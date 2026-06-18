@@ -10,78 +10,48 @@
   <style>body { font-family: 'Kanit', sans-serif; background-color: #f9fafb; }</style>
 </head>
 <body class="pb-10">
-
-  <div class="w-full bg-[#333333] flex items-center justify-between px-4" style="height: 24px;">
-    <span class="text-white" style="font-size: 6pt;">FTR3MD's</span>
-    <nav class="flex items-center space-x-3">
-      <a href="index.html" class="text-white" style="font-size: 6pt;">Home</a>
-      <a href="flights.html" class="text-white" style="font-size: 6pt;">Flights</a>
-    </nav>
-  </div>
-
   <main id="flight-container" class="max-w-md mx-auto p-4 space-y-6">
-    <div class="text-center text-gray-500 mt-10">กำลังโหลดข้อมูลเที่ยวบิน...</div>
+    <div id="loading" class="text-center mt-10 text-gray-500">กำลังโหลดข้อมูล...</div>
   </main>
 
   <script>
-    // แทนที่ URL นี้ด้วย Web App URL ของคุณ
     const url = 'https://script.google.com/macros/s/AKfycbzzF2n4723EcKe6Gup6JblQCNwhN98R0QZivr84VxFqCCR_vWJ2QdD6TkTX6DCzt9wEKA/exec';
 
-    // ใน all-flights.html ส่วนของ script
     fetch(url)
-      .then(res => {
-        console.log("Response Status:", res.status);
-        return res.json();
-      })
+      .then(res => res.json())
       .then(data => {
-        console.log("ได้รับข้อมูลครบแล้ว ขนาด:", data.length);
-        renderFlights(data);
-      })
-      .catch(err => {
-        console.error("เจอข้อผิดพลาดที่นี่:", err);
-        document.body.innerHTML = '<div style="color:red; padding:20px;">เกิด Error: ' + err + '</div>';
-      });
+        document.getElementById('loading').style.display = 'none';
+        const container = document.getElementById('flight-container');
 
-        // วนลูปตามเซ็ตข้อมูล (เริ่มจากคอลัมน์ 4 (E), 13 (N), ...)
-        for (let setIdx = 4; setIdx < data[0].length; setIdx += 9) {
-          if (!data[0][setIdx]) break; // จบถ้าไม่มีปีค.ศ.
+        // วนลูปเซ็ตข้อมูล (E, N, W... คอลัมน์ที่ 4, 13, 22...)
+        for (let setIdx = 4; setIdx < 200; setIdx += 9) {
+          if (!data[0] || !data[0][setIdx]) continue;
 
           // แสดงปีค.ศ.
-          container.innerHTML += `<h2 class="text-lg font-bold text-[#333333] border-b-2 border-[#333333] pb-1">${data[0][setIdx]}</h2>`;
+          container.innerHTML += `<h2 class="text-lg font-bold text-[#333333] border-b-2 border-[#333333] pb-1 mt-4">${data[0][setIdx]}</h2>`;
 
-          // ดึงข้อมูลแต่ละชุด (แถว 4-7, 8-11, ...)
-          for (let rowIdx = 3; rowIdx < data.length; rowIdx += 4) {
-            if (!data[rowIdx][setIdx]) break; 
-            
-            // สร้าง Card
-            const card = document.createElement('div');
-            card.className = "bg-white p-4 rounded-xl shadow-md border border-gray-200";
-            card.innerHTML = `
-              <div class="flex justify-between items-center text-xs text-gray-500 mb-2 font-light">
-                <span>${data[rowIdx][setIdx]}</span> <span class="flex items-center gap-1">🔰 ${data[rowIdx][setIdx+1]}</span> </div>
-              <div class="flex justify-between items-center text-xl font-bold text-[#333333] mb-1">
-                <span>${data[rowIdx][setIdx+2]}</span> <i data-lucide="plane" class="text-[#333333]"></i>
-                <span>${data[rowIdx][setIdx+3]}</span> </div>
-              <div class="flex justify-between text-[10px] text-gray-400 mb-2">
-                <span>${data[rowIdx+1][setIdx+3]}</span> <span>${data[rowIdx+1][setIdx+4]}</span> </div>
-              <div class="flex justify-between text-base font-semibold text-[#333333] mb-3">
-                <span>${data[rowIdx+2][setIdx+3]}</span> <span>${data[rowIdx+2][setIdx+4]}</span> </div>
-              <div class="text-[10px] bg-gray-100 p-2 rounded text-gray-600 flex items-center">
-                ${getIcon(data[rowIdx][setIdx+3], data[rowIdx][setIdx+4])} ${data[rowIdx+1][setIdx+2]}
+          // วนลูปข้อมูลในเซ็ต (แถวที่ 4-7, 8-11...)
+          for (let rowIdx = 3; rowIdx < 500; rowIdx += 4) {
+            if (!data[rowIdx] || !data[rowIdx][setIdx]) break;
+
+            container.innerHTML += `
+              <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+                <div class="text-xs text-gray-500 mb-2">${data[rowIdx][setIdx] || ''}</div>
+                <div class="flex justify-between items-center text-lg font-bold">
+                  <span>${data[rowIdx][setIdx+2] || ''}</span>
+                  <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                  <span>${data[rowIdx][setIdx+3] || ''}</span>
+                </div>
+                <div class="text-[10px] text-gray-400 mt-1">${data[rowIdx+1][setIdx+2] || ''} → ${data[rowIdx+1][setIdx+3] || ''}</div>
               </div>
             `;
-            container.appendChild(card);
           }
         }
         lucide.createIcons();
+      })
+      .catch(err => {
+        document.getElementById('loading').innerHTML = "เกิดข้อผิดพลาดในการโหลด: " + err;
       });
-
-    function getIcon(h4, i4) {
-      if (h4 && i4) return '🛄';
-      if (h4) return '🛫';
-      if (i4) return '🛬';
-      return '⛔';
-    }
   </script>
 </body>
 </html>
