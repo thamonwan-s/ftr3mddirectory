@@ -80,7 +80,7 @@
         const showMeeting = (h4 || i4);
         
         // ตัดรหัสสายการบิน, ลบช่องว่าง, และแปลงเป็นตัวพิมพ์เล็ก
-        const flightRaw = String(data[rowIdx][setIdx+5] || '');
+        const flightRaw = String(data[rowIdx][setIdx+6] || '');
         const flightCode = flightRaw.trim().split(' ')[0].toLowerCase(); 
         
         // เพิ่มเงื่อนไขเช็คว่าถ้าไม่มี flightCode ไม่ต้องเจน URL เพื่อไม่ให้รูปโหลดมั่ว
@@ -98,9 +98,9 @@
               <span class="text-sm font-semibold text-gray-700">${dayNum} ${month}</span>
             </div>
             
-            <div class="text-sm font-bold mb-4 flex items-center"> 
-              <span>${data[rowIdx][setIdx+5]} </span>
-              <img src="${logoUrl}" class="w-8 h-8 mr-3 border rounded-sm bg-gray-200">
+            <div class="text-sm font-bold mb-4 flex flex-wrap items-center"> 
+              <span class="mr-2">${data[rowIdx][setIdx+5]}</span>
+              <img src="${logoUrl}" class="w-6 h-6 mr-2 border rounded-sm bg-gray-200" onerror="this.style.display='none'"> 
               <span>${data[rowIdx][setIdx+6]} - ${data[rowIdx][setIdx+7] || ''}</span>
             </div>
 
