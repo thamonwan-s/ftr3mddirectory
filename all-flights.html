@@ -19,7 +19,7 @@
     </nav>
   </div>
 
-  <main id="flight-container" class="max-w-md mx-auto p-4 space-y-4">
+  <main id="flight-container" class="flex flex-col items-center p-4 space-y-4 w-full">
     <div id="loading" class="text-center mt-10 text-gray-500">กำลังโหลดข้อมูล...</div>
   </main>
 
@@ -48,7 +48,7 @@
           const isExpanded = (year === currentYear);
 
           container.innerHTML += `
-            <div class="year-section w-full max-w-sm mx-auto">
+            <div class="year-section w-full max-w-sm">
               <button onclick="toggleYear(this)" class="w-full flex justify-between items-center text-lg font-bold text-[#333333] border-b-2 border-[#333333] pb-1 mt-6 mb-2">
                 ${year} <span class="arrow">${isExpanded ? '▾' : '◂'}</span>
               </button>
