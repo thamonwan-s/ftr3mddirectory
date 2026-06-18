@@ -30,8 +30,16 @@
     fetch(url)
       .then(res => res.json())
       .then(data => {
+        console.log("ข้อมูลที่ได้รับ:", data); // ดูใน Console
         const container = document.getElementById('flight-container');
-        container.innerHTML = ''; // ล้างข้อความโหลด
+        
+        // สร้างตารางง่ายๆ เพื่อดูว่าข้อมูลมาจริงไหม
+        let html = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+        container.innerHTML = html; 
+      })
+      .catch(err => {
+        document.getElementById('flight-container').innerHTML = 'Error: ' + err;
+      });
 
         // วนลูปตามเซ็ตข้อมูล (เริ่มจากคอลัมน์ 4 (E), 13 (N), ...)
         for (let setIdx = 4; setIdx < data[0].length; setIdx += 9) {
