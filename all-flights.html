@@ -58,14 +58,20 @@
       for (let rowIdx = 3; rowIdx < 500; rowIdx += 4) {
         if (!data[rowIdx] || !data[rowIdx][setIdx]) break;
         
+        // 1. วันที่ (บรรทัดที่ 1 - ห้ามแตะต้อง)
         const d = new Date(data[rowIdx][setIdx]);
         const dayName = d.toLocaleDateString('en-US', {weekday: 'short'}).toUpperCase();
         const dayNum = d.getDate();
         const month = d.toLocaleDateString('en-US', {month: 'short'}).toUpperCase();
         
-        // ข้อมูลดึงตามโครงสร้างที่คุณยืนยันว่าถูกต้อง
-        const statusIcon = (data[rowIdx][setIdx+3] && data[rowIdx][setIdx+4]) ? '🛄' : (data[rowIdx][setIdx+3] ? '🛫' : (data[rowIdx][setIdx+4] ? '🛬' : '⛔'));
-        const timeFormat = (val) => val ? val.toString().substring(0, 5) : '--:--';
+        // 2. สถานะ/ไอคอน
+        const h4 = data[rowIdx][setIdx+3] === true;
+        const i4 = data[rowIdx][setIdx+4] === true;
+        const statusIcon = h4 && i4 ? '🛄' : h4 ? '🛫' : i4 ? '🛬' : '⛔';
+        const showMeeting = (h4 || i4); // ถ้าเป็น false ทั้งคู่ (⛔) จะไม่แสดงสถานที่พบ
+        
+        const formatTime = (val) => val ? val.toString().substring(0, 5) : '--:--';
+        const airlineName = String(data[rowIdx][setIdx+7] || '').toLowerCase().replace(/\s/g, '');
 
         html += `
           <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
@@ -75,24 +81,28 @@
             </div>
             
             <div class="text-sm font-bold mb-3 flex items-center">
-              <img src="https://api.brandfetch.io/v2/brand/${String(data[rowIdx][setIdx+7] || '').toLowerCase().replace(/\s/g, '')}.com/icon" class="w-6 h-6 mr-3 border rounded-sm" onerror="this.style.display='none'"> 
+              <img src="https://api.brandfetch.io/v2/brand/${airlineName}.com/icon" class="w-6 h-6 mr-3 border rounded-sm" onerror="this.style.display='none'"> 
               <span>${data[rowIdx][setIdx+5]} ${data[rowIdx][setIdx+6]} - ${data[rowIdx][setIdx+7] || ''}</span>
             </div>
 
-            <div class="flex justify-between items-center text-2xl font-black text-[#333333] my-4">
-              <div class="text-center">
-                <div>${data[rowIdx+2][setIdx+3]}</div>
-                <div class="text-[14px] font-bold text-gray-600">${timeFormat(data[rowIdx+1][setIdx+3])}</div>
-              </div>
-              <div class="text-gray-400 text-xl font-light">→</div>
-              <div class="text-center">
-                <div>${data[rowIdx+2][setIdx+4]}</div>
-                <div class="text-[14px] font-bold text-gray-600">${timeFormat(data[rowIdx+1][setIdx+4])}</div>
-              </div>
+            <div class="flex justify-between items-center text-2xl font-black text-[#333333] my-2">
+              <div>${data[rowIdx+2][setIdx+3]}</div>
+              <div class="text-gray-400 text-lg">→</div>
+              <div>${data[rowIdx+2][setIdx+4]}</div>
+            </div>
+
+            <div class="flex justify-between text-[11px] text-gray-500 mb-1">
+              <div>${data[rowIdx+2][setIdx+5] || ''}</div>
+              <div>${data[rowIdx+2][setIdx+6] || ''}</div>
+            </div>
+
+            <div class="flex justify-between text-lg font-bold text-gray-800 mb-3">
+              <div>${formatTime(data[rowIdx+1][setIdx+3])}</div>
+              <div>${formatTime(data[rowIdx+1][setIdx+4])}</div>
             </div>
 
             <div class="pt-3 border-t text-[11px] text-blue-800 font-bold">
-              ${statusIcon} ${data[rowIdx+1][setIdx+5] || ''} : ${data[rowIdx+3][setIdx+5] || ''}
+              ${statusIcon} ${data[rowIdx+1][setIdx+5] || ''} ${showMeeting ? ': ' + (data[rowIdx+3][setIdx+5] || '') : ''}
             </div>
           </div>`;
       }
