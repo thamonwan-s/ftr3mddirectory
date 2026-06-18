@@ -62,8 +62,7 @@
           yearSelect.innerHTML = '<option value="">เลือกปี</option>';
           
           sections.forEach(sec => {
-            const yearLabel = sec.id.replace('year-', '');
-            yearSelect.innerHTML += `<option value="${sec.id}">${yearLabel}</option>`;
+                yearSelect.innerHTML += `<option value="${sec.id}">${sec.id.replace('year-', '')}</option>`;
         });
        
       });
