@@ -83,8 +83,8 @@
         const flightRaw = String(data[rowIdx][setIdx+6] || '');
         const flightCode = flightRaw.trim().split(' ')[0].toLowerCase(); 
         const airlineMapping = {
-          "tvj": "vj",
-          "pal": "2p"
+          "vj": "tvj",
+          "2p": "pal"
         };
         
         // ถ้ามีรหัสใน mapping ให้ใช้ตัวที่กำหนด ถ้าไม่มีให้ใช้ flightCode เดิม
