@@ -5,11 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>All Flights</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap'); body { font-family: 'Kanit', sans-serif; }</style>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&display=swap" rel="stylesheet">
+  <style>body { font-family: 'Kanit', sans-serif; background-color: #f9fafb; }</style>
 </head>
-<body class="bg-gray-100 pb-10">
+<body class="pb-10">
 
-  <nav class="bg-blue-800 text-white p-4 shadow-lg">
+  <nav class="bg-[#333333] text-white p-4 shadow-md sticky top-0 z-10">
     <h1 class="font-bold text-lg">All Flights</h1>
   </nav>
 
@@ -34,34 +35,46 @@
           const isExpanded = (year === currentYear);
 
           container.innerHTML += `
-            <div class="border rounded-lg overflow-hidden bg-white shadow-sm">
-              <button onclick="this.nextElementSibling.classList.toggle('hidden')" class="w-full p-4 bg-gray-50 font-bold text-left flex justify-between border-b">
-                ${year} <span>${isExpanded ? '▼' : '▲'}</span>
+            <div class="year-section">
+              <button onclick="toggleYear(this)" class="w-full flex justify-between items-center text-lg font-bold text-[#333333] border-b-2 border-[#333333] pb-1 mt-6 mb-2">
+                ${year} <span class="arrow">${isExpanded ? '▼' : '▲'}</span>
               </button>
-              <div class="${isExpanded ? '' : 'hidden'} p-4">
-                ${renderRows(data, setIdx)}
+              <div class="content ${isExpanded ? '' : 'hidden'} space-y-4">
+                ${renderFlights(data, setIdx)}
               </div>
             </div>`;
         }
       });
 
-    function renderRows(data, setIdx) {
+    function toggleYear(btn) {
+      const content = btn.nextElementSibling;
+      content.classList.toggle('hidden');
+      btn.querySelector('.arrow').innerText = content.classList.contains('hidden') ? '▲' : '▼';
+    }
+
+    function renderFlights(data, setIdx) {
       let html = '';
       for (let rowIdx = 3; rowIdx < 500; rowIdx += 4) {
         if (!data[rowIdx] || !data[rowIdx][setIdx]) break;
         
-        // นี่คือจุดที่คุณต้องแก้เลข + ถ้าข้อมูลผิดช่อง!
-        let dateVal = data[rowIdx][setIdx]; 
-        let origin = data[rowIdx+2][setIdx+3]; 
-        let destination = data[rowIdx+2][setIdx+4];
+        // ดึงวันที่ (ตัดเวลาออก)
+        let dateVal = data[rowIdx][setIdx] ? data[rowIdx][setIdx].toString().split('T')[0] : '';
+        
+        // ตรงนี้คือส่วนที่ดึงข้อมูลสนามบิน
+        // ปรับเลข setIdx + X ตามตำแหน่งจริงใน Google Sheets ของคุณ
+        let origin = data[rowIdx + 2][setIdx + 3] || '---'; 
+        let dest = data[rowIdx + 2][setIdx + 4] || '---';
 
         html += `
-          <div class="border-b py-3 last:border-b-0">
-            <div class="text-[10px] text-gray-400">${new Date(dateVal).toLocaleDateString('th-TH')}</div>
-            <div class="flex justify-between items-center text-lg font-bold">
-              <span>${origin || '---'}</span>
-              <span class="text-gray-400 text-sm">✈</span>
-              <span>${destination || '---'}</span>
+          <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
+            <div class="text-xs text-gray-400 mb-2">${dateVal}</div>
+            <div class="flex justify-between items-center text-lg font-bold text-[#333333]">
+              <span>${origin}</span>
+              <span class="text-gray-400 text-sm">→</span>
+              <span>${dest}</span>
+            </div>
+            <div class="text-[10px] text-gray-400 mt-1">
+              ${data[rowIdx + 1][setIdx + 3] || ''} → ${data[rowIdx + 1][setIdx + 4] || ''}
             </div>
           </div>`;
       }
