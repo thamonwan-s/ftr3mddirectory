@@ -139,30 +139,61 @@
             </div>
 
             // floating navigator
-            <div class="fixed bottom-4 left-0 right-0 flex justify-center px-4 z-50">
-            <div class="bg-white/90 backdrop-blur-sm shadow-lg border border-gray-200 rounded-full py-2 px-6 flex items-center space-x-4">
-              
-              <button onclick="alert('เลือกปี')" class="text-[10px] font-bold text-[#333333] flex flex-col items-center">
-                <span class="text-[8px] text-gray-400">YEAR</span>
-                <span id="nav-year">2026</span>
-              </button>
-          
-              <button onclick="alert('เลือกเดือน')" class="text-[10px] font-bold text-[#333333] flex flex-col items-center">
-                <span class="text-[8px] text-gray-400">MONTH</span>
-                <span id="nav-month">JUN</span>
-              </button>
-          
-              <div class="w-px h-6 bg-gray-300"></div>
-          
-              <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="text-xl">🏠</button>
-          
-              <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="text-xl">⬆️</button>
-              
+            <div class="fixed bottom-6 left-0 right-0 flex justify-center px-4 z-50">
+              <div class="bg-white/90 backdrop-blur-md shadow-[0_4px_20px_rgba(0,0,0,0.08)] border border-gray-100 rounded-2xl py-2 px-5 flex items-center space-x-4">
+                
+                <button onclick="scrollToYear()" class="text-[10px] font-bold text-[#333333] flex flex-col items-center min-w-[30px]">
+                  <span class="text-[8px] text-gray-400 font-normal">YEAR</span>
+                  <span id="nav-year" class="text-xs">2026</span>
+                </button>
+            
+                <button onclick="scrollToMonth()" class="text-[10px] font-bold text-[#333333] flex flex-col items-center min-w-[30px]">
+                  <span class="text-[8px] text-gray-400 font-normal">MONTH</span>
+                  <span id="nav-month" class="text-xs">-</span>
+                </button>
+            
+                <div class="w-px h-6 bg-gray-200"></div>
+            
+                <button onclick="window.location.href='index.html'" class="text-gray-500 hover:text-black transition-colors">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                </button>
+            
+                <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="text-gray-500 hover:text-black transition-colors">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"></path></svg>
+                </button>
+                
+              </div>
             </div>
           </div>
           </div>`;
       }
       return html;
+    }
+
+    // อัปเดตเลขปี/เดือน ตามส่วนที่อยู่กลางจอ
+    const observerOptions = {
+      root: null,
+      threshold: 0.5 // เมื่อกล่องปีนั้นๆ เข้ามาเกินครึ่งหน้าจอ
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const year = entry.target.querySelector('button').innerText.trim().split(' ')[0];
+          document.getElementById('nav-year').innerText = year;
+        }
+      });
+    }, observerOptions);
+    
+    // เริ่มจับตาดูทุกปี
+    setTimeout(() => {
+      document.querySelectorAll('.year-section').forEach(section => observer.observe(section));
+    }, 500);
+    
+    // ฟังก์ชันกดปุ่มปี (เลื่อนไปปีนั้น)
+    function scrollToYear() {
+      const currentYear = document.getElementById('nav-year').innerText;
+      alert("ฟังก์ชันเลือกปี: คุณสามารถเปลี่ยนเป็น Modal หรือ Dropdown ได้ที่นี่");
     }
   </script>
 </body>
