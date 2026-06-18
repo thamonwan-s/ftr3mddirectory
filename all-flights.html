@@ -58,21 +58,19 @@
       for (let rowIdx = 3; rowIdx < 500; rowIdx += 4) {
         if (!data[rowIdx] || !data[rowIdx][setIdx]) break;
         
-        // จัดการวันที่: เพิ่มช่องว่างระหว่าง Day และ Date
         const d = new Date(data[rowIdx][setIdx]);
         const dayName = d.toLocaleDateString('en-US', {weekday: 'short'}).toUpperCase();
         const dayNum = d.getDate();
         const month = d.toLocaleDateString('en-US', {month: 'short'}).toUpperCase();
         
-        // Logic ไอคอนสถานะและข้อความ
         const h4 = data[rowIdx][setIdx+3] === true;
         const i4 = data[rowIdx][setIdx+4] === true;
         let statusIcon = h4 && i4 ? '🛄' : h4 ? '🛫' : i4 ? '🛬' : '⛔';
-        let statusText = data[rowIdx+1][setIdx+5] || ''; // J5: ข้อความสถานะ
-        let meetingPoint = data[rowIdx+3][setIdx+5] || ''; // J7: สถานที่พบ
+        let statusText = data[rowIdx+1][setIdx+5] || ''; 
+        let meetingPoint = data[rowIdx+3][setIdx+5] || ''; 
 
-        // ฟังก์ชันแปลงเวลา HH:MM
         const formatTime = (val) => val ? val.toString().split(':').slice(0,2).join(':') : '--:--';
+        const airlineName = (data[rowIdx][setIdx+7] || '').toString();
 
         html += `
           <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
@@ -82,19 +80,19 @@
             </div>
             
             <div class="text-sm font-bold mb-2 flex items-center">
-              <img src="https://logo.clearbit.com/${data[rowIdx][setIdx+7].toLowerCase().replace(/\s/g, '')}.com" class="w-5 h-5 mr-2" onerror="this.style.display='none'"> 
+              <img src="https://logo.clearbit.com/${airlineName.toLowerCase().replace(/\s/g, '')}.com" class="w-5 h-5 mr-2" onerror="this.style.display='none'"> 
               ${data[rowIdx][setIdx+5]} ${data[rowIdx][setIdx+6]}
             </div>
 
             <div class="flex justify-between items-center text-2xl font-black text-[#333333] my-4">
               <div class="text-center">
                 <div>${data[rowIdx+2][setIdx+3]}</div>
-                <div class="text-[12px] font-normal text-gray-500">${formatTime(data[rowIdx+1][setIdx+3])}</div>
+                <div class="text-[14px] font-bold text-gray-600">${formatTime(data[rowIdx+1][setIdx+3])}</div>
               </div>
               <div class="text-gray-400 text-lg">✈️ —————→</div>
               <div class="text-center">
                 <div>${data[rowIdx+2][setIdx+4]}</div>
-                <div class="text-[12px] font-normal text-gray-500">${formatTime(data[rowIdx+1][setIdx+4])}</div>
+                <div class="text-[14px] font-bold text-gray-600">${formatTime(data[rowIdx+1][setIdx+4])}</div>
               </div>
             </div>
 
