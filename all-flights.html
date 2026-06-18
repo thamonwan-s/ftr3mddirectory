@@ -79,9 +79,12 @@
         const statusIcon = h4 && i4 ? '🛄' : h4 ? '🛫' : i4 ? '🛬' : '⛔';
         const showMeeting = (h4 || i4);
         
+        // ตัดรหัสสายการบิน, ลบช่องว่าง, และแปลงเป็นตัวพิมพ์เล็ก
         const flightRaw = String(data[rowIdx][setIdx+5] || '');
-        const flightCode = flightRaw.split(' ')[0].toLowerCase();
-        const logoUrl = `https://raw.githubusercontent.com/theamerc/airline-logos/master/logos/${flightCode.toUpperCase()}.png`;
+        const flightCode = flightRaw.trim().split(' ')[0].toLowerCase(); 
+        
+        // เพิ่มเงื่อนไขเช็คว่าถ้าไม่มี flightCode ไม่ต้องเจน URL เพื่อไม่ให้รูปโหลดมั่ว
+        const logoUrl = flightCode ? `https://edge.wego.com/image/upload/flights/airlines_square/${flightCode}` : '';
         
         const j5 = data[rowIdx+1][setIdx+5] || '';
         const j6 = data[rowIdx+2][setIdx+5] || '';
