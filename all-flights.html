@@ -27,18 +27,19 @@
     // แทนที่ URL นี้ด้วย Web App URL ของคุณ
     const url = 'https://script.google.com/macros/s/AKfycbzzF2n4723EcKe6Gup6JblQCNwhN98R0QZivr84VxFqCCR_vWJ2QdD6TkTX6DCzt9wEKA/exec';
 
+    // ใน all-flights.html ส่วนของ script
     fetch(url)
-      .then(res => res.json())
+      .then(res => {
+        console.log("Response Status:", res.status);
+        return res.json();
+      })
       .then(data => {
-        console.log("ข้อมูลที่ได้รับ:", data); // ดูใน Console
-        const container = document.getElementById('flight-container');
-        
-        // สร้างตารางง่ายๆ เพื่อดูว่าข้อมูลมาจริงไหม
-        let html = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
-        container.innerHTML = html; 
+        console.log("ได้รับข้อมูลครบแล้ว ขนาด:", data.length);
+        renderFlights(data);
       })
       .catch(err => {
-        document.getElementById('flight-container').innerHTML = 'Error: ' + err;
+        console.error("เจอข้อผิดพลาดที่นี่:", err);
+        document.body.innerHTML = '<div style="color:red; padding:20px;">เกิด Error: ' + err + '</div>';
       });
 
         // วนลูปตามเซ็ตข้อมูล (เริ่มจากคอลัมน์ 4 (E), 13 (N), ...)
