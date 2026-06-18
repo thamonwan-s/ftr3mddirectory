@@ -3,20 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FTR3MD's - Flights</title>
+  <title>FTR3MD's - Home</title>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- ใช้ Lucide Icons -->
-  <script src="https://unpkg.com/lucide@latest"></script>
-  <style>
-    body { font-family: 'Kanit', sans-serif; }
-    /* ทำให้ปุ่มเป็นสี่เหลี่ยมจัตุรัสด้วย aspect-ratio */
-    .square-btn { aspect-ratio: 1 / 1; }
-  </style>
+  <style>body { font-family: 'Kanit', sans-serif; }</style>
 </head>
 <body class="bg-white min-h-screen flex flex-col">
 
-  <!-- Banner Section -->
   <div class="w-full bg-[#333333] flex items-center justify-between px-4" style="height: 24px;">
     <span class="text-white" style="font-size: 6pt; letter-spacing: 0.5px;">FTR3MD's</span>
     <nav class="flex items-center space-x-3">
@@ -26,40 +19,9 @@
     </nav>
   </div>
 
-  <!-- Content Section -->
-  <main class="flex-grow p-4">
-    <div class="grid grid-cols-2 gap-4">
-      
-      <!-- ปุ่ม All Flights -->
-      <a href="all-flights.html" class="square-btn bg-[#333333] flex flex-col items-center justify-center text-white rounded-lg p-2 hover:bg-gray-700 transition">
-        <i data-lucide="list" class="w-8 h-8 mb-2"></i>
-        <span style="font-size: 8pt;">All Flights</span>
-      </a>
-
-      <!-- ปุ่ม International -->
-      <a href="international.html" class="square-btn bg-[#333333] flex flex-col items-center justify-center text-white rounded-lg p-2 hover:bg-gray-700 transition">
-        <i data-lucide="globe" class="w-8 h-8 mb-2"></i>
-        <span style="font-size: 8pt;">International</span>
-      </a>
-
-      <!-- ปุ่ม Departures -->
-      <a href="departures.html" class="square-btn bg-[#333333] flex flex-col items-center justify-center text-white rounded-lg p-2 hover:bg-gray-700 transition">
-        <i data-lucide="plane-takeoff" class="w-8 h-8 mb-2"></i>
-        <span style="font-size: 8pt;">Departures</span>
-      </a>
-
-      <!-- ปุ่ม Arrivals -->
-      <a href="arrivals.html" class="square-btn bg-[#333333] flex flex-col items-center justify-center text-white rounded-lg p-2 hover:bg-gray-700 transition">
-        <i data-lucide="plane-landing" class="w-8 h-8 mb-2"></i>
-        <span style="font-size: 8pt;">Arrivals</span>
-      </a>
-
-    </div>
+  <main class="flex-grow flex items-center justify-center">
+    <p class="text-[#333333]" style="font-size: 8pt; text-transform: lowercase;">memories has been captured by ftr</p>
   </main>
 
-  <script>
-    // เรียกใช้ Lucide Icons
-    lucide.createIcons();
-  </script>
 </body>
 </html>
