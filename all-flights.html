@@ -96,15 +96,20 @@
             <div class="flex items-center space-x-2 mb-4">
               <span class="text-[10px] text-gray-400 font-bold bg-gray-100 px-2 py-0.5 rounded">${dayName}</span> 
               <span class="text-sm font-semibold text-gray-700">${dayNum} ${month}</span>
+              <span class="text-gray-300 mx-2"> | </span>
+              <span class="mr-2">${data[rowIdx][setIdx+5]}</span>
+
+              <div class="flex items-center text-right">
+              <div class="mr-2">
+                <div class="text-sm font-bold text-gray-800">${data[rowIdx][setIdx+5]}</div>
+                <div class="text-[9px] text-gray-400 font-medium">${data[rowIdx][setIdx+6]}</div>
+              </div>
+              <img src="${logoUrl}" 
+                   class="w-8 h-8 object-contain" 
+                   onerror="this.style.display='none'">
+            </div>
             </div>
             
-            <div class="text-sm font-bold mb-4 flex flex-wrap items-center"> 
-              <span class="mr-2">${data[rowIdx][setIdx+5]}</span>
-              <img src="${logoUrl}" 
-                   class="w-6 h-6 mx-2 border rounded-sm" 
-                   onerror="this.style.display='none'"> 
-              <span>${data[rowIdx][setIdx+6]} - ${data[rowIdx][setIdx+7] || ''}</span>
-            </div>
 
             <div class="flex justify-between items-center text-2xl sm:text-3xl font-black text-[#333333] my-4">
               <div class="text-center">
