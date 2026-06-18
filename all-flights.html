@@ -25,6 +25,16 @@
   <script>
     const url = 'https://script.google.com/macros/s/AKfycbzzF2n4723EcKe6Gup6JblQCNwhN98R0QZivr84VxFqCCR_vWJ2QdD6TkTX6DCzt9wEKA/exec';
 
+    // ย้ายมาไว้นอก Loop เพื่อป้องกัน Syntax Error
+    const formatTime = (val) => {
+      if (!val) return '--:--';
+      const date = new Date(val);
+      if (isNaN(date.getTime())) return val.toString().substring(0, 5);
+      const h = date.getHours().toString().padStart(2, '0');
+      const m = date.getMinutes().toString().padStart(2, '0');
+      return `${h}:${m}`;
+    };
+
     fetch(url)
       .then(res => res.json())
       .then(data => {
@@ -58,34 +68,24 @@
       for (let rowIdx = 3; rowIdx < 500; rowIdx += 4) {
         if (!data[rowIdx] || !data[rowIdx][setIdx]) break;
         
-        // 1. วันที่ (ค่าคงเดิม)
         const d = new Date(data[rowIdx][setIdx]);
         const dayName = d.toLocaleDateString('en-US', {weekday: 'short'}).toUpperCase();
         const dayNum = d.getDate();
         const month = d.toLocaleDateString('en-US', {month: 'short'}).toUpperCase();
         
-        // สถานะ
         const h4 = data[rowIdx][setIdx+3] === true;
         const i4 = data[rowIdx][setIdx+4] === true;
         const statusIcon = h4 && i4 ? '🛄' : h4 ? '🛫' : i4 ? '🛬' : '⛔';
         const showMeeting = (h4 || i4);
         
-        // โลโก้สายการบิน (Airhex)
         const airlineCode = String(data[rowIdx][setIdx+5] || '').toLowerCase();
         const logoUrl = `https://edge.wego.com/image/upload/flights/airlines_square/${airlineCode}.png`;
         
-        // เวลา HH:mm (ดึงจาก rowIdx+1)
-        // ฟังก์ชันดึงเวลา HH:mm ที่แม่นยำกว่า
-        const formatTime = (val) => {
-          if (!val) return '--:--';
-          const date = new Date(val);
-          // ตรวจสอบว่าเป็นวันเวลาที่ถูกต้องไหม
-          if (isNaN(date.getTime())) return val.toString().substring(0, 5); 
-          
-          const h = date.getHours().toString().padStart(2, '0');
-          const m = date.getMinutes().toString().padStart(2, '0');
-          return `${h}:${m}`;
-        };
+        // บรรทัดที่ 6: จัดการ Logic J5, J6, J7 ให้ถูกต้อง
+        const j5 = data[rowIdx+1][setIdx+5] || '';
+        const j6 = data[rowIdx+1][setIdx+6] || '';
+        const j7 = data[rowIdx+3][setIdx+5] || '';
+        const bottomText = showMeeting ? `${j5} ${j6} : ${j7}` : `${j5} ${j6}`;
 
         html += `
           <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
@@ -116,7 +116,7 @@
             </div>
 
             <div class="pt-3 border-t text-[11px] text-blue-800 font-bold">
-              ${statusIcon} ${data[rowIdx+1][setIdx+5] || ''} ${showMeeting ? + data[rowIdx+1][setIdx+6] || ''} ${showMeeting ? ': ' + (data[rowIdx+3][setIdx+5] || '') : ''}
+              ${statusIcon} ${bottomText}
             </div>
           </div>`;
       }
