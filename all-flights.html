@@ -50,7 +50,7 @@
     function toggleYear(btn) {
       const content = btn.nextElementSibling;
       content.classList.toggle('hidden');
-      btn.querySelector('.arrow').innerText = content.classList.contains('hidden') ? '▲' : '▼';
+      btn.querySelector('.arrow').innerText = content.classList.contains('hidden') ? '◂' : '▾';
     }
 
     function renderFlights(data, setIdx) {
@@ -72,10 +72,20 @@
         
         // โลโก้สายการบิน (Airhex)
         const airlineCode = String(data[rowIdx][setIdx+5] || '').toLowerCase();
-        const logoUrl = `https://airhex.com/images/airline-logos/${airlineCode}.png`;
+        const logoUrl = `https://edge.wego.com/image/upload/flights/airlines_square/${airlineCode}.png`;
         
         // เวลา HH:mm (ดึงจาก rowIdx+1)
-        const formatTime = (val) => val ? val.toString().substring(0, 5) : '--:--';
+        // ฟังก์ชันดึงเวลา HH:mm ที่แม่นยำกว่า
+        const formatTime = (val) => {
+          if (!val) return '--:--';
+          const date = new Date(val);
+          // ตรวจสอบว่าเป็นวันเวลาที่ถูกต้องไหม
+          if (isNaN(date.getTime())) return val.toString().substring(0, 5); 
+          
+          const h = date.getHours().toString().padStart(2, '0');
+          const m = date.getMinutes().toString().padStart(2, '0');
+          return `${h}:${m}`;
+        };
 
         html += `
           <div class="bg-white p-4 rounded-xl shadow-sm border border-gray-100">
@@ -96,8 +106,8 @@
             </div>
 
             <div class="flex justify-between text-[11px] text-gray-500 mb-1">
-              <div>${data[rowIdx+4][setIdx+3] || ''}</div>
-              <div>${data[rowIdx+4][setIdx+4] || ''}</div>
+              <div>${data[rowIdx+3][setIdx+3] || ''}</div>
+              <div>${data[rowIdx+3][setIdx+4] || ''}</div>
             </div>
 
             <div class="flex justify-between text-lg font-bold text-gray-800 mb-3">
@@ -106,7 +116,7 @@
             </div>
 
             <div class="pt-3 border-t text-[11px] text-blue-800 font-bold">
-              ${statusIcon} ${data[rowIdx+1][setIdx+5] || ''} ${data[rowIdx+1][setIdx+6] || ''} ${showMeeting ? ': ' + (data[rowIdx+3][setIdx+5] || '') : ''}
+              ${statusIcon} ${data[rowIdx+1][setIdx+5] || ''} ${showMeeting ? + data[rowIdx+1][setIdx+6] || ''} ${showMeeting ? ': ' + (data[rowIdx+3][setIdx+5] || '') : ''}
             </div>
           </div>`;
       }
