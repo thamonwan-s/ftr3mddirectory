@@ -82,6 +82,13 @@
         // ตัดรหัสสายการบิน, ลบช่องว่าง, และแปลงเป็นตัวพิมพ์เล็ก
         const flightRaw = String(data[rowIdx][setIdx+6] || '');
         const flightCode = flightRaw.trim().split(' ')[0].toLowerCase(); 
+        const airlineMapping = {
+          "tvj": "vj",
+          "pal": "2p"
+        };
+        
+        // ถ้ามีรหัสใน mapping ให้ใช้ตัวที่กำหนด ถ้าไม่มีให้ใช้ flightCode เดิม
+        const finalFlightCode = airlineMapping[flightCode] || flightCode;
         
         // เพิ่มเงื่อนไขเช็คว่าถ้าไม่มี flightCode ไม่ต้องเจน URL เพื่อไม่ให้รูปโหลดมั่ว
         const logoUrl = flightCode ? `https://edge.wego.com/image/upload/flights/airlines_square/${flightCode}` : '';
