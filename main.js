@@ -2,37 +2,43 @@
  * main.js - ไฟล์หลักสำหรับควบคุมการทำงานของเว็บไซต์
  */
 
-// 1. ฟังก์ชันสร้าง Breadcrumb
+// --- ส่วนที่ 1: ระบบจัดการ Breadcrumb ---
 function updateBreadcrumb() {
     const breadcrumbEl = document.getElementById('breadcrumb');
     if (!breadcrumbEl) return;
 
     const path = window.location.pathname;
-    
-    // ถ้าเป็นหน้าแรก (Home) ให้ลบ Breadcrumb ทิ้ง
     if (path.endsWith('index.html') || path === '/' || path === '') {
         breadcrumbEl.innerHTML = '';
         return; 
     }
 
-    // สร้างโครงสร้าง Breadcrumb
     let html = '<li><a href="index.html">Home</a></li>';
-    
-    // ตรวจสอบหน้าปัจจุบันเพื่อเพิ่มชื่อหน้า
-    if (path.includes('flights.html')) {
-        html += '<li>/ Flights</li>';
-    } else if (path.includes('schedule.html')) {
-        html += '<li>/ Schedule</li>';
-    }
+    if (path.includes('flights.html')) html += '<li>/ Flights</li>';
+    else if (path.includes('schedule.html')) html += '<li>/ Schedule</li>';
     
     breadcrumbEl.innerHTML = html;
 }
 
-// 2. ฟังก์ชันตรวจสอบรหัสผ่าน (ใช้ JSONP เพื่อเลี่ยงปัญหา CORS)
+// --- ส่วนที่ 2: ระบบ Login / Session ---
+const SESSION_DURATION = 12 * 60 * 60 * 1000; 
+
+function init() {
+    const loginTime = localStorage.getItem('loginTime');
+    if (loginTime) {
+        const timePassed = Date.now() - parseInt(loginTime);
+        if (timePassed < SESSION_DURATION) {
+            showLogoutState();
+            startCountdown(parseInt(loginTime) + SESSION_DURATION);
+        } else {
+            logout(); 
+        }
+    }
+}
+
 function checkPassword() {
     const input = document.getElementById('pass').value;
     
-    // สร้างฟังก์ชันรับค่ากลับแบบ Global
     window.handleResponse = function(isCorrect) {
         if (isCorrect === true) {
             localStorage.setItem('loginTime', Date.now().toString());
@@ -40,27 +46,41 @@ function checkPassword() {
         } else {
             alert("Incorrect password");
         }
-        // ลบ script tag ทิ้งหลังทำงานเสร็จ
         document.body.removeChild(scriptTag);
     };
 
     const scriptTag = document.createElement('script');
-    // เรียกใช้ SCRIPT_URL จาก config.js
     scriptTag.src = `${SCRIPT_URL}?function=checkPassword&pass=${input}&callback=handleResponse`;
     document.body.appendChild(scriptTag);
 }
 
-// 3. ฟังก์ชันดึงข้อมูล Flights (ตัวอย่างการเขียนแยกฟังก์ชัน)
-async function fetchFlightsData() {
-    // โค้ดสำหรับดึงข้อมูล Flights ไปแสดงผล
-    console.log("Fetching flight data...");
-    // ใส่ logic การดึงข้อมูลจาก SCRIPT_URL ที่นี่...
+function showLogoutState() {
+    const loginForm = document.getElementById('login-form');
+    const logoutForm = document.getElementById('logout-form');
+    if (loginForm) loginForm.classList.add('hidden');
+    if (logoutForm) logoutForm.classList.remove('hidden');
 }
 
-// 4. สั่งให้ทำงานเมื่อโหลดหน้าเว็บเสร็จสมบูรณ์
+function logout() {
+    localStorage.removeItem('loginTime');
+    location.reload();
+}
+
+function startCountdown(endTime) {
+    const timer = setInterval(() => {
+        const distance = endTime - Date.now();
+        const countdownEl = document.getElementById('countdown');
+        if (distance < 0) { logout(); clearInterval(timer); return; }
+        
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        if (countdownEl) countdownEl.innerText = `auto-logout in: ${hours}h ${minutes}m ${seconds}s`;
+    }, 1000);
+}
+
+// --- ส่วนที่ 3: สั่งให้ทำงานเมื่อโหลดหน้าเสร็จ ---
 document.addEventListener('DOMContentLoaded', () => {
     updateBreadcrumb();
-    
-    // ตรวจสอบการ Login (ถ้ามี)
-    // init(); 
+    init(); // เรียกใช้ระบบ Login เมื่อโหลดหน้าเว็บ
 });
