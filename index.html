@@ -41,8 +41,8 @@
 
   <script>
     const SESSION_DURATION = 12 * 60 * 60 * 1000; 
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzzF2n4723EcKe6Gup6JblQCNwhN98R0QZivr84VxFqCCR_vWJ2QdD6TkTX6DCzt9wEKA/exec';
 
-    // เพิ่มการรอให้ DOM โหลดเสร็จก่อนเพื่อป้องกัน Error
     document.addEventListener('DOMContentLoaded', () => {
         init();
     });
@@ -60,13 +60,23 @@
         }
     }
 
-    function checkPassword() {
-        const password = document.getElementById('pass').value;
-        if (password === "0958565111") {
-            localStorage.setItem('loginTime', Date.now().toString());
-            location.reload();
-        } else {
-            alert("Incorrect password");
+    async function checkPassword() {
+        const input = document.getElementById('pass').value;
+
+        if (!input) { alert("กรุณากรอกรหัสผ่าน"); return; }
+
+        try {
+            const response = await fetch(`${SCRIPT_URL}?function=checkPassword&pass=${input}`);
+            const result = await response.json();
+
+            if (result === true) {
+                localStorage.setItem('loginTime', Date.now().toString());
+                location.reload();
+            } else {
+                alert("Incorrect password");
+            }
+        } catch (error) {
+            alert("เกิดข้อผิดพลาดในการเชื่อมต่อ");
         }
     }
 
