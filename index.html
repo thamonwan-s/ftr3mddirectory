@@ -91,6 +91,31 @@ function checkPassword() {
         location.reload();
     }
 
+    function updateBreadcrumb() {
+    const breadcrumbEl = document.getElementById('breadcrumb');
+    if (!breadcrumbEl) return;
+
+    // เช็กชื่อไฟล์ปัจจุบัน
+    const path = window.location.pathname;
+    
+    // ถ้าหน้าปัจจุบันคือ index.html หรือ root ให้ซ่อนหรือคืนค่าว่างไปเลย
+    if (path.endsWith('index.html') || path === '/') {
+        breadcrumbEl.innerHTML = ''; // ไม่ต้องแสดงอะไร
+        return; 
+    }
+
+    // ถ้าไม่ใช่หน้า home ถึงค่อยสร้าง path
+    let html = '<li><a href="index.html">Home</a></li>';
+    
+    // ตัวอย่าง: ถ้าอยู่หน้า flights.html ให้เติมเข้าไป
+    if (path.includes('flights.html')) {
+        html += '<li>/ Flights</li>';
+    }
+    // เพิ่มเงื่อนไขหน้าอื่นๆ ได้ที่นี่...
+
+    breadcrumbEl.innerHTML = html;
+}
+
     function startCountdown(endTime) {
         const timer = setInterval(() => {
             const distance = endTime - Date.now();
