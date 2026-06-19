@@ -8,14 +8,24 @@ function updateBreadcrumb() {
     if (!breadcrumbEl) return;
 
     const path = window.location.pathname;
+    
+    // 1. ถ้าเป็นหน้าแรก ให้ซ่อน
     if (path.endsWith('index.html') || path === '/' || path === '') {
         breadcrumbEl.innerHTML = '';
         return; 
     }
 
-    let html = '<li><a href="index.html">Home</a></li>';
-    if (path.includes('flights.html')) html += '<li>/ Flights</li>';
-    else if (path.includes('schedule.html')) html += '<li>/ Schedule</li>';
+    // 2. ดึงชื่อไฟล์ออกมา เช่น "flights.html"
+    const fileName = path.split('/').pop(); 
+    
+    // 3. แปลงชื่อไฟล์เป็นชื่อเมนูที่สวยงาม (แทนที่ .html ด้วยช่องว่าง แล้วจัดตัวพิมพ์ใหญ่)
+    // ตัวอย่าง: "flights.html" -> "Flights" หรือ "all-flights.html" -> "All Flights"
+    let pageName = fileName.replace('.html', '').replace(/-/g, ' ');
+    pageName = pageName.charAt(0).toUpperCase() + pageName.slice(1);
+
+    // 4. สร้าง HTML อัตโนมัติ
+    let html = `<li><a href="index.html">Home</a></li>`;
+    html += `<li>/ ${pageName}</li>`;
     
     breadcrumbEl.innerHTML = html;
 }
