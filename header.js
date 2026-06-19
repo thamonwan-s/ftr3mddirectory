@@ -53,7 +53,7 @@ function injectLayout() {
     existingIcons.forEach(icon => icon.remove());
     const link = document.createElement('link');
     link.rel = 'icon';
-    link.href = 'about:blank';
+    link.href = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
     document.head.appendChild(link);
 
     // 2. ฉีด CSS (สั่งให้ทำงานที่ body โดยตรง)
