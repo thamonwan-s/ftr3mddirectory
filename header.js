@@ -23,3 +23,11 @@ function injectHeader() {
     // ใส่ไว้บนสุดของ body ทันที
     document.body.prepend(headerElement);
 }
+
+// ในไฟล์ header.js
+(function() {
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.href = 'data:,';
+    document.head.appendChild(link);
+})();
