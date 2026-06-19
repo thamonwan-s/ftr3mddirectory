@@ -133,6 +133,15 @@ async function fetchAndDisplayFlights() {
     }
 }
 
+function formatTime(val) {
+    if (!val) return '--:--';
+    const date = new Date(val);
+    if (isNaN(date.getTime())) return val.toString().substring(0, 5);
+    const h = date.getHours().toString().padStart(2, '0');
+    const m = date.getMinutes().toString().padStart(2, '0');
+    return `${h}:${m}`;
+}
+
 // --- ส่วนที่ 3: สั่งให้ทำงานเมื่อโหลดหน้าเสร็จ ---
 document.addEventListener('DOMContentLoaded', () => {
     updateBreadcrumb();
