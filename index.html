@@ -22,24 +22,30 @@
   <main class="flex-grow flex flex-col items-center justify-center p-4">
     <p class="text-[#333333] mb-6" style="font-size: 8pt; text-transform: lowercase;">memories has been captured by ftr</p>
     
-    <div class="w-full max-w-xs space-y-4">
+    <div id="login-form" class="w-full max-w-xs space-y-4">
       <input type="password" id="pass" placeholder="Password" 
              class="w-full border-b border-[#333333] text-center text-sm py-2 focus:outline-none">
-      
-      <p class="text-[7pt] text-gray-400 italic text-center">
-        hint: สายตรงถึงน้องหมั่นโถว
-      </p>
-      
+      <p class="text-[7pt] text-gray-400 italic text-center">hint: สายตรงถึงน้องหมั่นโถว</p>
       <button onclick="checkPassword()" 
               class="w-full bg-[#333333] text-white text-[8pt] py-2 uppercase tracking-widest hover:opacity-80 transition-opacity">
         Enter
       </button>
     </div>
+
+    <div id="logout-form" class="hidden text-center space-y-4">
+      <p class="text-[8pt] text-gray-500">logged in successfully</p>
+      <div id="countdown" class="text-[7pt] text-red-500 font-mono"></div>
+      <button onclick="logout()" class="w-full border border-[#333333] text-[#333333] text-[8pt] py-2 uppercase tracking-widest hover:bg-gray-100">Logout</button>
+    </div>
   </main>
-  
 
   <script>
-    const SESSION_DURATION = 12 * 60 * 60 * 1000; // 12 ชั่วโมง
+    const SESSION_DURATION = 12 * 60 * 60 * 1000; 
+
+    // เพิ่มการรอให้ DOM โหลดเสร็จก่อนเพื่อป้องกัน Error
+    document.addEventListener('DOMContentLoaded', () => {
+        init();
+    });
 
     function init() {
         const loginTime = localStorage.getItem('loginTime');
@@ -49,14 +55,14 @@
                 showLogoutState();
                 startCountdown(parseInt(loginTime) + SESSION_DURATION);
             } else {
-                logout(); // หมดเวลา
+                logout(); 
             }
         }
     }
 
     function checkPassword() {
         const password = document.getElementById('pass').value;
-        if (password === "0958565111") { // เปลี่ยนรหัสที่นี่
+        if (password === "0958565111") {
             localStorage.setItem('loginTime', Date.now().toString());
             location.reload();
         } else {
@@ -77,17 +83,15 @@
     function startCountdown(endTime) {
         const timer = setInterval(() => {
             const distance = endTime - Date.now();
-            if (distance < 0) { logout(); return; }
+            const countdownEl = document.getElementById('countdown');
+            if (distance < 0) { logout(); clearInterval(timer); return; }
             
             const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-            document.getElementById('countdown').innerText = `auto-logout in: ${hours}h ${minutes}m ${seconds}s`;
+            if (countdownEl) countdownEl.innerText = `auto-logout in: ${hours}h ${minutes}m ${seconds}s`;
         }, 1000);
     }
-
-    init();
-</script>
-
+  </script>
 </body>
 </html>
