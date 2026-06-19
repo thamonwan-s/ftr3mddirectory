@@ -161,75 +161,126 @@ function formatTime(val) {
 }
 
 // ฟังก์ชันเดียวจบสำหรับสร้าง HTML การ์ด
-// 1. ฟังก์ชันตัวเดิม (สำหรับ Recent Flight) - ต้องเติม HTML ให้ครบ!
-function createFlightCardHTML(data, rowIdx, setIdx, showFloatingBar = false) {
-    const d = new Date(data[rowIdx][setIdx]);
-    const dayName = d.toLocaleDateString('en-US', {weekday: 'short'}).toUpperCase();
-    const dayNum = d.getDate();
-    const month = d.toLocaleDateString('en-US', {month: 'short'}).toUpperCase();
-    const h4 = data[rowIdx][setIdx+3] === true;
-    const i4 = data[rowIdx][setIdx+4] === true;
-    const statusIcon = h4 && i4 ? '🛄' : h4 ? '🛫' : i4 ? '🛬' : '⛔';
-    const showMeeting = (h4 || i4);
-    const flightRaw = String(data[rowIdx][setIdx+6] || '');
-    const flightCode = flightRaw.trim().split(' ')[0].toLowerCase(); 
-    const airlineMapping = { "tvj": "vj", "pal": "2p" };
-    const finalFlightCode = airlineMapping[flightCode] || flightCode;
-    const logoUrl = finalFlightCode ? `https://edge.wego.com/image/upload/flights/airlines_square/${finalFlightCode}` : '';
-    
-    const j5 = data[rowIdx+1][setIdx+5] || '';
-    const j6 = data[rowIdx+2][setIdx+5] || '';
-    const j7 = data[rowIdx+3][setIdx+5] || '';
-    const bottomText = showMeeting ? `${j5} ${j6} : ${j7}` : `${j5} ${j6}`;
 
-    const floatingBar = showFloatingBar ? `
-        <div class="fixed bottom-6 left-0 right-0 flex justify-center px-4 z-50">
-            <div class="bg-white/95 backdrop-blur-md border border-gray-200 rounded-2xl py-2 px-5 flex items-center space-x-4">
-                <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="text-gray-400">Back to Top</button>
-            </div>
-        </div>` : '';
-
-    return `
-        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 w-full max-w-sm mx-auto my-4"> 
-            <div class="flex items-center space-x-2 mb-4">
-                <span class="text-[10px] text-gray-400 font-bold bg-gray-100 px-2 py-0.5 rounded">${dayName}</span> 
-                <span class="text-sm font-semibold text-gray-700">${dayNum} ${month}</span>
-            </div>
-            <div class="text-xl font-bold">${flightRaw}</div>
-            <div class="pt-4 border-t text-sm text-blue-800 font-bold">${statusIcon} ${bottomText}</div>
-            ${floatingBar}
-        </div>`;
-}
-
-// 2. ฟังก์ชันตัวใหม่ (สำหรับรายการปีใน All Flights)
+// ฟังก์ชันตัวใหม่ (สำหรับรายการปีใน All Flights)
 function createNarrowFlightCardHTML(data, rowIdx, setIdx) {
-    const d = new Date(data[rowIdx][setIdx]);
-    const dayNum = d.getDate();
-    const month = d.toLocaleDateString('en-US', {month: 'short'}).toUpperCase();
-    const h4 = data[rowIdx][setIdx+3] === true;
-    const i4 = data[rowIdx][setIdx+4] === true;
-    const statusIcon = h4 && i4 ? '🛄' : h4 ? '🛫' : i4 ? '🛬' : '⛔';
-    const showMeeting = (h4 || i4);
-    const flightRaw = String(data[rowIdx][setIdx+6] || '');
-    const j5 = data[rowIdx+1][setIdx+5] || '';
-    const j6 = data[rowIdx+2][setIdx+5] || '';
-    const j7 = data[rowIdx+3][setIdx+5] || '';
-    const bottomText = showMeeting ? `${j5} ${j6} : ${j7}` : `${j5} ${j6}`;
+    // --- ดึงตรรกะคำนวณมาใส่ให้ครบ ---
+        const d = new Date(data[rowIdx][setIdx]);
+        const dayName = d.toLocaleDateString('en-US', {weekday: 'short'}).toUpperCase();
+        const dayNum = d.getDate();
+        const month = d.toLocaleDateString('en-US', {month: 'short'}).toUpperCase();
+        
+        const h4 = data[rowIdx][setIdx+3] === true;
+        const i4 = data[rowIdx][setIdx+4] === true;
+        const statusIcon = h4 && i4 ? '🛄' : h4 ? '🛫' : i4 ? '🛬' : '⛔';
+        const showMeeting = (h4 || i4);
+        
+        const flightRaw = String(data[rowIdx][setIdx+6] || '');
+        const flightCode = flightRaw.trim().split(' ')[0].toLowerCase(); 
+        const airlineMapping = { "tvj": "vj", "pal": "2p" };
+        const finalFlightCode = airlineMapping[flightCode] || flightCode;
+        const logoUrl = finalFlightCode ? `https://edge.wego.com/image/upload/flights/airlines_square/${finalFlightCode}` : '';
+        
+        const j5 = data[rowIdx+1][setIdx+5] || '';
+        const j6 = data[rowIdx+2][setIdx+5] || '';
+        const j7 = data[rowIdx+3][setIdx+5] || '';
+        const bottomText = showMeeting ? `${j5} ${j6} : ${j7}` : `${j5} ${j6}`;
 
-    return `
-        <div class="bg-white p-2 rounded-xl shadow-sm border border-gray-100 w-full max-w-sm mx-auto my-1 flex items-center justify-between"> 
-            <div class="flex items-center space-x-2">
-                <span class="text-xs font-bold text-gray-400">${dayNum} ${month}</span>
-                <span class="text-sm">${statusIcon}</span>
+        // --- โครงสร้าง HTML เดียวกับที่ใช้ในลูป (ตัดส่วน Floating Bar ออก) ---
+        return `
+          <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-100 w-full max-w-sm mx-auto my-2"> 
+        <div class="flex items-center space-x-2 mb-2">
+          <span class="text-[9px] text-gray-400 font-bold bg-gray-100 px-1.5 py-0.5 rounded">${dayName}</span> 
+          <span class="text-xs font-semibold text-gray-700">${dayNum} ${month}</span>
+          <span class="text-gray-300 mx-1">|</span>
+          <span class="text-xs text-gray-600">${data[rowIdx][setIdx+5]}</span>
+          <div class="flex flex-1 justify-end items-center text-right">
+            <div class="mr-1.5">
+              <div class="text-xs font-bold text-gray-800">${data[rowIdx][setIdx+6]}</div>
+              <div class="text-[8px] text-gray-400 font-medium">${data[rowIdx][setIdx+7]}</div>
             </div>
-            <div class="text-xs font-medium text-gray-700 truncate px-2">${flightRaw.split(' ')[0]}</div>
-            <div class="text-[10px] text-gray-500 truncate">${bottomText}</div>
-        </div>`;
-}
+            <img src="${logoUrl}" class="w-5 h-5 object-contain" onerror="this.style.display='none'">
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center text-lg font-black text-[#333333] my-2">
+          <div class="text-center">
+            <div class="text-[10px] font-normal text-gray-400">${data[rowIdx+2][setIdx+3]}</div>
+            <div class="text-sm font-bold text-gray-800">${formatTime(data[rowIdx+1][setIdx+3])}</div>
+          </div>
+          <div class="text-gray-300 text-sm">→</div>
+          <div class="text-center">
+            <div class="text-[10px] font-normal text-gray-400">${data[rowIdx+2][setIdx+4]}</div>
+            <div class="text-sm font-bold text-gray-800">${formatTime(data[rowIdx+1][setIdx+4])}</div>
+          </div>
+        </div>
+
+        <div class="pt-2 border-t text-[10px] text-blue-800 font-bold">
+          ${statusIcon} ${bottomText}
+        </div>
+      </div>`;
+    }
+
 
 function renderSingleFlight(data, rowIdx, setIdx) {
-    return createFlightCardHTML(data, rowIdx, setIdx, false);
-}
+        // --- ดึงตรรกะคำนวณมาใส่ให้ครบ ---
+        const d = new Date(data[rowIdx][setIdx]);
+        const dayName = d.toLocaleDateString('en-US', {weekday: 'short'}).toUpperCase();
+        const dayNum = d.getDate();
+        const month = d.toLocaleDateString('en-US', {month: 'short'}).toUpperCase();
+        
+        const h4 = data[rowIdx][setIdx+3] === true;
+        const i4 = data[rowIdx][setIdx+4] === true;
+        const statusIcon = h4 && i4 ? '🛄' : h4 ? '🛫' : i4 ? '🛬' : '⛔';
+        const showMeeting = (h4 || i4);
+        
+        const flightRaw = String(data[rowIdx][setIdx+6] || '');
+        const flightCode = flightRaw.trim().split(' ')[0].toLowerCase(); 
+        const airlineMapping = { "tvj": "vj", "pal": "2p" };
+        const finalFlightCode = airlineMapping[flightCode] || flightCode;
+        const logoUrl = finalFlightCode ? `https://edge.wego.com/image/upload/flights/airlines_square/${finalFlightCode}` : '';
+        
+        const j5 = data[rowIdx+1][setIdx+5] || '';
+        const j6 = data[rowIdx+2][setIdx+5] || '';
+        const j7 = data[rowIdx+3][setIdx+5] || '';
+        const bottomText = showMeeting ? `${j5} ${j6} : ${j7}` : `${j5} ${j6}`;
+
+        // --- โครงสร้าง HTML เดียวกับที่ใช้ในลูป (ตัดส่วน Floating Bar ออก) ---
+        return `
+          <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 w-full max-w-sm mx-auto"> 
+            <div class="flex items-center space-x-2 mb-4">
+              <span class="text-[10px] text-gray-400 font-bold bg-gray-100 px-2 py-0.5 rounded">${dayName}</span> 
+              <span class="text-sm font-semibold text-gray-700">${dayNum} ${month}</span>
+              <span class="text-gray-300 mx-2"> | </span>
+              <span class="text-sm text-gray-700">${data[rowIdx][setIdx+5]}</span>
+              <div class="flex flex-1 justify-end items-center text-right">
+                <div class="mr-2">
+                  <div class="text-sm font-bold text-gray-800">${data[rowIdx][setIdx+6]}</div>
+                  <div class="text-[9px] text-gray-400 font-medium">${data[rowIdx][setIdx+7]}</div>
+                </div>
+                <img src="${logoUrl}" class="w-6 h-6 object-contain" onerror="this.style.display='none'">
+              </div>
+            </div>
+
+            <div class="flex justify-between items-center text-2xl sm:text-3xl font-black text-[#333333] my-4">
+              <div class="text-center">
+                <div>${data[rowIdx+2][setIdx+3]}</div>
+                <div class="text-lg font-bold text-gray-800">${formatTime(data[rowIdx+1][setIdx+3])}</div>
+                <div class="text-xs text-gray-500">${data[rowIdx+3][setIdx+3] || ''}</div>
+              </div>
+              <div class="text-gray-400 text-lg">→</div>
+              <div class="text-center">
+                <div>${data[rowIdx+2][setIdx+4]}</div>
+                <div class="text-lg font-bold text-gray-800">${formatTime(data[rowIdx+1][setIdx+4])}</div>
+                <div class="text-xs text-gray-500">${data[rowIdx+3][setIdx+4] || ''}</div>
+              </div>
+            </div>
+
+            <div class="pt-4 border-t text-[11px] text-blue-800 font-bold">
+              ${statusIcon} ${bottomText}
+            </div>
+          </div>`;
+    }
 
 function renderFlights(data, setIdx) {
     let html = '';
