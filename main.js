@@ -99,26 +99,55 @@ function startCountdown(endTime) {
 async function fetchAndDisplayFlights(type = 'all') {
     const container = document.getElementById('flight-container');
     if (!container) return;
-    container.innerHTML = '<div class="text-center mt-10">กำลังโหลด...</div>';
+    container.innerHTML = '<div class="text-center mt-10 text-gray-500">กำลังโหลดข้อมูล...</div>';
 
     try {
         const response = await fetch(SCRIPT_URL);
         const data = await response.json();
         container.innerHTML = "";
 
-        // ตรงนี้คือจุดที่คุณจะ "กรองข้อมูล" ตามประเภทที่ส่งเข้ามา
+        // 1. กรองข้อมูล (ถ้ามี)
         let filteredData = data; 
         if (type === 'intl') {
-            // สมมติว่าคอลัมน์ที่ 10 คือประเภทเที่ยวบิน
             filteredData = data.filter(row => row[10] === 'International');
         } else if (type === 'dom') {
             filteredData = data.filter(row => row[10] === 'Domestic');
         }
 
-        // จากนั้นก็นำ filteredData ไปวนลูป Render ตามปกติ
-        // ... (โค้ดลูปสร้างตารางเหมือนเดิม) ...
+        // 2. หา Recent Flight (ใช้ข้อมูลดิบจาก data ชุดแรก)
+        let latestRowIdx = -1;
+        for (let rowIdx = 499; rowIdx >= 3; rowIdx--) {
+            if (data[rowIdx] && data[rowIdx][4]) {
+                latestRowIdx = rowIdx;
+                break;
+            }
+        }
+
+        if (latestRowIdx !== -1) {
+            container.innerHTML += `
+                <div class="w-full max-w-sm mb-6">
+                    <h2 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-2">Recent Flight</h2>
+                    ${renderSingleFlight(data, latestRowIdx, 4)}
+                </div>
+            `;
+        }
+
+        // 3. วนลูปสร้างปี/เดือน
+        for (let setIdx = 4; setIdx < 200; setIdx += 9) {
+            if (!data[0] || !data[0][setIdx]) continue;
+            const year = data[0][setIdx].toString();
+            
+            container.innerHTML += `
+                <div id="year-${year}" class="year-section w-full max-w-sm">
+                    <button onclick="toggleYear(this)" class="w-full flex justify-between items-center text-lg font-bold text-[#333333] border-b-2 border-[#333333] pb-1 mt-6 mb-2">
+                        ${year} <span class="arrow">◂</span>
+                    </button>
+                    <div class="content hidden w-full">${renderFlights(data, setIdx)}</div>
+                </div>`;
+        }
     } catch (e) {
-        // จัดการ Error
+        container.innerHTML = '<div class="text-center mt-10 text-red-500">เกิดข้อผิดพลาดในการโหลดข้อมูล</div>';
+        console.error("Error:", e);
     }
 }
 
@@ -129,6 +158,57 @@ function formatTime(val) {
     const h = date.getHours().toString().padStart(2, '0');
     const m = date.getMinutes().toString().padStart(2, '0');
     return `${h}:${m}`;
+}
+
+// ฟังก์ชันเดียวจบสำหรับสร้าง HTML การ์ด
+function createFlightCardHTML(data, rowIdx, setIdx, showFloatingBar = false) {
+    const d = new Date(data[rowIdx][setIdx]);
+    const dayName = d.toLocaleDateString('en-US', {weekday: 'short'}).toUpperCase();
+    const dayNum = d.getDate();
+    const month = d.toLocaleDateString('en-US', {month: 'short'}).toUpperCase();
+    
+    const h4 = data[rowIdx][setIdx+3] === true;
+    const i4 = data[rowIdx][setIdx+4] === true;
+    const statusIcon = h4 && i4 ? '🛄' : h4 ? '🛫' : i4 ? '🛬' : '⛔';
+    const showMeeting = (h4 || i4);
+    
+    const flightRaw = String(data[rowIdx][setIdx+6] || '');
+    const flightCode = flightRaw.trim().split(' ')[0].toLowerCase(); 
+    const airlineMapping = { "tvj": "vj", "pal": "2p" };
+    const finalFlightCode = airlineMapping[flightCode] || flightCode;
+    const logoUrl = finalFlightCode ? `https://edge.wego.com/image/upload/flights/airlines_square/${finalFlightCode}` : '';
+    
+    const j5 = data[rowIdx+1][setIdx+5] || '';
+    const j6 = data[rowIdx+2][setIdx+5] || '';
+    const j7 = data[rowIdx+3][setIdx+5] || '';
+    const bottomText = showMeeting ? `${j5} ${j6} : ${j7}` : `${j5} ${j6}`;
+
+    // สร้างส่วน Floating Bar (ถ้าต้องการ)
+    const floatingBar = showFloatingBar ? `
+        <div class="fixed bottom-6 left-0 right-0 flex justify-center px-4 z-50">
+            <div class="bg-white/95 backdrop-blur-md border border-gray-200 rounded-2xl py-2 px-5 flex items-center space-x-4">
+                <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="text-gray-400">Back to Top</button>
+            </div>
+        </div>` : '';
+
+    return `
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 w-full max-w-sm mx-auto my-4"> 
+            ${floatingBar}
+        </div>`;
+}
+
+function renderSingleFlight(data, rowIdx, setIdx) {
+    return createFlightCardHTML(data, rowIdx, setIdx, false);
+}
+
+function renderFlights(data, setIdx) {
+    let html = '';
+    for (let rowIdx = 3; rowIdx < 500; rowIdx += 4) {
+        if (!data[rowIdx] || !data[rowIdx][setIdx]) break;
+        // ส่งค่า true เข้าไปเพื่อให้โชว์ Floating Bar แค่ในรายการหลัก
+        html += createFlightCardHTML(data, rowIdx, setIdx, true); 
+    }
+    return html;
 }
 
 // --- ส่วนที่ 3: สั่งให้ทำงานเมื่อโหลดหน้าเสร็จ ---
