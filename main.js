@@ -302,4 +302,5 @@ function renderFlights(data, setIdx) {
 document.addEventListener('DOMContentLoaded', () => {
     updateBreadcrumb();
     init(); // เรียกใช้ระบบ Login เมื่อโหลดหน้าเว็บ
+    lucide.createIcons();
 });
