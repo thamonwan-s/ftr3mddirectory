@@ -17,7 +17,7 @@ const headerHTML = `
 
 const footerHTML = `
   <footer id="main-footer" class="w-full bg-[#333333] py-6 mt-10 text-center">
-    <div class="text-white font-bold" style="font-size: 8pt;">FTR3MD's FLIGHT LOG</div>
+    <div class="text-white font-bold" style="font-size: 8pt;">FTR3MD's DIRECTORY</div>
     <div class="text-gray-400 mt-1" style="font-size: 6pt;">© 2026 ALL RIGHTS RESERVED</div>
   </footer>
 `;
@@ -46,9 +46,25 @@ function injectLayout() {
 
 // จัดการ Favicon และสั่งรัน layout ทันทีที่โหลด
 (function() {
+    // 1. สร้างและฉีด CSS เพื่อแก้ปัญหา Footer ลอย
+    const style = document.createElement('style');
+    style.innerHTML = `
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        body > div:last-child {
+            margin-top: auto; /* ดัน Footer ให้ตกลงไปล่างสุดเสมอ */
+        }
+    `;
+    document.head.appendChild(style);
+
+    // ... โค้ดส่วน Favicon และ injectLayout เดิม ...
     const link = document.createElement('link');
     link.rel = 'icon';
-    link.href = 'data:,';
+    link.href = 'data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAA';
     document.head.appendChild(link);
 
     document.addEventListener('DOMContentLoaded', injectLayout);
