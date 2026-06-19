@@ -24,6 +24,14 @@
   </main>
 
   <script>
+    // ตรวจสอบกุญแจทุกครั้งที่เปิดหน้านี้
+    if (sessionStorage.getItem('auth') !== 'success') {
+        // ถ้าไม่มีกุญแจ ให้ส่งกลับไปหน้า index.html (หน้า Login) ทันที
+        window.location.href = 'index.html';
+    }
+  </script>
+
+  <script>
     const url = 'https://script.google.com/macros/s/AKfycbzzF2n4723EcKe6Gup6JblQCNwhN98R0QZivr84VxFqCCR_vWJ2QdD6TkTX6DCzt9wEKA/exec';
 
     const formatTime = (val) => {
