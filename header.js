@@ -48,52 +48,49 @@ function injectLayout() {
 // ในส่วนของ (function() { ... }) ของ header.js
 
 (function() {
-    // 1. เคลียร์ Favicon (หยุด 404 Error)
-    const existingIcons = document.querySelectorAll("link[rel*='icon']");
-    existingIcons.forEach(icon => icon.remove());
-    const link = document.createElement('link');
-    link.rel = 'icon';
-    link.href = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
-    document.head.appendChild(link);
+    // 1. Favicon (ใช้ try-catch ครอบเพื่อป้องกัน Error หยุดการทำงาน)
+    try {
+        const link = document.createElement('link');
+        link.rel = 'icon';
+        // ใช้ Data URI แทน about:blank เพื่อความชัวร์ในมือถือ
+        link.href = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+        document.head.appendChild(link);
+    } catch (e) {
+        console.log("Favicon set skipped");
+    }
 
-    // 2. ฉีด CSS (สั่งให้ทำงานที่ body โดยตรง)
-    const style = document.createElement('style');
-    style.innerHTML = `
-        html, body {
-            height: 100% !important;
-            margin: 0 !important;
-            display: flex !important;
-            flex-direction: column !important;
-        }
-        body { min-height: 100dvh !important; }
-        #main-footer { margin-top: auto !important; }
-    `;
-    document.head.appendChild(style);
+    // 2. CSS & Layout (แยกออกมาให้ทำงานแน่นอน)
+    try {
+        const style = document.createElement('style');
+        style.innerHTML = `
+            html, body {
+                height: 100% !important;
+                margin: 0 !important;
+                display: flex !important;
+                flex-direction: column !important;
+            }
+            body { min-height: 100dvh !important; }
+            #main-footer { margin-top: auto !important; flex-shrink: 0 !important; }
+        `;
+        document.head.appendChild(style);
+    } catch (e) {
+        console.log("CSS set skipped");
+    }
 
-    // 3. ฟังก์ชัน Inject (ต้องมั่นใจว่าไม่มีการเคลียร์ innerHTML ของ body ทั้งหมด)
+    // 3. Footer Injector
     function injectLayout() {
-        // จัดการ Header
-        if (!document.getElementById('main-header')) {
-            const header = document.createElement('div');
-            header.id = "main-header";
-            header.innerHTML = headerHTML;
-            document.body.prepend(header);
-        }
-
-        // จัดการ Footer
         if (!document.getElementById('main-footer')) {
             const footer = document.createElement('footer');
             footer.id = "main-footer";
             footer.className = "w-full bg-[#333333] py-6 mt-auto text-center";
             footer.innerHTML = `
-                <div class="text-white font-bold" style="font-size: 8pt;">FTR3MD's DIRECTORY</div>
+                <div class="text-white font-bold" style="font-size: 8pt;">FTR3MD's FLIGHT LOG</div>
                 <div class="text-gray-400 mt-1" style="font-size: 6pt;">© 2026 ALL RIGHTS RESERVED</div>
             `;
             document.body.appendChild(footer);
         }
     }
 
-    // รันเมื่อ DOM โหลดเสร็จ
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', injectLayout);
     } else {
