@@ -197,7 +197,7 @@ function createNarrowFlightCardHTML(data, rowIdx, setIdx) {
               <div class="flex flex-1 justify-end items-center text-right">
                 <div class="mr-1.5">
                   <div class="text-[9px] font-bold text-gray-800">${data[rowIdx][setIdx+6]}</div>
-                  <div class="text-[6px] text-gray-400 font-medium">${data[rowIdx][setIdx+7]}</div>
+                  <div class="text-[6px] text-gray-400 font-medium leading-tight">${data[rowIdx][setIdx+7]}</div>
                 </div>
                 <img src="${logoUrl}" class="w-4 h-4 object-contain" onerror="this.style.display='none'">
               </div>
@@ -207,13 +207,15 @@ function createNarrowFlightCardHTML(data, rowIdx, setIdx) {
               <div class="flex items-center justify-start space-x-2">
                 <div class="text-sm font-bold text-gray-800">${data[rowIdx+2][setIdx+3]}
                     <span class="text-[6px] text-gray-500 text-center">${data[rowIdx+3][setIdx+3] || ''}</span>
-                    <span class="text-xs font-bold text-gray-800 text-right justify-end">${formatTime(data[rowIdx+1][setIdx+3])}</span>
                 </div>
               </div>
-              <div class="text-gray-300 text-sm">→</div>
+              <div class="flex items-center text-center">
+                  <span class="text-xs font-bold text-gray-800">${formatTime(data[rowIdx+1][setIdx+3])}</span>
+                  <span class="text-gray-300 text-sm">→</span>
+                  <span class="text-xs font-bold text-gray-800">${formatTime(data[rowIdx+1][setIdx+4])}</span>
+              </div>
               <div class="flex items-center justify-end text-right space-x-2">
-                <div class="text-xs font-bold text-gray-800">${formatTime(data[rowIdx+1][setIdx+4])}
-                    <span class="text-[6px] text-gray-500 text-center">${data[rowIdx+3][setIdx+4] || ''}</span>
+                <div class="text-[6px] text-gray-500 text-center">${data[rowIdx+3][setIdx+4] || ''}
                     <span class="text-sm font-bold text-gray-800 text-left justify-start">${data[rowIdx+2][setIdx+4]}</span>
                 </div>
               </div>
