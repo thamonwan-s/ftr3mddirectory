@@ -43,7 +43,6 @@
 
   <script>
     const SESSION_DURATION = 12 * 60 * 60 * 1000; 
-    const url = `${SCRIPT_URL}?function=checkPassword&pass=${input}&callback=handleResponse`;
 
     document.addEventListener('DOMContentLoaded', () => {
         init();
@@ -64,6 +63,7 @@
 
 function checkPassword() {
     const input = document.getElementById('pass').value;
+    const url = `${SCRIPT_URL}?function=checkPassword&pass=${input}&callback=handleResponse`;
 
     // สร้างฟังก์ชันชั่วคราวเพื่อรับค่ากลับมา
     window.handleResponse = function(isCorrect) {
