@@ -43,7 +43,7 @@
 
   <script>
     const SESSION_DURATION = 12 * 60 * 60 * 1000; 
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzzF2n4723EcKe6Gup6JblQCNwhN98R0QZivr84VxFqCCR_vWJ2QdD6TkTX6DCzt9wEKA/exec';
+    const url = `${SCRIPT_URL}?function=checkPassword&pass=${input}&callback=handleResponse`;
 
     document.addEventListener('DOMContentLoaded', () => {
         init();
@@ -64,7 +64,6 @@
 
 function checkPassword() {
     const input = document.getElementById('pass').value;
-    const url = `${SCRIPT_URL}?function=checkPassword&pass=${input}&callback=handleResponse`;
 
     // สร้างฟังก์ชันชั่วคราวเพื่อรับค่ากลับมา
     window.handleResponse = function(isCorrect) {
