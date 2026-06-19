@@ -48,34 +48,43 @@ function injectLayout() {
 // ในส่วนของ (function() { ... }) ของ header.js
 
 (function() {
-    // 1. เพิ่ม CSS ที่แก้ปัญหา Footer ลอยและรองรับการโหลดข้อมูล
-   const style = document.createElement('style');
-    style.innerHTML = `
-        body {
-            display: flex !important;
-            flex-direction: column !important;
-            min-height: 100vh !important;
-            margin: 0 !important;
-        }
-        /* บังคับให้ส่วนที่เป็นที่วางข้อมูลมีขนาดขั้นต่ำจนกว่าของจะมา */
-        #flight-container {
-            flex: 1 !important;
-        }
-        #main-footer {
-            margin-top: auto !important;
-            /* ทำให้มันพร้อมแสดงผลทันที ไม่ต้องรอโหลด */
-            display: block !important;
-        }
-    `;
-    document.head.appendChild(style);
-
-    // ... (ส่วนเดิมของ link favicon) ...
+    // 1. เคลียร์ Favicon
     const existingIcons = document.querySelectorAll("link[rel*='icon']");
     existingIcons.forEach(icon => icon.remove());
     const link = document.createElement('link');
     link.rel = 'icon';
-    link.href = 'data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
+    link.href = 'about:blank';
     document.head.appendChild(link);
+
+    // 2. CSS บังคับโครงสร้าง
+    const style = document.createElement('style');
+    style.innerHTML = `
+        /* ทำให้ body สูงเต็มจอเสมอ และวาง Footer ไว้ล่างสุด */
+        html, body {
+            height: 100% !important;
+            margin: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        
+        /* สั่งให้ body ยืดหยุ่น */
+        body {
+            min-height: 100vh !important;
+        }
+
+        /* ตรงนี้สำคัญ: บังคับให้ส่วนเนื้อหาหลักขยายตัวจนเต็มพื้นที่ */
+        /* เราใช้ selector เป็น * เพื่อครอบคลุมทุกหน้า */
+        body > div:not(#main-footer):not(#main-header-wrapper) {
+            flex: 1 !important;
+        }
+
+        /* ตรึง Footer ไว้ล่างสุดเสมอ */
+        #main-footer {
+            margin-top: auto !important;
+            flex-shrink: 0 !important;
+        }
+    `;
+    document.head.appendChild(style);
 
     document.addEventListener('DOMContentLoaded', injectLayout);
 })();
