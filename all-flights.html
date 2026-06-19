@@ -60,32 +60,6 @@
             `;
         }
 
-            function renderSingleFlight(data, rowIdx, setIdx) {
-        // ก๊อปปี้ตรรกะมาจาก renderFlights ของคุณ แต่เอาเฉพาะการสร้าง HTML ของแถวนั้นแถวเดียว
-        // เพื่อไม่ให้มันวนลูปทั้งปี
-        const d = new Date(data[rowIdx][setIdx]);
-        const dayName = d.toLocaleDateString('en-US', {weekday: 'short'}).toUpperCase();
-        const dayNum = d.getDate();
-        const month = d.toLocaleDateString('en-US', {month: 'short'}).toUpperCase();
-        const h4 = data[rowIdx][setIdx+3] === true;
-        const i4 = data[rowIdx][setIdx+4] === true;
-        const statusIcon = h4 && i4 ? '🛄' : h4 ? '🛫' : i4 ? '🛬' : '⛔';
-        const logoUrl = `https://edge.wego.com/image/upload/flights/airlines_square/${(data[rowIdx][setIdx+6] || '').trim().split(' ')[0].toLowerCase()}`;
-        
-        return `
-          <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 w-full max-w-sm mx-auto"> 
-            <div class="flex items-center space-x-2 mb-4">
-              <span class="text-[10px] text-gray-400 font-bold bg-gray-100 px-2 py-0.5 rounded">${dayName}</span> 
-              <span class="text-sm font-semibold text-gray-700">${dayNum} ${month}</span>
-              <div class="flex flex-1 justify-end">
-                <img src="${logoUrl}" class="w-6 h-6 object-contain" onerror="this.style.display='none'">
-              </div>
-            </div>
-            <div class="text-lg font-bold text-gray-800">${data[rowIdx][setIdx+6]}</div>
-            <div class="pt-4 border-t text-[11px] text-blue-800 font-bold">${statusIcon} ${data[rowIdx+1][setIdx+5]} ${data[rowIdx+2][setIdx+5]}</div>
-          </div>`;
-    }
-
         // 3. เริ่มลูปสร้างปี
         for (let setIdx = 4; setIdx < 200; setIdx += 9) {
           if (!data[0] || !data[0][setIdx]) continue;
@@ -133,6 +107,18 @@
       content.classList.toggle('hidden');
       content.classList.toggle('block');
       btn.querySelector('.arrow').innerText = content.classList.contains('hidden') ? '◂' : '▾';
+    }
+
+    function renderSingleFlight(data, rowIdx, setIdx) {
+      const d = new Date(data[rowIdx][setIdx]);
+      const dayName = d.toLocaleDateString('en-US', {weekday: 'short'}).toUpperCase();
+      const dayNum = d.getDate();
+      const month = d.toLocaleDateString('en-US', {month: 'short'}).toUpperCase();
+      return `
+        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 w-full max-w-sm mx-auto"> 
+          <div class="text-sm font-semibold text-gray-700">${dayNum} ${month} (${dayName})</div>
+          <div class="text-lg font-bold text-gray-800">${data[rowIdx][setIdx+6] || ''}</div>
+        </div>`;
     }
 
     function renderFlights(data, setIdx) {
