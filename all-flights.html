@@ -56,12 +56,18 @@
             </div>`;
 
         }
+        setTimeout(() => {
           const yearSelect = document.getElementById('year-select');
-          yearSelect.innerHTML = '<option value="">เลือกปี</option>' + 
-            document.querySelectorAll('.year-section').forEach(sec => {
-              const yr = sec.id.replace('year-', '');
-              yearSelect.innerHTML += `<option value="${sec.id}">${yr}</option>`;
+          const sections = document.querySelectorAll('.year-section');
+          if (yearSelect) {
+            yearSelect.innerHTML = '<option value="">เลือกปี</option>';
+            sections.forEach(sec => {
+              yearSelect.innerHTML += `<option value="${sec.id}">${sec.id.replace('year-', '')}</option>`;
             });
+          }
+        }, 500); 
+
+      });
       });
 
     function toggleYear(btn) {
