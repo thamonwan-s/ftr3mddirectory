@@ -300,8 +300,18 @@ function renderFlights(data, setIdx) {
         container.innerHTML = html;
         
         // 2. เรียกใช้ Lucide ทันทีหลังจากใส่ HTML เข้าไปแล้ว เพื่อเปลี่ยน <i> ให้เป็นไอคอน
+        // ใน main.js ตรงจุดที่คุณสั่ง createIcons() ให้แก้เป็นบรรทัดนี้:
+
         if (typeof lucide !== 'undefined') {
-            lucide.createIcons();
+            lucide.createIcons({
+                icons: lucide, // ใส่ชื่อไอคอนทั้งหมดที่มีให้มัน
+                nameAttr: 'data-lucide'
+            });
+        } else if (window.lucide) {
+            window.lucide.createIcons({
+                icons: window.lucide,
+                nameAttr: 'data-lucide'
+            });
         }
     }
     return html;
@@ -311,5 +321,5 @@ function renderFlights(data, setIdx) {
 document.addEventListener('DOMContentLoaded', () => {
     updateBreadcrumb();
     init(); // เรียกใช้ระบบ Login เมื่อโหลดหน้าเว็บ
-    lucide.createIcons();
+    lucide.createIcons({ icons: lucide });
 });
