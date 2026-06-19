@@ -161,17 +161,16 @@ function formatTime(val) {
 }
 
 // ฟังก์ชันเดียวจบสำหรับสร้าง HTML การ์ด
+// 1. ฟังก์ชันตัวเดิม (สำหรับ Recent Flight) - ต้องเติม HTML ให้ครบ!
 function createFlightCardHTML(data, rowIdx, setIdx, showFloatingBar = false) {
     const d = new Date(data[rowIdx][setIdx]);
     const dayName = d.toLocaleDateString('en-US', {weekday: 'short'}).toUpperCase();
     const dayNum = d.getDate();
     const month = d.toLocaleDateString('en-US', {month: 'short'}).toUpperCase();
-    
     const h4 = data[rowIdx][setIdx+3] === true;
     const i4 = data[rowIdx][setIdx+4] === true;
     const statusIcon = h4 && i4 ? '🛄' : h4 ? '🛫' : i4 ? '🛬' : '⛔';
     const showMeeting = (h4 || i4);
-    
     const flightRaw = String(data[rowIdx][setIdx+6] || '');
     const flightCode = flightRaw.trim().split(' ')[0].toLowerCase(); 
     const airlineMapping = { "tvj": "vj", "pal": "2p" };
@@ -183,7 +182,6 @@ function createFlightCardHTML(data, rowIdx, setIdx, showFloatingBar = false) {
     const j7 = data[rowIdx+3][setIdx+5] || '';
     const bottomText = showMeeting ? `${j5} ${j6} : ${j7}` : `${j5} ${j6}`;
 
-    // สร้างส่วน Floating Bar (ถ้าต้องการ)
     const floatingBar = showFloatingBar ? `
         <div class="fixed bottom-6 left-0 right-0 flex justify-center px-4 z-50">
             <div class="bg-white/95 backdrop-blur-md border border-gray-200 rounded-2xl py-2 px-5 flex items-center space-x-4">
@@ -193,47 +191,39 @@ function createFlightCardHTML(data, rowIdx, setIdx, showFloatingBar = false) {
 
     return `
         <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 w-full max-w-sm mx-auto my-4"> 
+            <div class="flex items-center space-x-2 mb-4">
+                <span class="text-[10px] text-gray-400 font-bold bg-gray-100 px-2 py-0.5 rounded">${dayName}</span> 
+                <span class="text-sm font-semibold text-gray-700">${dayNum} ${month}</span>
+            </div>
+            <div class="text-xl font-bold">${flightRaw}</div>
+            <div class="pt-4 border-t text-sm text-blue-800 font-bold">${statusIcon} ${bottomText}</div>
             ${floatingBar}
         </div>`;
 }
 
+// 2. ฟังก์ชันตัวใหม่ (สำหรับรายการปีใน All Flights)
 function createNarrowFlightCardHTML(data, rowIdx, setIdx) {
-    // ดึงข้อมูลเดิมมาทั้งหมด (Logic เดิมเป๊ะๆ)
     const d = new Date(data[rowIdx][setIdx]);
-    const dayName = d.toLocaleDateString('en-US', {weekday: 'short'}).toUpperCase();
     const dayNum = d.getDate();
     const month = d.toLocaleDateString('en-US', {month: 'short'}).toUpperCase();
-    
     const h4 = data[rowIdx][setIdx+3] === true;
     const i4 = data[rowIdx][setIdx+4] === true;
     const statusIcon = h4 && i4 ? '🛄' : h4 ? '🛫' : i4 ? '🛬' : '⛔';
     const showMeeting = (h4 || i4);
-    
     const flightRaw = String(data[rowIdx][setIdx+6] || '');
-    const flightCode = flightRaw.trim().split(' ')[0].toLowerCase(); 
-    const airlineMapping = { "tvj": "vj", "pal": "2p" };
-    const finalFlightCode = airlineMapping[flightCode] || flightCode;
-    const logoUrl = finalFlightCode ? `https://edge.wego.com/image/upload/flights/airlines_square/${finalFlightCode}` : '';
-    
     const j5 = data[rowIdx+1][setIdx+5] || '';
     const j6 = data[rowIdx+2][setIdx+5] || '';
     const j7 = data[rowIdx+3][setIdx+5] || '';
     const bottomText = showMeeting ? `${j5} ${j6} : ${j7}` : `${j5} ${j6}`;
 
-    // ส่งคืน HTML แบบย่อ (Narrow Version)
-    // เปลี่ยน p-5 เป็น p-2, ลดขนาด text, ลด margin my-4 เหลือ my-1
     return `
         <div class="bg-white p-2 rounded-xl shadow-sm border border-gray-100 w-full max-w-sm mx-auto my-1 flex items-center justify-between"> 
             <div class="flex items-center space-x-2">
                 <span class="text-xs font-bold text-gray-400">${dayNum} ${month}</span>
                 <span class="text-sm">${statusIcon}</span>
             </div>
-            <div class="text-xs font-medium text-gray-700 truncate px-2">
-                ${flightRaw.split(' ')[0]}
-            </div>
-            <div class="text-[10px] text-gray-500 truncate">
-                ${bottomText}
-            </div>
+            <div class="text-xs font-medium text-gray-700 truncate px-2">${flightRaw.split(' ')[0]}</div>
+            <div class="text-[10px] text-gray-500 truncate">${bottomText}</div>
         </div>`;
 }
 
