@@ -96,26 +96,40 @@ function startCountdown(endTime) {
 
 // ใน main.js
 async function fetchAndDisplayFlights() {
-    const tableBody = document.getElementById('flights-table-body');
-    if (!tableBody) return;
+    const container = document.getElementById('flight-container');
+    if (!container) return;
 
-    tableBody.innerHTML = '<tr><td colspan="5">กำลังโหลดข้อมูล...</td></tr>';
+    // แสดงสถานะโหลด
+    container.innerHTML = '<div class="text-center mt-10 text-gray-500">กำลังโหลดข้อมูล...</div>';
 
     try {
-        // ใช้ตัวแปร SCRIPT_URL จาก config.js
-        const response = await fetch(SCRIPT_URL); 
+        const response = await fetch(SCRIPT_URL);
         const data = await response.json();
 
-        // นำข้อมูลไปแสดงผล
-        let html = '';
-        data.forEach(row => {
-            html += `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td></tr>`;
-        });
+        // เคลียร์โหลดดิ้ง
+        container.innerHTML = "";
+
+        // --- ตรงนี้คือการนำตรรกะเดิมของคุณมาใส่ ---
+        // 1. แสดง Recent Flight (ถ้ามี)
+        // [ก๊อปปี้โค้ดส่วนที่สร้าง Recent Flight จาก HTML เดิมมาใส่ตรงนี้]
+
+        // 2. ลูปสร้างปี/เดือน
+        for (let setIdx = 4; setIdx < 200; setIdx += 9) {
+            if (!data[0] || !data[0][setIdx]) continue;
+            const year = data[0][setIdx].toString();
+            
+            container.innerHTML += `
+                <div id="year-${year}" class="year-section w-full max-w-sm">
+                    <button onclick="toggleYear(this)" class="w-full flex justify-between items-center text-lg font-bold text-[#333333] border-b-2 border-[#333333] pb-1 mt-6 mb-2">
+                        ${year} <span class="arrow">◂</span>
+                    </button>
+                    <div class="content hidden w-full">${renderFlights(data, setIdx)}</div>
+                </div>`;
+        }
         
-        tableBody.innerHTML = html;
     } catch (error) {
-        tableBody.innerHTML = '<tr><td colspan="5">เกิดข้อผิดพลาดในการดึงข้อมูล</td></tr>';
-        console.error("Error fetching data:", error);
+        container.innerHTML = '<div class="text-center mt-10 text-red-500">เกิดข้อผิดพลาดในการโหลดข้อมูล</div>';
+        console.error("Error:", error);
     }
 }
 
