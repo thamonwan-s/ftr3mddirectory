@@ -245,8 +245,10 @@ function renderFlights(data, setIdx) {
     let html = '';
     for (let rowIdx = 3; rowIdx < 500; rowIdx += 4) {
         if (!data[rowIdx] || !data[rowIdx][setIdx]) break;
-        // ส่งค่า true เข้าไปเพื่อให้โชว์ Floating Bar แค่ในรายการหลัก
-        html += createFlightCardHTML(data, rowIdx, setIdx, true); 
+        
+        // เปลี่ยนจาก createFlightCardHTML เป็น createNarrowFlightCardHTML
+        // และเอา parameter showFloatingBar ออก เพราะ narrow card ของคุณไม่มีส่วนนี้
+        html += createNarrowFlightCardHTML(data, rowIdx, setIdx);
     }
     return html;
 }
