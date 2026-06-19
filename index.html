@@ -60,31 +60,26 @@
         }
     }
 
-    async function checkPassword() {
-        const input = document.getElementById('pass').value;
-        // ใช้ SCRIPT_URL ที่เราประกาศไว้ด้านบนของ script
-        
-        if (!input) { alert("กรุณากรอกรหัสผ่าน"); return; }
+function checkPassword() {
+    const input = document.getElementById('pass').value;
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbzzF2n4723EcKe6Gup6JblQCNwhN98R0QZivr84VxFqCCR_vWJ2QdD6TkTX6DCzt9wEKA/exec';
 
-        try {
-            // เพิ่ม mode: 'cors' เข้าไปตามนี้ครับ
-            const response = await fetch(`${SCRIPT_URL}?function=checkPassword&pass=${input}`, {
-                method: 'GET',
-                mode: 'cors'
-            });
-            const result = await response.json();
-
-            if (result === true) {
-                localStorage.setItem('loginTime', Date.now().toString());
-                location.reload();
-            } else {
-                alert("Incorrect password");
-            }
-        } catch (error) {
-            console.error("Error:", error); // ดู Error ใน F12
-            alert("เกิดข้อผิดพลาดในการเชื่อมต่อ (CORS)");
+    // สร้างฟังก์ชันชั่วคราวเพื่อรับค่ากลับมา
+    window.handleResponse = function(isCorrect) {
+        if (isCorrect === true) {
+            localStorage.setItem('loginTime', Date.now().toString());
+            location.reload();
+        } else {
+            alert("Incorrect password");
         }
-    }
+        document.body.removeChild(scriptTag);
+    };
+
+    // สร้าง script tag เพื่อเรียก URL (เลี่ยง CORS ได้สมบูรณ์)
+    const scriptTag = document.createElement('script');
+    scriptTag.src = `${scriptUrl}?function=checkPassword&pass=${input}&callback=handleResponse`;
+    document.body.appendChild(scriptTag);
+}
 
     function showLogoutState() {
         document.getElementById('login-form').classList.add('hidden');
