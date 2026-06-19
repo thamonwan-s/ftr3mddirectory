@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FTR3MD's - Flights</title>
   <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="config.js"></script>
   <script>
     const loginTime = localStorage.getItem('loginTime');
     const isExpired = !loginTime || (Date.now() - parseInt(loginTime) > 12 * 60 * 60 * 1000);
