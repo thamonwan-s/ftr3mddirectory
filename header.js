@@ -8,15 +8,18 @@ const headerHTML = `
       <a href="#" class="text-white hover:text-gray-300" style="font-size: 6pt;">Schedule</a>
     </nav>
   </div>
+
   <nav aria-label="Breadcrumb" class="w-full px-4 py-2 border-b border-gray-100">
-    <ol id="breadcrumb" class="flex items-center space-x-2" style="font-size: 6pt; color: #888; text-transform: uppercase;"></ol>
+    <ol id="breadcrumb" class="flex items-center space-x-2" style="font-size: 6pt; color: #888; text-transform: uppercase;">
+    </ol>
   </nav>
 `;
 
-// ฟังก์ชันสำหรับใส่ Header เข้าไปในหน้าเว็บ
-function loadHeader() {
-    const headerContainer = document.getElementById('header-container');
-    if (headerContainer) {
-        headerContainer.innerHTML = headerHTML;
-    }
+// ฟังก์ชันสำหรับใส่ Header เข้าไป
+function injectHeader() {
+    const headerElement = document.createElement('div');
+    headerElement.innerHTML = headerHTML;
+    
+    // ใส่ไว้บนสุดของ body ทันที
+    document.body.prepend(headerElement);
 }
