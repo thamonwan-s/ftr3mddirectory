@@ -19,9 +19,31 @@
     </nav>
   </div>
 
-  <main class="flex-grow flex items-center justify-center">
-    <p class="text-[#333333]" style="font-size: 8pt; text-transform: lowercase;">memories has been captured by ftr</p>
+  <main class="flex-grow flex flex-col items-center justify-center p-4">
+    <p class="text-[#333333] mb-6" style="font-size: 8pt; text-transform: lowercase;">memories has been captured by ftr</p>
+    
+    <div class="w-full max-w-xs space-y-4">
+      <input type="password" id="pass" placeholder="Password" 
+             class="w-full border-b border-[#333333] text-center text-sm py-2 focus:outline-none">
+      <button onclick="checkPassword()" 
+              class="w-full bg-[#333333] text-white text-[8pt] py-2 uppercase tracking-widest hover:opacity-80 transition-opacity">
+        Enter
+      </button>
+    </div>
   </main>
+
+  <script>
+    function checkPassword() {
+        const password = document.getElementById('pass').value;
+        // เปลี่ยนรหัสตรงนี้ครับ
+        if (password === "MySecret123") {
+            sessionStorage.setItem('auth', 'success');
+            window.location.href = 'flights.html';
+        } else {
+            alert("Incorrect password");
+        }
+    }
+  </script>
 
 </body>
 </html>
