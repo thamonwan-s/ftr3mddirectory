@@ -61,25 +61,24 @@
         }
     }
 
-function checkPassword() {
+async function checkPassword() {
     const input = document.getElementById('pass').value;
-    const url = `${SCRIPT_URL}?function=checkPassword&pass=${input}&callback=handleResponse`;
+    const url = `${SCRIPT_URL}?function=checkPassword&pass=${input}`;
 
-    // สร้างฟังก์ชันชั่วคราวเพื่อรับค่ากลับมา
-    window.handleResponse = function(isCorrect) {
+    try {
+        const response = await fetch(url);
+        const isCorrect = await response.json(); // รับค่าแบบ JSON ตรงๆ
+
         if (isCorrect === true) {
             localStorage.setItem('loginTime', Date.now().toString());
             location.reload();
         } else {
             alert("Incorrect password");
         }
-        document.body.removeChild(scriptTag);
-    };
-
-    // สร้าง script tag เพื่อเรียก URL (เลี่ยง CORS ได้สมบูรณ์)
-    const scriptTag = document.createElement('script');
-    scriptTag.src = `${SCRIPT_URL}?function=checkPassword&pass=${input}&callback=handleResponse`;
-    document.body.appendChild(scriptTag);
+    } catch (error) {
+        console.error("Error:", error);
+        alert("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้");
+    }
 }
 
     function showLogoutState() {
