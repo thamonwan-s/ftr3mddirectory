@@ -1,218 +1,215 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FTR3MD's - Home</title>
-  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500&display=swap" rel="stylesheet">
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>body { font-family: 'Kanit', sans-serif; }</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTR3MD's - Home</title>
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>body { font-family: 'Kanit', sans-serif; }</style>
 </head>
 <body class="bg-white min-h-screen flex flex-col">
 
-  <div class="w-full bg-[#333333] flex items-center justify-between px-4" style="height: 24px;">
-    <span class="text-white" style="font-size: 6pt; letter-spacing: 0.5px;">FTR3MD's</span>
-    <nav class="flex items-center space-x-3">
-      <a href="index.html" class="text-white hover:text-gray-300" style="font-size: 6pt;">Home</a>
-      <a href="flights.html" class="text-white hover:text-gray-300" style="font-size: 6pt;">Flights</a>
-      <a href="#" class="text-white hover:text-gray-300" style="font-size: 6pt;">Schedule</a>
-    </nav>
-  </div>
+  <div class="w-full bg-[#333333] flex items-center justify-between px-4" style="height: 24px;">
+    <span class="text-white" style="font-size: 6pt; letter-spacing: 0.5px;">FTR3MD's</span>
+    <nav class="flex items-center space-x-3">
+      <a href="index.html" class="text-white hover:text-gray-300" style="font-size: 6pt;">Home</a>
+      <a href="flights.html" class="text-white hover:text-gray-300" style="font-size: 6pt;">Flights</a>
+      <a href="#" class="text-white hover:text-gray-300" style="font-size: 6pt;">Schedule</a>
+    </nav>
+  </div>
 
-  <main id="flight-container" class="flex flex-col items-center p-4 space-y-4 w-full">
-    <div id="loading" class="text-center mt-10 text-gray-500">กำลังโหลดข้อมูล...</div>
-  </main>
+  <main id="flight-container" class="flex flex-col items-center p-4 space-y-4 w-full">
+    <div id="loading" class="text-center mt-10 text-gray-500">กำลังโหลดข้อมูล...</div>
+  </main>
 
-  <script>
-    const url = 'https://script.google.com/macros/s/AKfycbzzF2n4723EcKe6Gup6JblQCNwhN98R0QZivr84VxFqCCR_vWJ2QdD6TkTX6DCzt9wEKA/exec';
+  <script>
+    const url = 'https://script.google.com/macros/s/AKfycbzzF2n4723EcKe6Gup6JblQCNwhN98R0QZivr84VxFqCCR_vWJ2QdD6TkTX6DCzt9wEKA/exec';
 
-    const formatTime = (val) => {
-      if (!val) return '--:--';
-      const date = new Date(val);
-      if (isNaN(date.getTime())) return val.toString().substring(0, 5);
-      const h = date.getHours().toString().padStart(2, '0');
-      const m = date.getMinutes().toString().padStart(2, '0');
-      return `${h}:${m}`;
-    };
+    const formatTime = (val) => {
+      if (!val) return '--:--';
+      const date = new Date(val);
+      if (isNaN(date.getTime())) return val.toString().substring(0, 5);
+      const h = date.getHours().toString().padStart(2, '0');
+      const m = date.getMinutes().toString().padStart(2, '0');
+      return `${h}:${m}`;
+    };
 
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('loading').style.display = 'none';
-        const container = document.getElementById('flight-container');
-        const currentYear = new Date().getFullYear().toString();
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById('loading').style.display = 'none';
+        const container = document.getElementById('flight-container');
+        const currentYear = new Date().getFullYear().toString();
 
-        for (let setIdx = 4; setIdx < 200; setIdx += 9) {
-          if (!data[0] || !data[0][setIdx]) continue;
-          const year = data[0][setIdx].toString();
-          const isExpanded = (year === currentYear);
+        for (let setIdx = 4; setIdx < 200; setIdx += 9) {
+          if (!data[0] || !data[0][setIdx]) continue;
+          const year = data[0][setIdx].toString();
+          const isExpanded = (year === currentYear);
 
-          container.innerHTML += `
-            <div id="year-${year}" class="year-section w-full max-w-sm">
-              <button onclick="toggleYear(this)" class="w-full flex justify-between items-center text-lg font-bold text-[#333333] border-b-2 border-[#333333] pb-1 mt-6 mb-2">
-                ${year} <span class="arrow">${isExpanded ? '▾' : '◂'}</span>
-              </button>
-              <div class="content ...">${renderFlights(data, setIdx)}</div>
-            </div>`;
+          container.innerHTML += `
+            <div id="year-${year}" class="year-section w-full max-w-sm">
+              <button onclick="toggleYear(this)" class="w-full flex justify-between items-center text-lg font-bold text-[#333333] border-b-2 border-[#333333] pb-1 mt-6 mb-2">
+                ${year} <span class="arrow">${isExpanded ? '▾' : '◂'}</span>
+              </button>
+              <div class="content ...">${renderFlights(data, setIdx)}</div>
+            </div>`;
+
+          const yearSelect = document.getElementById('year-select');
+          yearSelect.innerHTML = '<option value="">เลือกปี</option>' + 
+            document.querySelectorAll('.year-section').forEach(sec => {
+              const yr = sec.id.replace('year-', '');
+              yearSelect.innerHTML += `<option value="${sec.id}">${yr}</option>`;
+            });
         }
-
-          const yearSelect = document.getElementById('year-select');
-          const sections = document.querySelectorAll('.year-section');
-          // เคลียร์ค่าเก่าก่อน (เผื่อมีการโหลดซ้ำ)
-          yearSelect.innerHTML = '<option value="">เลือกปี</option>';
-          
-          sections.forEach(sec => {
-                yearSelect.innerHTML += `<option value="${sec.id}">${sec.id.replace('year-', '')}</option>`;
-        });
-       
       });
 
-    function toggleYear(btn) {
-      const content = btn.nextElementSibling;
-      content.classList.toggle('hidden');
-      content.classList.toggle('block');
-      btn.querySelector('.arrow').innerText = content.classList.contains('hidden') ? '◂' : '▾';
-    }
+    function toggleYear(btn) {
+      const content = btn.nextElementSibling;
+      content.classList.toggle('hidden');
+      content.classList.toggle('block');
+      btn.querySelector('.arrow').innerText = content.classList.contains('hidden') ? '◂' : '▾';
+    }
 
-    function renderFlights(data, setIdx) {
-      let html = '';
-      for (let rowIdx = 3; rowIdx < 500; rowIdx += 4) {
-        if (!data[rowIdx] || !data[rowIdx][setIdx]) break;
-        
-        const d = new Date(data[rowIdx][setIdx]);
-        const dayName = d.toLocaleDateString('en-US', {weekday: 'short'}).toUpperCase();
-        const dayNum = d.getDate();
-        const month = d.toLocaleDateString('en-US', {month: 'short'}).toUpperCase();
-        
-        const h4 = data[rowIdx][setIdx+3] === true;
-        const i4 = data[rowIdx][setIdx+4] === true;
-        const statusIcon = h4 && i4 ? '🛄' : h4 ? '🛫' : i4 ? '🛬' : '⛔';
-        const showMeeting = (h4 || i4);
-        
-        // ตัดรหัสสายการบิน, ลบช่องว่าง, และแปลงเป็นตัวพิมพ์เล็ก
-        const flightRaw = String(data[rowIdx][setIdx+6] || '');
-        const flightCode = flightRaw.trim().split(' ')[0].toLowerCase(); 
-        const airlineMapping = {
-          "tvj": "vj",
-          "pal": "2p"
-        };
-        
-        // ถ้ามีรหัสใน mapping ให้ใช้ตัวที่กำหนด ถ้าไม่มีให้ใช้ flightCode เดิม
-        const finalFlightCode = airlineMapping[flightCode] || flightCode;
-        
-        // เพิ่มเงื่อนไขเช็คว่าถ้าไม่มี flightCode ไม่ต้องเจน URL เพื่อไม่ให้รูปโหลดมั่ว
-        const logoUrl = finalFlightCode ? `https://edge.wego.com/image/upload/flights/airlines_square/${finalFlightCode}` : '';
-        
-        const j5 = data[rowIdx+1][setIdx+5] || '';
-        const j6 = data[rowIdx+2][setIdx+5] || '';
-        const j7 = data[rowIdx+3][setIdx+5] || '';
-        const bottomText = showMeeting ? `${j5} ${j6} : ${j7}` : `${j5} ${j6}`;
+    function renderFlights(data, setIdx) {
+      let html = '';
+      for (let rowIdx = 3; rowIdx < 500; rowIdx += 4) {
+        if (!data[rowIdx] || !data[rowIdx][setIdx]) break;
+        
+        const d = new Date(data[rowIdx][setIdx]);
+        const dayName = d.toLocaleDateString('en-US', {weekday: 'short'}).toUpperCase();
+        const dayNum = d.getDate();
+        const month = d.toLocaleDateString('en-US', {month: 'short'}).toUpperCase();
+        
+        const h4 = data[rowIdx][setIdx+3] === true;
+        const i4 = data[rowIdx][setIdx+4] === true;
+        const statusIcon = h4 && i4 ? '🛄' : h4 ? '🛫' : i4 ? '🛬' : '⛔';
+        const showMeeting = (h4 || i4);
+        
+        // ตัดรหัสสายการบิน, ลบช่องว่าง, และแปลงเป็นตัวพิมพ์เล็ก
+        const flightRaw = String(data[rowIdx][setIdx+6] || '');
+        const flightCode = flightRaw.trim().split(' ')[0].toLowerCase(); 
+        const airlineMapping = {
+          "tvj": "vj",
+          "pal": "2p"
+        };
+        
+        // ถ้ามีรหัสใน mapping ให้ใช้ตัวที่กำหนด ถ้าไม่มีให้ใช้ flightCode เดิม
+        const finalFlightCode = airlineMapping[flightCode] || flightCode;
+        
+        // เพิ่มเงื่อนไขเช็คว่าถ้าไม่มี flightCode ไม่ต้องเจน URL เพื่อไม่ให้รูปโหลดมั่ว
+        const logoUrl = finalFlightCode ? `https://edge.wego.com/image/upload/flights/airlines_square/${finalFlightCode}` : '';
+        
+        const j5 = data[rowIdx+1][setIdx+5] || '';
+        const j6 = data[rowIdx+2][setIdx+5] || '';
+        const j7 = data[rowIdx+3][setIdx+5] || '';
+        const bottomText = showMeeting ? `${j5} ${j6} : ${j7}` : `${j5} ${j6}`;
 
-        html += `
-          <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 w-full max-w-sm mx-auto"> 
-            <div class="flex items-center space-x-2 mb-4">
-              <span class="text-[10px] text-gray-400 font-bold bg-gray-100 px-2 py-0.5 rounded">${dayName}</span> 
-              <span class="text-sm font-semibold text-gray-700">${dayNum} ${month}</span>
-              <span class="text-gray-300 mx-2"> | </span>
-              <span class="text-sm text-gray-700">${data[rowIdx][setIdx+5]}</span>
+        html += `
+          <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 w-full max-w-sm mx-auto"> 
+            <div class="flex items-center space-x-2 mb-4">
+              <span class="text-[10px] text-gray-400 font-bold bg-gray-100 px-2 py-0.5 rounded">${dayName}</span> 
+              <span class="text-sm font-semibold text-gray-700">${dayNum} ${month}</span>
+              <span class="text-gray-300 mx-2"> | </span>
+              <span class="text-sm text-gray-700">${data[rowIdx][setIdx+5]}</span>
 
-              <div class="flex flex-1 justify-end items-center text-right">
-              <div class="mr-2">
-                <div class="text-sm font-bold text-gray-800">${data[rowIdx][setIdx+6]}</div>
-                <div class="text-[9px] text-gray-400 font-medium">${data[rowIdx][setIdx+7]}</div>
-              </div>
-              <img src="${logoUrl}" 
-                   class="w-6 h-6 object-contain" 
-                   onerror="this.style.display='none'">
-            </div>
-            </div>
-            
+              <div class="flex flex-1 justify-end items-center text-right">
+              <div class="mr-2">
+                <div class="text-sm font-bold text-gray-800">${data[rowIdx][setIdx+6]}</div>
+                <div class="text-[9px] text-gray-400 font-medium">${data[rowIdx][setIdx+7]}</div>
+              </div>
+              <img src="${logoUrl}" 
+                   class="w-6 h-6 object-contain" 
+                   onerror="this.style.display='none'">
+            </div>
+            </div>
+            
 
-            <div class="flex justify-between items-center text-2xl sm:text-3xl font-black text-[#333333] my-4">
-              <div class="text-center">
-                <div>${data[rowIdx+2][setIdx+3]}</div>
-                <div class="text-lg font-bold text-gray-800">${formatTime(data[rowIdx+1][setIdx+3])}</div>
-                <div class="text-xs text-gray-500">${data[rowIdx+3][setIdx+3] || ''}</div>
-              </div>
-              
-              <div class="text-gray-400 text-lg">→</div>
-              
-              <div class="text-center">
-                <div>${data[rowIdx+2][setIdx+4]}</div>
-                <div class="text-lg font-bold text-gray-800">${formatTime(data[rowIdx+1][setIdx+4])}</div>
-                <div class="text-xs text-gray-500">${data[rowIdx+3][setIdx+4] || ''}</div>
-              </div>
-            </div>
+            <div class="flex justify-between items-center text-2xl sm:text-3xl font-black text-[#333333] my-4">
+              <div class="text-center">
+                <div>${data[rowIdx+2][setIdx+3]}</div>
+                <div class="text-lg font-bold text-gray-800">${formatTime(data[rowIdx+1][setIdx+3])}</div>
+                <div class="text-xs text-gray-500">${data[rowIdx+3][setIdx+3] || ''}</div>
+              </div>
+              
+              <div class="text-gray-400 text-lg">→</div>
+              
+              <div class="text-center">
+                <div>${data[rowIdx+2][setIdx+4]}</div>
+                <div class="text-lg font-bold text-gray-800">${formatTime(data[rowIdx+1][setIdx+4])}</div>
+                <div class="text-xs text-gray-500">${data[rowIdx+3][setIdx+4] || ''}</div>
+              </div>
+            </div>
 
-            <div class="pt-4 border-t text-[11px] text-blue-800 font-bold">
-              ${statusIcon} ${bottomText}
-            </div>
+            <div class="pt-4 border-t text-[11px] text-blue-800 font-bold">
+              ${statusIcon} ${bottomText}
+            </div>
 
-            <div class="fixed bottom-6 left-0 right-0 flex justify-center px-4 z-50">
-              <div class="bg-white/95 backdrop-blur-md border border-gray-200 rounded-2xl py-2 px-5 flex items-center space-x-4">
-                
-                <div class="relative">
-                  <button onclick="document.getElementById('year-select').click()" class="text-[10px] font-bold text-[#333333] flex flex-col items-center min-w-[30px]">
-                    <span class="text-[8px] text-gray-400 font-normal">YEAR</span>
-                    <span id="nav-year" class="text-xs">2026</span>
-                  </button>
-                  <select id="year-select" onchange="jumpToSection(this.value)" class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer">
-                  </select>
-                </div>
-            
-                <div class="relative">
-                  <button onclick="document.getElementById('month-select').click()" class="text-[10px] font-bold text-[#333333] flex flex-col items-center min-w-[30px]">
-                    <span class="text-[8px] text-gray-400 font-normal">MONTH</span>
-                    <span id="nav-month" class="text-xs">-</span>
-                  </button>
-                  <select id="month-select" class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer">
-                    </select>
-                </div>
-            
-                <div class="w-px h-6 bg-gray-200"></div>
-            
-                <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="text-gray-400 hover:text-black transition-colors">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"></path></svg>
-                </button>
-              </div>
-            </div>
-          </div>`;
-      }
-      return html;
-    }
+            <div class="fixed bottom-6 left-0 right-0 flex justify-center px-4 z-50">
+              <div class="bg-white/95 backdrop-blur-md border border-gray-200 rounded-2xl py-2 px-5 flex items-center space-x-4">
+                
+                <div class="relative">
+                  <button onclick="document.getElementById('year-select').click()" class="text-[10px] font-bold text-[#333333] flex flex-col items-center min-w-[30px]">
+                    <span class="text-[8px] text-gray-400 font-normal">YEAR</span>
+                    <span id="nav-year" class="text-xs">2026</span>
+                  </button>
+                  <select id="year-select" onchange="jumpToSection(this.value)" class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer">
+                  </select>
+                </div>
+            
+                <div class="relative">
+                  <button onclick="document.getElementById('month-select').click()" class="text-[10px] font-bold text-[#333333] flex flex-col items-center min-w-[30px]">
+                    <span class="text-[8px] text-gray-400 font-normal">MONTH</span>
+                    <span id="nav-month" class="text-xs">-</span>
+                  </button>
+                  <select id="month-select" class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer">
+                    </select>
+                </div>
+            
+                <div class="w-px h-6 bg-gray-200"></div>
+            
+                <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="text-gray-400 hover:text-black transition-colors">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"></path></svg>
+                </button>
+              </div>
+            </div>
+          </div>`;
+      }
+      return html;
+    }
 
-    // อัปเดตเลขปี/เดือน ตามส่วนที่อยู่กลางจอ
-    const observerOptions = {
-      root: null,
-      threshold: 0.5 // เมื่อกล่องปีนั้นๆ เข้ามาเกินครึ่งหน้าจอ
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const year = entry.target.querySelector('button').innerText.trim().split(' ')[0];
-          document.getElementById('nav-year').innerText = year;
-        }
-      });
-    }, observerOptions);
-    
-    // เริ่มจับตาดูทุกปี
-    setTimeout(() => {
-      document.querySelectorAll('.year-section').forEach(section => observer.observe(section));
-    }, 500);
-    
-    // ฟังก์ชันกดปุ่มปี (เลื่อนไปปีนั้น)
-    function scrollToYear() {
-      const currentYear = document.getElementById('nav-year').innerText;
-      alert("ฟังก์ชันเลือกปี: คุณสามารถเปลี่ยนเป็น Modal หรือ Dropdown ได้ที่นี่");
-    }
+    // อัปเดตเลขปี/เดือน ตามส่วนที่อยู่กลางจอ
+    const observerOptions = {
+      root: null,
+      threshold: 0.5 // เมื่อกล่องปีนั้นๆ เข้ามาเกินครึ่งหน้าจอ
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const year = entry.target.querySelector('button').innerText.trim().split(' ')[0];
+          document.getElementById('nav-year').innerText = year;
+        }
+      });
+    }, observerOptions);
+    
+    // เริ่มจับตาดูทุกปี
+    setTimeout(() => {
+      document.querySelectorAll('.year-section').forEach(section => observer.observe(section));
+    }, 500);
+    
+    // ฟังก์ชันกดปุ่มปี (เลื่อนไปปีนั้น)
+    function scrollToYear() {
+      const currentYear = document.getElementById('nav-year').innerText;
+      alert("ฟังก์ชันเลือกปี: คุณสามารถเปลี่ยนเป็น Modal หรือ Dropdown ได้ที่นี่");
+    }
 
-    function jumpToSection(id) {
-      if (id) {
-        const element = document.getElementById(id);
-        element.scrollIntoView({ behavior: 'smooth' });
-      }
-    }
-  </script>
+    function jumpToSection(id) {
+      if (id) {
+        const element = document.getElementById(id);
+        element.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  </script>
 </body>
 </html>
