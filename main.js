@@ -94,6 +94,31 @@ function startCountdown(endTime) {
     }, 1000);
 }
 
+// ใน main.js
+async function fetchAndDisplayFlights() {
+    const tableBody = document.getElementById('flights-table-body');
+    if (!tableBody) return;
+
+    tableBody.innerHTML = '<tr><td colspan="5">กำลังโหลดข้อมูล...</td></tr>';
+
+    try {
+        // ใช้ตัวแปร SCRIPT_URL จาก config.js
+        const response = await fetch(SCRIPT_URL); 
+        const data = await response.json();
+
+        // นำข้อมูลไปแสดงผล
+        let html = '';
+        data.forEach(row => {
+            html += `<tr><td>${row[0]}</td><td>${row[1]}</td><td>${row[2]}</td></tr>`;
+        });
+        
+        tableBody.innerHTML = html;
+    } catch (error) {
+        tableBody.innerHTML = '<tr><td colspan="5">เกิดข้อผิดพลาดในการดึงข้อมูล</td></tr>';
+        console.error("Error fetching data:", error);
+    }
+}
+
 // --- ส่วนที่ 3: สั่งให้ทำงานเมื่อโหลดหน้าเสร็จ ---
 document.addEventListener('DOMContentLoaded', () => {
     updateBreadcrumb();
