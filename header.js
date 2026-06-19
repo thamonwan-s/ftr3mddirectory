@@ -50,21 +50,19 @@ function injectLayout() {
 (function() {
     // 1. เพิ่ม CSS ที่แก้ปัญหา Footer ลอยและรองรับการโหลดข้อมูล
     const style = document.createElement('style');
-    style.innerHTML = `
-        /* ทำให้ทั้งหน้าเว็บยืดเต็มจอ */
+    style.innerHTML =`
         html, body {
-            height: 100%;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
+            height: 100% !important;
+            margin: 0 !important;
+            display: flex !important;
+            flex-direction: column !important;
         }
-        /* ให้ส่วนเนื้อหาหลักขยายตัวจนดัน Footer ลงไปข้างล่าง */
-        body > div:nth-child(2) { /* สมมติว่าเป็น wrapper หลักของคุณ หรือถ้าไม่มี ให้ใช้ body ได้เลย */
-            flex: 1;
+        body {
+            min-height: 100vh !important;
         }
-        /* ถ้าไม่มีตัวห่อหุ้ม ให้ใช้กฎนี้แทนเพื่อความชัวร์ */
         #main-footer {
-            margin-top: auto;
+            margin-top: auto !important;
+            width: 100%;
         }
     `;
     document.head.appendChild(style);
