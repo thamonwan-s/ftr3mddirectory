@@ -46,26 +46,13 @@ function injectLayout() {
 
 // จัดการ Favicon และสั่งรัน layout ทันทีที่โหลด
 (function() {
-    // 1. สร้างและฉีด CSS เพื่อแก้ปัญหา Footer ลอย
-    const style = document.createElement('style');
-    style.innerHTML = `
-        html, body {
-            height: 100%;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-        }
-        body > div:last-child {
-            margin-top: auto; /* ดัน Footer ให้ตกลงไปล่างสุดเสมอ */
-        }
-    `;
-    document.head.appendChild(style);
-
-    // ... โค้ดส่วน Favicon และ injectLayout เดิม ...
+    // 1. สร้าง Link สำหรับ Favicon ทันทีเพื่อปิดปากเบราว์เซอร์
+    // เราใช้ Data URI (ไอคอนว่างเปล่าขนาด 1x1 พิกเซล) ฝังในโค้ดเลย
     const link = document.createElement('link');
     link.rel = 'icon';
-    link.href = 'data:image/x-icon;base64,AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAA';
+    link.href = 'data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
     document.head.appendChild(link);
 
+    // 2. จัดการ Layout (Header + Footer)
     document.addEventListener('DOMContentLoaded', injectLayout);
 })();
