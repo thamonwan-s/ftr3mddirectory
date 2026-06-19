@@ -27,59 +27,15 @@
     }
   </script>
 
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        injectHeader();            // ใส่ Header
+        updateBreadcrumb();        // เติมข้อมูล Breadcrumb
+        fetchAndDisplayFlights();  // ดึงข้อมูลมาแสดง (ฟังก์ชันใหม่ใน main.js)
+    });
+  </script>
+
   <script>
-    const url = SCRIPT_URL;
-
-    const formatTime = (val) => {
-      if (!val) return '--:--';
-      const date = new Date(val);
-      if (isNaN(date.getTime())) return val.toString().substring(0, 5);
-      const h = date.getHours().toString().padStart(2, '0');
-      const m = date.getMinutes().toString().padStart(2, '0');
-      return `${h}:${m}`;
-    };
-
-    fetch(url)
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('loading').style.display = 'none';
-        const container = document.getElementById('flight-container');
-
-        // 1. หาข้อมูลล่าสุด (แถวสุดท้ายของชุดข้อมูลแรก setIdx = 4)
-        let latestRowIdx = -1;
-        for (let rowIdx = 499; rowIdx >= 3; rowIdx--) {
-            if (data[rowIdx] && data[rowIdx][4]) {
-                latestRowIdx = rowIdx;
-                break;
-            }
-        }
-
-        // 2. แสดงหัวข้อ Recent Flight
-        if (latestRowIdx !== -1) {
-            container.innerHTML = `
-                <div class="w-full max-w-sm mb-6">
-                    <h2 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-2">Recent Flight</h2>
-                    ${renderSingleFlight(data, latestRowIdx, 4)}
-                </div>
-            `;
-        }
-
-        // 3. เริ่มลูปสร้างปี
-        for (let setIdx = 4; setIdx < 200; setIdx += 9) {
-          if (!data[0] || !data[0][setIdx]) continue;
-          const year = data[0][setIdx].toString();
-          
-          container.innerHTML += `
-            <div id="year-${year}" class="year-section w-full max-w-sm">
-              <button onclick="toggleYear(this)" class="w-full flex justify-between items-center text-lg font-bold text-[#333333] border-b-2 border-[#333333] pb-1 mt-6 mb-2">
-                ${year} <span class="arrow">◂</span>
-              </button>
-              <div class="content hidden w-full">${renderFlights(data, setIdx)}</div>
-            </div>`;
-        }
-      }); // ปิด .then
-
-
     function toggleYear(btn) {
       const content = btn.nextElementSibling;
       content.classList.toggle('hidden');
