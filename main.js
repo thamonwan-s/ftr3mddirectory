@@ -188,7 +188,7 @@ function createNarrowFlightCardHTML(data, rowIdx, setIdx) {
 
         // --- โครงสร้าง HTML เดียวกับที่ใช้ในลูป (ตัดส่วน Floating Bar ออก) ---
         return `
-          <div class="bg-white p-1.5 rounded-xl shadow-sm border border-gray-100 w-full max-w-sm mx-auto my-2"> 
+          <div class="bg-white p-2 rounded-xl shadow-sm border border-gray-100 w-full max-w-sm mx-auto my-2"> 
             <div class="flex items-center space-x-2 mb-1">
               <span class="text-[6px] text-gray-400 font-bold bg-gray-100 px-1.5 py-0.5 rounded">${dayName}</span> 
               <span class="text-[9px] font-semibold text-gray-700">${dayNum} ${month}</span>
@@ -211,7 +211,7 @@ function createNarrowFlightCardHTML(data, rowIdx, setIdx) {
                 <div class="text-[6px] text-gray-500 leading-tight">${data[rowIdx+3][setIdx+3] || ''}</div>
               </div>
               <div class="text-gray-300 text-sm">→</div>
-              <div class="items-center justify-end">
+              <div class="items-center justify-end text-right">
                 <div class="text-xs font-bold text-gray-800">${formatTime(data[rowIdx+1][setIdx+4])}</div>
                     <i data-lucide="plane-landing" class="w-3 h-3 mb-1"></i>
                     <span class="text-sm font-bold text-gray-800">${data[rowIdx+2][setIdx+4]}</span>
