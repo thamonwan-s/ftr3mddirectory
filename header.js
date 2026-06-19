@@ -65,7 +65,7 @@ function injectLayout() {
             display: flex !important;
             flex-direction: column !important;
         }
-        body { min-height: 100vh !important; }
+        body { min-height: 100dvh !important; }
         #main-footer { margin-top: auto !important; }
     `;
     document.head.appendChild(style);
