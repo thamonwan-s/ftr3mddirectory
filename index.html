@@ -78,7 +78,7 @@ function checkPassword() {
 
     // สร้าง script tag เพื่อเรียก URL (เลี่ยง CORS ได้สมบูรณ์)
     const scriptTag = document.createElement('script');
-    scriptTag.src = `${scriptUrl}?function=checkPassword&pass=${input}&callback=handleResponse`;
+    scriptTag.src = `${SCRIPT_URL}?function=checkPassword&pass=${input}&callback=handleResponse`;
     document.body.appendChild(scriptTag);
 }
 
