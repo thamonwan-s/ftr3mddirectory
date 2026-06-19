@@ -49,20 +49,22 @@ function injectLayout() {
 
 (function() {
     // 1. เพิ่ม CSS ที่แก้ปัญหา Footer ลอยและรองรับการโหลดข้อมูล
-    const style = document.createElement('style');
-    style.innerHTML =`
-        html, body {
-            height: 100% !important;
-            margin: 0 !important;
+   const style = document.createElement('style');
+    style.innerHTML = `
+        body {
             display: flex !important;
             flex-direction: column !important;
-        }
-        body {
             min-height: 100vh !important;
+            margin: 0 !important;
+        }
+        /* บังคับให้ส่วนที่เป็นที่วางข้อมูลมีขนาดขั้นต่ำจนกว่าของจะมา */
+        #flight-container {
+            flex: 1 !important;
         }
         #main-footer {
             margin-top: auto !important;
-            width: 100%;
+            /* ทำให้มันพร้อมแสดงผลทันที ไม่ต้องรอโหลด */
+            display: block !important;
         }
     `;
     document.head.appendChild(style);
