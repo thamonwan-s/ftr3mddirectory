@@ -22,32 +22,34 @@ const footerHTML = `
   </footer>
 `;
 
-function injectLayout() {
-    // 1. จัดการ Header
-    const existingHeader = document.getElementById('main-header-wrapper');
-    if (existingHeader) existingHeader.remove();
-    
+// ฟังก์ชันนี้มีไว้เพื่อให้หน้า HTML ที่เรียก injectHeader() ไม่ Error
+function injectHeader() {
+    const existing = document.getElementById('main-header-wrapper');
+    if (existing) existing.remove();
     const headerElement = document.createElement('div');
     headerElement.innerHTML = headerHTML;
     document.body.prepend(headerElement);
-
-    // 2. จัดการ Footer
-    const existingFooter = document.getElementById('main-footer');
-    if (existingFooter) existingFooter.remove();
-    
-    const footerElement = document.createElement('div');
-    footerElement.innerHTML = footerHTML;
-    document.body.appendChild(footerElement);
 }
 
-// 3. จัดการ Favicon และ Auto-Inject
+// ฟังก์ชันฉีด Layout ทั้งหมด (Header + Footer)
+function injectLayout() {
+    injectHeader(); // ใส่ Header
+    
+    // ใส่ Footer
+    const existingFooter = document.getElementById('main-footer');
+    if (!existingFooter) {
+        const footerElement = document.createElement('div');
+        footerElement.innerHTML = footerHTML;
+        document.body.appendChild(footerElement);
+    }
+}
+
+// จัดการ Favicon และสั่งรัน layout ทันทีที่โหลด
 (function() {
-    // Favicon
     const link = document.createElement('link');
     link.rel = 'icon';
     link.href = 'data:,';
     document.head.appendChild(link);
 
-    // สั่งรันเมื่อโหลดหน้าเสร็จ
     document.addEventListener('DOMContentLoaded', injectLayout);
 })();
