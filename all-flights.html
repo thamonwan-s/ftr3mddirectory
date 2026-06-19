@@ -75,32 +75,6 @@
         }
       }); // ปิด .then
 
-        for (let setIdx = 4; setIdx < 200; setIdx += 9) {
-          if (!data[0] || !data[0][setIdx]) continue;
-          const year = data[0][setIdx].toString();
-          const isExpanded = (year === currentYear);
-
-          container.innerHTML += `
-            <div id="year-${year}" class="year-section w-full max-w-sm">
-              <button onclick="toggleYear(this)" class="w-full flex justify-between items-center text-lg font-bold text-[#333333] border-b-2 border-[#333333] pb-1 mt-6 mb-2">
-                ${year} <span class="arrow">◂</span>
-              </button>
-              <div class="content hidden w-full">${renderFlights(data, setIdx)}</div>
-            </div>`;
-
-        }
-        setTimeout(() => {
-          const yearSelect = document.getElementById('year-select');
-          const sections = document.querySelectorAll('.year-section');
-          if (yearSelect) {
-            yearSelect.innerHTML = '<option value="">เลือกปี</option>';
-            sections.forEach(sec => {
-              yearSelect.innerHTML += `<option value="${sec.id}">${sec.id.replace('year-', '')}</option>`;
-            });
-          }
-        }, 500); 
-
-      });
 
     function toggleYear(btn) {
       const content = btn.nextElementSibling;
