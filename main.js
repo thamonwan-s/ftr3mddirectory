@@ -3,33 +3,38 @@
  */
 
 // --- ส่วนที่ 1: ระบบจัดการ Breadcrumb ---
+// ใน main.js
 function updateBreadcrumb() {
     const breadcrumbEl = document.getElementById('breadcrumb');
     if (!breadcrumbEl) return;
 
     const path = window.location.pathname;
+    const fileName = path.split('/').pop();
     
-    // 1. ถ้าเป็นหน้าแรก ให้ซ่อน
-    if (path.endsWith('index.html') || path === '/' || path === '') {
-        breadcrumbEl.innerHTML = '';
-        return; 
+    if (fileName === 'index.html' || fileName === '') return;
+
+    // ระบบลำดับชั้น (เพิ่มหน้าใหม่ได้ที่นี่ที่เดียว!)
+    const pageMap = {
+        'flights.html': { name: 'Flights', parent: null },
+        'all-flights.html': { name: 'All Flights', parent: 'flights.html' },
+        'schedule.html': { name: 'Schedule', parent: null }
+    };
+
+    const currentPage = pageMap[fileName];
+    if (!currentPage) return;
+
+    let html = '<li><a href="index.html">Home</a></li>';
+
+    // ถ้ามี Parent ให้ใส่ Parent ก่อน
+    if (currentPage.parent && pageMap[currentPage.parent]) {
+        const parent = pageMap[currentPage.parent];
+        html += `<li>/ <a href="${currentPage.parent}">${parent.name}</a></li>`;
     }
 
-    // 2. ดึงชื่อไฟล์ออกมา เช่น "flights.html"
-    const fileName = path.split('/').pop(); 
-    
-    // 3. แปลงชื่อไฟล์เป็นชื่อเมนูที่สวยงาม (แทนที่ .html ด้วยช่องว่าง แล้วจัดตัวพิมพ์ใหญ่)
-    // ตัวอย่าง: "flights.html" -> "Flights" หรือ "all-flights.html" -> "All Flights"
-    let pageName = fileName.replace('.html', '').replace(/-/g, ' ');
-    pageName = pageName.charAt(0).toUpperCase() + pageName.slice(1);
-
-    // 4. สร้าง HTML อัตโนมัติ
-    let html = `<li><a href="index.html">Home</a></li>`;
-    html += `<li>/ ${pageName}</li>`;
-    
+    // ใส่หน้าปัจจุบัน
+    html += `<li class="text-gray-400">/ ${currentPage.name}</li>`;
     breadcrumbEl.innerHTML = html;
 }
-
 // --- ส่วนที่ 2: ระบบ Login / Session ---
 const SESSION_DURATION = 12 * 60 * 60 * 1000; 
 
