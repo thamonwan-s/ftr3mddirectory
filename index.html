@@ -62,11 +62,16 @@
 
     async function checkPassword() {
         const input = document.getElementById('pass').value;
-
+        // ใช้ SCRIPT_URL ที่เราประกาศไว้ด้านบนของ script
+        
         if (!input) { alert("กรุณากรอกรหัสผ่าน"); return; }
 
         try {
-            const response = await fetch(`${SCRIPT_URL}?function=checkPassword&pass=${input}`);
+            // เพิ่ม mode: 'cors' เข้าไปตามนี้ครับ
+            const response = await fetch(`${SCRIPT_URL}?function=checkPassword&pass=${input}`, {
+                method: 'GET',
+                mode: 'cors'
+            });
             const result = await response.json();
 
             if (result === true) {
@@ -76,7 +81,8 @@
                 alert("Incorrect password");
             }
         } catch (error) {
-            alert("เกิดข้อผิดพลาดในการเชื่อมต่อ");
+            console.error("Error:", error); // ดู Error ใน F12
+            alert("เกิดข้อผิดพลาดในการเชื่อมต่อ (CORS)");
         }
     }
 
