@@ -210,8 +210,8 @@ function createNarrowFlightCardHTML(data, rowIdx, setIdx) {
               </div>
               
               <div class="grid grid-cols-[1fr,auto,1fr] items-center gap-1 px-2">
-                    <div class="text-xs font-bold text-gray-800 items-center justify-center">${formatTime(data[rowIdx+1][setIdx+3])}</div>
-                    <div class="text-gray-300 text-sm justify-center">→</div>
+                    <div class="flex text-xs font-bold text-gray-800 items-center justify-center">${formatTime(data[rowIdx+1][setIdx+3])}</div>
+                    <div class="text-gray-300 text-sm justify-center mx-2">→</div>
                     <div class="flex text-xs font-bold text-gray-800 items-center justify-center">${formatTime(data[rowIdx+1][setIdx+4])}</div>
                 </div>
               
