@@ -64,6 +64,7 @@
 
 function checkPassword() {
     const input = document.getElementById('pass').value;
+    const url = `${SCRIPT_URL}?function=checkPassword&pass=${input}&callback=handleResponse`;
 
     // สร้างฟังก์ชันชั่วคราวเพื่อรับค่ากลับมา
     window.handleResponse = function(isCorrect) {
