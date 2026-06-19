@@ -189,19 +189,33 @@
       threshold: 0.5 // เมื่อกล่องปีนั้นๆ เข้ามาเกินครึ่งหน้าจอ
     };
     
+// แก้ไขส่วน Observer ให้จับทั้งปีและเดือน
+    const observerOptions = {
+      root: null,
+      threshold: 0.6 // ปรับให้แม่นขึ้นเมื่อเลื่อนผ่านกล่องปี
+    };
+    
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          const year = entry.target.querySelector('button').innerText.trim().split(' ')[0];
+          // ดึงค่าจาก ID หรือโครงสร้างเดิมของคุณ
+          const year = entry.target.id.replace('year-', '');
           document.getElementById('nav-year').innerText = year;
+          
+          // ถ้าอยากดึงเดือนด้วย (อิงจากข้อมูลในกล่องปีนั้นๆ ถ้ามี)
+          // สมมติว่าในกล่องปีมีข้อมูลเดือนซ่อนอยู่ หรือเราจะดึงจากวันที่แรกของกล่อง
+          const monthText = entry.target.querySelector('.text-sm.font-semibold') 
+                            ? entry.target.querySelector('.text-sm.font-semibold').innerText.split(' ')[1] 
+                            : '-';
+          document.getElementById('nav-month').innerText = monthText;
         }
       });
     }, observerOptions);
     
-    // เริ่มจับตาดูทุกปี
+    // เริ่มจับตาดูทุกปีที่มี class="year-section"
     setTimeout(() => {
       document.querySelectorAll('.year-section').forEach(section => observer.observe(section));
-    }, 500);
+    }, 1000); // รอโหลดเสร็จชัวร์ๆ 1 วินาที
     
     // ฟังก์ชันกดปุ่มปี (เลื่อนไปปีนั้น)
     function scrollToYear() {
