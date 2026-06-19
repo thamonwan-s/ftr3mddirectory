@@ -190,10 +190,10 @@ function createNarrowFlightCardHTML(data, rowIdx, setIdx) {
         return `
           <div class="bg-white p-3 rounded-xl shadow-sm border border-gray-100 w-full max-w-sm mx-auto my-2"> 
         <div class="flex items-center space-x-2 mb-2">
-          <span class="text-[9px] text-gray-400 font-bold bg-gray-100 px-1.5 py-0.5 rounded">${dayName}</span> 
-          <span class="text-xs font-semibold text-gray-700">${dayNum} ${month}</span>
+          <span class="text-[6px] text-gray-400 font-bold bg-gray-100 px-1.5 py-0.5 rounded">${dayName}</span> 
+          <span class="text-[9px] font-semibold text-gray-700">${dayNum} ${month}</span>
           <span class="text-gray-300 mx-1">|</span>
-          <span class="text-xs text-gray-600">${data[rowIdx][setIdx+5]}</span>
+          <span class="text-[9px] text-gray-600">${data[rowIdx][setIdx+5]}</span>
           <div class="flex flex-1 justify-end items-center text-right">
             <div class="mr-1.5">
               <div class="text-xs font-bold text-gray-800">${data[rowIdx][setIdx+6]}</div>
@@ -205,17 +205,19 @@ function createNarrowFlightCardHTML(data, rowIdx, setIdx) {
 
         <div class="flex justify-between items-center text-lg font-black text-[#333333] my-2">
           <div class="text-center">
-            <div class="text-[10px] font-normal text-gray-400">${data[rowIdx+2][setIdx+3]}</div>
-            <div class="text-sm font-bold text-gray-800">${formatTime(data[rowIdx+1][setIdx+3])}</div>
+            <div class="text-sm font-bold text-gray-800">${data[rowIdx+2][setIdx+3]}</div>
+            <div class="text-xs font-bold text-gray-800">${formatTime(data[rowIdx+1][setIdx+3])}</div>
+            <div class="text-[6px] text-gray-500">${data[rowIdx+3][setIdx+3] || ''}</div>
           </div>
           <div class="text-gray-300 text-sm">→</div>
           <div class="text-center">
-            <div class="text-[10px] font-normal text-gray-400">${data[rowIdx+2][setIdx+4]}</div>
-            <div class="text-sm font-bold text-gray-800">${formatTime(data[rowIdx+1][setIdx+4])}</div>
+            <div class="text-sm font-bold text-gray-800">${data[rowIdx+2][setIdx+4]}</div>
+            <div class="text-xs font-bold text-gray-800">${formatTime(data[rowIdx+1][setIdx+4])}</div>
+            <div class="text-[6px] text-gray-500">${data[rowIdx+3][setIdx+4] || ''}</div>
           </div>
         </div>
 
-        <div class="pt-2 border-t text-[10px] text-blue-800 font-bold">
+        <div class="pt-2 border-t text-[6px] text-blue-800 font-bold">
           ${statusIcon} ${bottomText}
         </div>
       </div>`;
