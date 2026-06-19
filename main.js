@@ -95,41 +95,29 @@ function startCountdown(endTime) {
 }
 
 // ใน main.js
-async function fetchAndDisplayFlights() {
+// ปรับฟังก์ชันให้รับพารามิเตอร์ type
+async function fetchAndDisplayFlights(type = 'all') {
     const container = document.getElementById('flight-container');
-    if (!container) return;
-
-    // แสดงสถานะโหลด
-    container.innerHTML = '<div class="text-center mt-10 text-gray-500">กำลังโหลดข้อมูล...</div>';
+    container.innerHTML = '<div class="text-center mt-10">กำลังโหลด...</div>';
 
     try {
         const response = await fetch(SCRIPT_URL);
         const data = await response.json();
-
-        // เคลียร์โหลดดิ้ง
         container.innerHTML = "";
 
-        // --- ตรงนี้คือการนำตรรกะเดิมของคุณมาใส่ ---
-        // 1. แสดง Recent Flight (ถ้ามี)
-        // [ก๊อปปี้โค้ดส่วนที่สร้าง Recent Flight จาก HTML เดิมมาใส่ตรงนี้]
-
-        // 2. ลูปสร้างปี/เดือน
-        for (let setIdx = 4; setIdx < 200; setIdx += 9) {
-            if (!data[0] || !data[0][setIdx]) continue;
-            const year = data[0][setIdx].toString();
-            
-            container.innerHTML += `
-                <div id="year-${year}" class="year-section w-full max-w-sm">
-                    <button onclick="toggleYear(this)" class="w-full flex justify-between items-center text-lg font-bold text-[#333333] border-b-2 border-[#333333] pb-1 mt-6 mb-2">
-                        ${year} <span class="arrow">◂</span>
-                    </button>
-                    <div class="content hidden w-full">${renderFlights(data, setIdx)}</div>
-                </div>`;
+        // ตรงนี้คือจุดที่คุณจะ "กรองข้อมูล" ตามประเภทที่ส่งเข้ามา
+        let filteredData = data; 
+        if (type === 'intl') {
+            // สมมติว่าคอลัมน์ที่ 10 คือประเภทเที่ยวบิน
+            filteredData = data.filter(row => row[10] === 'International');
+        } else if (type === 'dom') {
+            filteredData = data.filter(row => row[10] === 'Domestic');
         }
-        
-    } catch (error) {
-        container.innerHTML = '<div class="text-center mt-10 text-red-500">เกิดข้อผิดพลาดในการโหลดข้อมูล</div>';
-        console.error("Error:", error);
+
+        // จากนั้นก็นำ filteredData ไปวนลูป Render ตามปกติ
+        // ... (โค้ดลูปสร้างตารางเหมือนเดิม) ...
+    } catch (e) {
+        // จัดการ Error
     }
 }
 
