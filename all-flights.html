@@ -42,6 +42,24 @@
         const container = document.getElementById('flight-container');
         const currentYear = new Date().getFullYear().toString();
 
+        let recentFlightHtml = '';
+            for (let rowIdx = 499; rowIdx >= 3; rowIdx--) {
+                if (data[rowIdx] && data[rowIdx][4]) { // เช็คว่ามีข้อมูลในชุดข้อมูลแรก (setIdx=4)
+                    recentFlightHtml = renderFlights(data, 4); // เรียกฟังก์ชันเดิมเพื่อเจน HTML
+                    // ดึงเฉพาะรายการล่าสุดแค่รายการเดียว (ถ้า renderFlights เจนทั้งปี เราอาจต้องตัดเหลือแค่ 1 ก้อน)
+                    recentFlightHtml = recentFlightHtml.split('</div>')[0] + '</div>'; 
+                    break;
+                }
+            }
+        
+            // 2. แสดงหัวข้อและกล่องล่าสุดก่อนลูปปี
+            container.innerHTML = `
+                <div class="w-full max-w-sm mt-4">
+                    <h2 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-2">Recent Flight</h2>
+                    ${recentFlightHtml}
+                </div>
+            `;
+
         for (let setIdx = 4; setIdx < 200; setIdx += 9) {
           if (!data[0] || !data[0][setIdx]) continue;
           const year = data[0][setIdx].toString();
