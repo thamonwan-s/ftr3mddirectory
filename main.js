@@ -295,6 +295,15 @@ function renderFlights(data, setIdx) {
         // และเอา parameter showFloatingBar ออก เพราะ narrow card ของคุณไม่มีส่วนนี้
         html += createNarrowFlightCardHTML(data, rowIdx, setIdx);
     }
+    const container = document.getElementById('card-container');
+    if (container) {
+        container.innerHTML = html;
+        
+        // 2. เรียกใช้ Lucide ทันทีหลังจากใส่ HTML เข้าไปแล้ว เพื่อเปลี่ยน <i> ให้เป็นไอคอน
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        }
+    }
     return html;
 }
 
