@@ -206,7 +206,7 @@ function createNarrowFlightCardHTML(data, rowIdx, setIdx) {
             <div class="grid grid-cols-[1fr,auto,1fr] items-center text-lg font-black text-[#333333] my-1 gap-2">
               <div class="flex items-baseline justify-start gap-1 overflow-hidden">
                     <span class="text-sm font-bold text-gray-800">${data[rowIdx+2][setIdx+3]}</span>
-                    <span class="text-[6px] text-gray-500 text-center mt-0.5">${data[rowIdx+3][setIdx+3] || ''}</span>
+                    <span class="text-[6px] text-gray-500 text-center">${data[rowIdx+3][setIdx+3] || ''}</span>
               </div>
               
               <div class="grid grid-cols-[1fr,auto,1fr] items-center gap-1 px-2">
@@ -217,7 +217,7 @@ function createNarrowFlightCardHTML(data, rowIdx, setIdx) {
               
               <div class="flex items-baseline justify-end text-right gap-1 overflow-hidden">
                     <span class="text-[6px] text-gray-500 text-center">${data[rowIdx+3][setIdx+4] || ''}</span>
-                    <span class="text-sm font-bold text-gray-800 text-left justify-start mt-0.5">${data[rowIdx+2][setIdx+4]}</span>
+                    <span class="text-sm font-bold text-gray-800 text-left justify-start">${data[rowIdx+2][setIdx+4]}</span>
               </div>
               
             </div>
