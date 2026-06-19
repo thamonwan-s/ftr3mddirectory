@@ -203,19 +203,21 @@ function createNarrowFlightCardHTML(data, rowIdx, setIdx) {
               </div>
             </div>
 
-            <div class="flex justify-between items-center text-lg font-black text-[#333333] my-1">
-              <div class="flex items-center justify-start space-x-2">
-                <div class="text-sm font-bold text-gray-800">${data[rowIdx+2][setIdx+3]}
+            <div class="grid-cols-[1fr,auto,1fr] items-center text-lg font-black text-[#333333] my-1">
+              <div class="flex items-center justify-start text-left truncate">
+                <div class="flex flex-col">
+                    <span class="text-sm font-bold text-gray-800">${data[rowIdx+2][setIdx+3]}</span>
                     <span class="text-[6px] text-gray-500 text-center mt-0.5">${data[rowIdx+3][setIdx+3] || ''}</span>
                 </div>
               </div>
-              <div class="flex items-center text-center justify-center space-x-2">
+              <div class="flex flex-col items-center px-2">
                   <span class="text-xs font-bold text-gray-800">${formatTime(data[rowIdx+1][setIdx+3])}</span>
                   <span class="text-gray-300 text-sm justify-center">→</span>
                   <span class="text-xs font-bold text-gray-800">${formatTime(data[rowIdx+1][setIdx+4])}</span>
               </div>
               <div class="flex items-center justify-end text-right space-x-2">
-                <div class="text-[6px] text-gray-500 text-center">${data[rowIdx+3][setIdx+4] || ''}
+                <div class="flex flex-col">
+                    <span class="text-[6px] text-gray-500 text-center">${data[rowIdx+3][setIdx+4] || ''}</span>
                     <span class="text-sm font-bold text-gray-800 text-left justify-start mt-0.5">${data[rowIdx+2][setIdx+4]}</span>
                 </div>
               </div>
