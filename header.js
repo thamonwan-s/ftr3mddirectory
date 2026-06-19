@@ -86,7 +86,7 @@ function injectLayout() {
             footer.id = "main-footer";
             footer.className = "w-full bg-[#333333] py-6 mt-auto text-center";
             footer.innerHTML = `
-                <div class="text-white font-bold" style="font-size: 8pt;">FTR3MD's FLIGHT LOG</div>
+                <div class="text-white font-bold" style="font-size: 8pt;">FTR3MD's DIRECTORY</div>
                 <div class="text-gray-400 mt-1" style="font-size: 6pt;">© 2026 ALL RIGHTS RESERVED</div>
             `;
             document.body.appendChild(footer);
