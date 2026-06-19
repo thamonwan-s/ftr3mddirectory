@@ -55,13 +55,13 @@
               <div class="content ...">${renderFlights(data, setIdx)}</div>
             </div>`;
 
+        }
           const yearSelect = document.getElementById('year-select');
           yearSelect.innerHTML = '<option value="">เลือกปี</option>' + 
             document.querySelectorAll('.year-section').forEach(sec => {
               const yr = sec.id.replace('year-', '');
               yearSelect.innerHTML += `<option value="${sec.id}">${yr}</option>`;
             });
-        }
       });
 
     function toggleYear(btn) {
