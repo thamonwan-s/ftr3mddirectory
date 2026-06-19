@@ -45,14 +45,35 @@ function injectLayout() {
 }
 
 // จัดการ Favicon และสั่งรัน layout ทันทีที่โหลด
+// ในส่วนของ (function() { ... }) ของ header.js
+
 (function() {
-    // 1. สร้าง Link สำหรับ Favicon ทันทีเพื่อปิดปากเบราว์เซอร์
-    // เราใช้ Data URI (ไอคอนว่างเปล่าขนาด 1x1 พิกเซล) ฝังในโค้ดเลย
+    // 1. เพิ่ม CSS ที่แก้ปัญหา Footer ลอยและรองรับการโหลดข้อมูล
+    const style = document.createElement('style');
+    style.innerHTML = `
+        /* ทำให้ทั้งหน้าเว็บยืดเต็มจอ */
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        /* ให้ส่วนเนื้อหาหลักขยายตัวจนดัน Footer ลงไปข้างล่าง */
+        body > div:nth-child(2) { /* สมมติว่าเป็น wrapper หลักของคุณ หรือถ้าไม่มี ให้ใช้ body ได้เลย */
+            flex: 1;
+        }
+        /* ถ้าไม่มีตัวห่อหุ้ม ให้ใช้กฎนี้แทนเพื่อความชัวร์ */
+        #main-footer {
+            margin-top: auto;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // ... (ส่วนเดิมของ link favicon) ...
     const link = document.createElement('link');
     link.rel = 'icon';
     link.href = 'data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
     document.head.appendChild(link);
 
-    // 2. จัดการ Layout (Header + Footer)
     document.addEventListener('DOMContentLoaded', injectLayout);
 })();
