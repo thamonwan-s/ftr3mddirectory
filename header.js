@@ -9,29 +9,45 @@ const headerHTML = `
         <a href="#" class="text-white hover:text-gray-300" style="font-size: 6pt;">Schedule</a>
       </nav>
     </div>
-
     <nav aria-label="Breadcrumb" class="w-full px-4 py-2 border-b border-gray-100">
-      <ol id="breadcrumb" class="flex items-center space-x-2" style="font-size: 6pt; color: #888; text-transform: uppercase;">
-      </ol>
+      <ol id="breadcrumb" class="flex items-center space-x-2" style="font-size: 6pt; color: #888; text-transform: uppercase;"></ol>
     </nav>
   </div>
 `;
 
-function injectHeader() {
-    // 1. ลบของเก่าออกก่อน (ถ้ามี)
-    const existing = document.getElementById('main-header-wrapper');
-    if (existing) existing.remove();
+const footerHTML = `
+  <footer id="main-footer" class="w-full bg-[#333333] py-6 mt-10 text-center">
+    <div class="text-white font-bold" style="font-size: 8pt;">FTR3MD's FLIGHT LOG</div>
+    <div class="text-gray-400 mt-1" style="font-size: 6pt;">© 2026 ALL RIGHTS RESERVED</div>
+  </footer>
+`;
 
-    // 2. ใส่ของใหม่
+function injectLayout() {
+    // 1. จัดการ Header
+    const existingHeader = document.getElementById('main-header-wrapper');
+    if (existingHeader) existingHeader.remove();
+    
     const headerElement = document.createElement('div');
     headerElement.innerHTML = headerHTML;
     document.body.prepend(headerElement);
+
+    // 2. จัดการ Footer
+    const existingFooter = document.getElementById('main-footer');
+    if (existingFooter) existingFooter.remove();
+    
+    const footerElement = document.createElement('div');
+    footerElement.innerHTML = footerHTML;
+    document.body.appendChild(footerElement);
 }
 
-// 3. จัดการเรื่อง Favicon
+// 3. จัดการ Favicon และ Auto-Inject
 (function() {
+    // Favicon
     const link = document.createElement('link');
     link.rel = 'icon';
     link.href = 'data:,';
     document.head.appendChild(link);
+
+    // สั่งรันเมื่อโหลดหน้าเสร็จ
+    document.addEventListener('DOMContentLoaded', injectLayout);
 })();
