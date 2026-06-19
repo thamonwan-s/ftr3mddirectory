@@ -70,6 +70,8 @@ function injectLayout() {
     document.head.appendChild(style);
 
     // ... (ส่วนเดิมของ link favicon) ...
+    const existingIcons = document.querySelectorAll("link[rel*='icon']");
+    existingIcons.forEach(icon => icon.remove());
     const link = document.createElement('link');
     link.rel = 'icon';
     link.href = 'data:image/x-icon;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=';
