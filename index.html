@@ -25,25 +25,69 @@
     <div class="w-full max-w-xs space-y-4">
       <input type="password" id="pass" placeholder="Password" 
              class="w-full border-b border-[#333333] text-center text-sm py-2 focus:outline-none">
+      
+      <p class="text-[7pt] text-gray-400 italic text-center">
+        hint: สายตรงถึงน้องหมั่นโถว
+      </p>
+      
       <button onclick="checkPassword()" 
               class="w-full bg-[#333333] text-white text-[8pt] py-2 uppercase tracking-widest hover:opacity-80 transition-opacity">
         Enter
       </button>
     </div>
   </main>
+  
 
   <script>
+    const SESSION_DURATION = 12 * 60 * 60 * 1000; // 12 ชั่วโมง
+
+    function init() {
+        const loginTime = localStorage.getItem('loginTime');
+        if (loginTime) {
+            const timePassed = Date.now() - parseInt(loginTime);
+            if (timePassed < SESSION_DURATION) {
+                showLogoutState();
+                startCountdown(parseInt(loginTime) + SESSION_DURATION);
+            } else {
+                logout(); // หมดเวลา
+            }
+        }
+    }
+
     function checkPassword() {
         const password = document.getElementById('pass').value;
-        // เปลี่ยนรหัสตรงนี้ครับ
-        if (password === "MySecret123") {
-            sessionStorage.setItem('auth', 'success');
-            window.location.href = 'flights.html';
+        if (password === "0958565111") { // เปลี่ยนรหัสที่นี่
+            localStorage.setItem('loginTime', Date.now().toString());
+            location.reload();
         } else {
             alert("Incorrect password");
         }
     }
-  </script>
+
+    function showLogoutState() {
+        document.getElementById('login-form').classList.add('hidden');
+        document.getElementById('logout-form').classList.remove('hidden');
+    }
+
+    function logout() {
+        localStorage.removeItem('loginTime');
+        location.reload();
+    }
+
+    function startCountdown(endTime) {
+        const timer = setInterval(() => {
+            const distance = endTime - Date.now();
+            if (distance < 0) { logout(); return; }
+            
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+            document.getElementById('countdown').innerText = `auto-logout in: ${hours}h ${minutes}m ${seconds}s`;
+        }, 1000);
+    }
+
+    init();
+</script>
 
 </body>
 </html>
