@@ -61,24 +61,24 @@
         }
     }
 
-async function checkPassword() {
+function checkPassword() {
     const input = document.getElementById('pass').value;
-    const url = `${SCRIPT_URL}?function=checkPassword&pass=${input}`;
-
-    try {
-        const response = await fetch(url);
-        const isCorrect = await response.json(); // รับค่าแบบ JSON ตรงๆ
-
+    
+    // ประกาศฟังก์ชันรับค่าให้ตรงกับชื่อ callback ที่จะส่งไป
+    window.handleResponse = function(isCorrect) {
         if (isCorrect === true) {
             localStorage.setItem('loginTime', Date.now().toString());
             location.reload();
         } else {
             alert("Incorrect password");
         }
-    } catch (error) {
-        console.error("Error:", error);
-        alert("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้");
-    }
+        document.body.removeChild(scriptTag);
+    };
+
+    const scriptTag = document.createElement('script');
+    // ระบุ callback เป็น 'handleResponse' เพื่อให้ Google Script ส่งค่ากลับมาในรูปแบบ handleResponse(result)
+    scriptTag.src = `${SCRIPT_URL}?function=checkPassword&pass=${input}&callback=handleResponse`;
+    document.body.appendChild(scriptTag);
 }
 
     function showLogoutState() {
