@@ -98,6 +98,7 @@ function startCountdown(endTime) {
 // ปรับฟังก์ชันให้รับพารามิเตอร์ type
 async function fetchAndDisplayFlights(type = 'all') {
     const container = document.getElementById('flight-container');
+    if (!container) return;
     container.innerHTML = '<div class="text-center mt-10">กำลังโหลด...</div>';
 
     try {
