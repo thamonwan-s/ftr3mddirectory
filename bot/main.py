@@ -63,6 +63,8 @@ with sync_playwright() as p:
             # เพิ่มบรรทัดนี้ไว้หลังบรรทัด page_browser.goto(page_url)
             print(f"หน้าเว็บที่ดึงมาได้มีเนื้อหา: {page_browser.title()}")
             page_browser.wait_for_timeout(3000) # รอให้โหลดเนื้อหา
+            # เพิ่มคำสั่งนี้เพื่อเซฟรูปสิ่งที่บอทเห็น
+            page_browser.screenshot(path="debug_screenshot.png")
             
             # ดึง div ที่เป็นบทความ (role="article")
             posts = page_browser.query_selector_all('[role="article"]')
