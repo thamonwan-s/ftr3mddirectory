@@ -1,0 +1,22 @@
+name: Line Bot Daily Job
+on:
+  schedule:
+    - cron: '0 8 * * *' # รันทุกวันเวลา 8:00 UTC
+  workflow_dispatch:   # ช่วยให้เรากดรันเองได้จากหน้าเว็บ
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install requests
+        run: pip install requests
+      - name: Run Bot Script
+        env:
+          LINE_ACCESS_TOKEN: ${{ secrets.LINE_ACCESS_TOKEN }}
+          MY_USER_ID: ${{ secrets.MY_USER_ID }}
+        run: python bot/main.py
