@@ -21,36 +21,34 @@ def send_line(text):
     headers = {'Authorization': f'Bearer {os.environ["LINE_ACCESS_TOKEN"]}', 'Content-Type': 'application/json'}
     requests.post('https://api.line.me/v2/bot/message/push', headers=headers, json=data)
 
-print("--- เริ่มดึงข้อมูลแบบครอบจักรวาล ---")
+print("--- เริ่มดึงข้อมูลผ่าน Embed Page ---")
 with sync_playwright() as p:
     browser = p.chromium.launch()
     page = browser.new_page()
     
     for p_info in fb_pages:
         try:
-            print(f"กำลังเช็คเพจ: {p_info['Page_Name']}")
-            page.goto(p_info['Page_URL'].replace("www.", "m."), wait_until="networkidle", timeout=60000)
-            page.wait_for_timeout(5000)
+            # ใช้ URL รูปแบบ Embed ของ Facebook ที่เปิดเผยข้อมูลสาธารณะ
+            # ปรับ URL จากเพจปกติ เป็น URL รูปแบบที่ดึงข้อมูลได้
+            embed_url = f"https://www.facebook.com/plugins/page.php?href={p_info['Page_URL']}&tabs=timeline&width=500&height=500"
+            page.goto(embed_url, wait_until="networkidle", timeout=60000)
+            page.wait_for_timeout(8000)
             
-            # ดึงทุกๆ div ที่มี class หรือ role ต่างๆ ออกมา
-            # เราจะหาข้อความที่ยาวพอจะเป็นโพสต์ (เกิน 50 ตัวอักษร)
-            all_text_elements = page.query_selector_all('div')
-            found_count = 0
+            # ดึงเฉพาะข้อความใน Timeline (Selector นี้แม่นยำสำหรับ Facebook Embed)
+            posts = page.query_selector_all('div._1dwg, div.userContent')
             
-            for el in all_text_elements:
-                text = el.inner_text().strip()
-                if len(text) > 100: # ถ้าข้อความยาวเกิน 100 ตัวอักษร (น่าจะเป็นโพสต์)
+            for post in posts:
+                text = post.inner_text().strip()
+                if len(text) > 50 and text not in ["Log into Facebook", "Create new account"]:
                     norm_text = unicodedata.normalize('NFKC', text).lower()
                     
                     if norm_text not in existing_data:
-                        sheet_data.append_row([text[:200], datetime.now().strftime("%Y-%m-%d %H:%M")])
+                        sheet_data.append_row([text, datetime.now().strftime("%Y-%m-%d %H:%M")])
                         existing_data.append(norm_text)
-                        send_line(f"เจอข้อมูลจาก {p_info['Page_Name']}:\n{text[:50]}...")
-                        print(f"บันทึกแล้ว: {p_info['Page_Name']}")
-                        found_count += 1
-                        if found_count >= 1: break # เอาแค่โพสต์เดียวต่อเพจ เพื่อเทสต์
-                        
+                        send_line(f"เจอข้อมูลใหม่: {text[:50]}...")
+                        print(f"บันทึกสำเร็จ: {p_info['Page_Name']}")
+                        break 
         except Exception as e:
-            print(f"Error เพจ {p_info['Page_Name']}: {e}")
+            print(f"Error: {e}")
     browser.close()
 print("--- จบการทำงาน ---")
