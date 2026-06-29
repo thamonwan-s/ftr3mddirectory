@@ -23,4 +23,4 @@ jobs:
         run: python bot/main.py
       - name: Install dependencies
         run: |
-          pip install requests beautifulsoup4 pytz
+          pip install requests beautifulsoup4 pytz gspread oauth2client
