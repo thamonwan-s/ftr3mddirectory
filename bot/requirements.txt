@@ -1,6 +1,5 @@
 requests
 beautifulsoup4
-playwright
 gspread
 oauth2client
 feedparser
