@@ -1,6 +1,7 @@
 requests
 beautifulsoup4
-pytz
 playwright
 gspread
 oauth2client
+feedparser
+pytz
