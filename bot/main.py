@@ -60,6 +60,8 @@ with sync_playwright() as p:
         
         try:
             page_browser.goto(page_url)
+            # เพิ่มบรรทัดนี้ไว้หลังบรรทัด page_browser.goto(page_url)
+            print(f"หน้าเว็บที่ดึงมาได้มีเนื้อหา: {page_browser.title()}")
             page_browser.wait_for_timeout(3000) # รอให้โหลดเนื้อหา
             
             # ดึง div ที่เป็นบทความ (role="article")
