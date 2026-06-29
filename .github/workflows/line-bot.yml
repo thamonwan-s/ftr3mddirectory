@@ -30,3 +30,7 @@ jobs:
           GOOGLE_CREDENTIALS: ${{ secrets.GOOGLE_CREDENTIALS }}
           SHEET_ID: ${{ secrets.SHEET_ID }}
         run: python bot/main.py
+    - name: Install Playwright
+      run: |
+        playwright install chromium
+        playwright install-deps
