@@ -22,10 +22,20 @@ def send_line(text):
     requests.post('https://api.line.me/v2/bot/message/push', headers=headers, json=data)
 
 def get_posts_from_mbasic(url):
+    # ตัวแปร User-Agent นี้คือตัวสำคัญมาก! 
+    # เราใช้ Nokia หรือ Android รุ่นเก่าเพื่อให้ Facebook ไม่บังคับ Redirect
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Linux; Android 10; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.210 Mobile Safari/537.36'
+        'User-Agent': 'Opera/9.80 (J2ME/MIDP; Opera Mini/4.2/28.2722; U; en) Presto/2.8.119 Version/11.10',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Referer': 'https://mbasic.facebook.com/'
     }
-    response = requests.get(url, headers=headers)
+    
+    session = requests.Session()
+    response = session.get(url, headers=headers)
+    
+    # พิมพ์เช็คดูว่ามันยัง Redirect ไหม
+    print(f"URL ที่บอทได้รับ: {response.url}") 
+    
     soup = BeautifulSoup(response.text, 'html.parser')
     
     posts = []
