@@ -2,47 +2,52 @@ import os
 import json
 import gspread
 import requests
-import feedparser # เพิ่มตัวนี้
+from bs4 import BeautifulSoup # เพิ่มสิ่งนี้
 from oauth2client.service_account import ServiceAccountCredentials
 from datetime import datetime
 import unicodedata
 
-# 1. เชื่อมต่อ (เหมือนเดิม)
-creds_json = json.loads(os.environ['GOOGLE_CREDENTIALS'])
-creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_json, ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"])
-client = gspread.authorize(creds)
-sheet = client.open_by_key(os.environ['SHEET_ID'])
-sheet_data = sheet.worksheet("Master_Data")
-fb_pages = sheet.worksheet("Facebook_Pages").get_all_records()
-existing_data = [unicodedata.normalize('NFKC', str(x)).lower() for x in sheet_data.col_values(1)]
+# (ส่วนการเชื่อมต่อ Google Sheets เหมือนเดิม)
+# ...
 
-def send_line(text):
-    data = {"to": os.environ['MY_USER_ID'], "messages": [{"type": "text", "text": text}]}
-    headers = {'Authorization': f'Bearer {os.environ["LINE_ACCESS_TOKEN"]}', 'Content-Type': 'application/json'}
-    requests.post('https://api.line.me/v2/bot/message/push', headers=headers, json=data)
+def get_mbasic_posts(url):
+    # mbasic จำเป็นต้องมี User-Agent เหมือนคนใช้มือถือ
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Linux; Android 10; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.210 Mobile Safari/537.36'
+    }
+    response = requests.get(url, headers=headers)
+    soup = BeautifulSoup(response.text, 'html.parser')
+    
+    posts = []
+    # ใน mbasic โพสต์มักอยู่ใน tag ที่มี class คล้ายๆ กัน (ต้องลอง inspect ดูใน Chrome อีกที)
+    # ส่วนใหญ่อยู่ใน div ที่เป็นบทความ
+    articles = soup.find_all('div', {'data-ft': True}) 
+    
+    for article in articles:
+        text = article.get_text()
+        if text:
+            posts.append(text)
+    return posts
 
-print("--- เริ่มดึงข้อมูลผ่าน RSS Feed ---")
+print("--- เริ่มดึงข้อมูลผ่าน mbasic ---")
 
 for p_info in fb_pages:
     try:
-        rss_url = p_info.get('RSS_URL') # ดึงจากคอลัมน์ D (สมมติว่า Header คือ RSS_URL)
-        if not rss_url:
-            continue
+        page_url = p_info.get('PAGE_URL') # เปลี่ยนจาก RSS_URL เป็น URL หน้าเพจ mbasic
+        if not page_url: continue
             
-        # ดึงข้อมูลผ่าน Feedparser (แทน Playwright)
-        feed = feedparser.parse(rss_url)
+        posts = get_mbasic_posts(page_url)
         
-        for entry in feed.entries:
-            text = entry.title # หรือ entry.summary ขึ้นอยู่กับว่า Google Alerts ส่งมาอย่างไร
+        for text in posts:
             norm_text = unicodedata.normalize('NFKC', text).lower()
             
             if norm_text not in existing_data:
-                sheet_data.append_row([text, datetime.now().strftime("%Y-%m-%d %H:%M")])
+                sheet_data.append_row([text[:200], datetime.now().strftime("%Y-%m-%d %H:%M")])
                 existing_data.append(norm_text)
                 send_line(f"เจอข้อมูลใหม่: {text[:50]}...")
-                print(f"บันทึกสำเร็จจาก {p_info['Page_Name']}")
+                print(f"บันทึกสำเร็จ")
                 
     except Exception as e:
-        print(f"Error fetching {p_info.get('Page_Name')}: {e}")
+        print(f"Error: {e}")
 
 print("--- จบการทำงาน ---")
