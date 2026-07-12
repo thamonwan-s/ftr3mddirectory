@@ -1,7 +1,7 @@
 // header.js
 const headerHTML = `
   <div id="main-header-wrapper">
-    <div class="w-full bg-[#333333] flex items-center justify-between px-6 gap-x-4" style="height: 26px;">
+    <div class="w-full bg-[#333333] flex items-center justify-between px-10 gap-x-4" style="height: 26px;">
       <span class="text-white" style="font-size: 10pt; letter-spacing: 0.5px;">FTR3MD's</span>
       <nav class="flex items-center space-x-3">
         <a href="index.html" class="text-white hover:text-gray-300" style="font-size: 8pt;">Home</a>
