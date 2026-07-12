@@ -8,18 +8,11 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>body { font-family: 'Kanit', sans-serif; }</style>
   <script src="config.js"></script>
+  <script src="header.js"></script>
   <script src="main.js"></script>
 </head>
 <body class="bg-white min-h-screen flex flex-col">
 
-  <div class="w-full bg-[#333333] flex items-center justify-between px-5" style="height: 24px;">
-    <span class="text-white" style="font-size: 10pt; letter-spacing: 0.5px;">FTR3MD's</span>
-    <nav class="flex items-center space-x-3">
-      <a href="index.html" class="text-white hover:text-gray-300" style="font-size: 8pt;">Home</a>
-      <a href="flights.html" class="text-white hover:text-gray-300" style="font-size: 8pt;">Flights</a>
-      <a href="#" class="text-white hover:text-gray-300" style="font-size: 8pt;">Schedule</a>
-    </nav>
-  </div>
 
   <main class="flex-grow flex flex-col items-center justify-center p-4">
     <p class="text-[#333333] mb-6" style="font-size: 8pt; text-transform: lowercase;">memories has been captured by ftr</p>
@@ -40,6 +33,12 @@
       <button onclick="logout()" class="w-full border border-[#333333] text-[#333333] text-[8pt] py-2 uppercase tracking-widest hover:bg-gray-100">Logout</button>
     </div>
   </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        injectHeader();    // ใส่ Header
+    });
+  </script>
 
 </body>
 </html>
