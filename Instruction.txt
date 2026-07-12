@@ -8,3 +8,20 @@ All Flights > allflights.html
 Navigation Path > main.js
 Database > config.js
 Head Banner Template > header.js
+
+Data Structures
+> TMD : Database
+  - Flight
+  - Personal Stats : Places, Con
+  - Fest & Awards **need to be reconstructed
+> TMD : Bills
+  - Personsal Stats : Total, Bills
+> TMD : Schedules
+  - Overall Stats : Places, Con
+  - Comparative Guides
+> TMD : งานเลี้ยงภายใน
+  - History
+  - Priority Lists
+  - Overall Lists
+> TMD : Search
+  - Data fetching ***hold cuz unuasble
