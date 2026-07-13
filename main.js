@@ -103,7 +103,7 @@ async function fetchAndDisplayFlights(type = 'all') {
     container.innerHTML = '<div class="text-center mt-10 text-gray-500">กำลังโหลดข้อมูล...</div>';
 
     try {
-        const response = await fetch(SCRIPT_URL);
+        const response = await fetch(CONFIG.SCRIPT_URL);
         const data = await response.json();
         container.innerHTML = "";
 
