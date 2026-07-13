@@ -123,16 +123,14 @@ async function fetchAndDisplayFlights(type = 'all') {
             `;
 
         // 3. วนลูปสร้างปี/เดือน
-        for (let setIdx = 4; setIdx < 200; setIdx += 9) {
-            if (!data[0] || !data[0][setIdx]) continue;
-            const year = data[0][setIdx].toString();
+        for (const year of years) {
             
             container.innerHTML += `
                 <div id="year-${year}" class="year-section w-full max-w-sm">
                     <button onclick="toggleYear(this)" class="w-full flex justify-between items-center text-lg font-bold text-[#333333] border-b-2 border-[#333333] pb-1 mt-6 mb-2">
                         ${year} <span class="arrow">◂</span>
                     </button>
-                    <div class="content hidden w-full">${renderFlights(data, setIdx)}</div>
+                    <div class="content hidden w-full">${renderFlights(data, year)}</div>
                 </div>`;
         }
     } catch (e) {
@@ -198,27 +196,27 @@ function formatTime(val) {
 // ฟังก์ชันเดียวจบสำหรับสร้าง HTML การ์ด
 
 // ฟังก์ชันตัวใหม่ (สำหรับรายการปีใน All Flights)
-function createNarrowFlightCardHTML(data, rowIdx, setIdx) {
+function createNarrowFlightCardHTML(flightData) {
     // --- ดึงตรรกะคำนวณมาใส่ให้ครบ ---
-        const d = new Date(data[rowIdx][setIdx]);
+        const d = new Date(flightData.date);
         const dayName = d.toLocaleDateString('en-US', {weekday: 'short'}).toUpperCase();
         const dayNum = d.getDate();
         const month = d.toLocaleDateString('en-US', {month: 'short'}).toUpperCase();
         
-        const h4 = data[rowIdx][setIdx+3] === true;
-        const i4 = data[rowIdx][setIdx+4] === true;
+        const h4 = flightData.dep_ch === true;
+        const i4 = flightData.arr_ch === true;
         const statusIcon = h4 && i4 ? '🛄' : h4 ? '🛫' : i4 ? '🛬' : '⛔';
         const showMeeting = (h4 || i4);
         
-        const flightRaw = String(data[rowIdx][setIdx+6] || '');
+        const flightRaw = String(flightData.flight || '');
         const flightCode = flightRaw.trim().split(' ')[0].toLowerCase(); 
         const airlineMapping = { "tvj": "vj", "pal": "2p" };
         const finalFlightCode = airlineMapping[flightCode] || flightCode;
         const logoUrl = finalFlightCode ? `https://edge.wego.com/image/upload/flights/airlines_square/${finalFlightCode}` : '';
         
-        const j5 = data[rowIdx+1][setIdx+5] || '';
-        const j6 = data[rowIdx+2][setIdx+5] || '';
-        const j7 = data[rowIdx+3][setIdx+5] || '';
+        const j5 = flightData.desc || '';
+        const j6 = flightData.place || '';
+        const j7 = flightData.airport || '';
         const bottomText = showMeeting ? `${j5} ${j6} : ${j7}` : `${j5} ${j6}`;
 
         // --- โครงสร้าง HTML เดียวกับที่ใช้ในลูป (ตัดส่วน Floating Bar ออก) ---
@@ -228,11 +226,11 @@ function createNarrowFlightCardHTML(data, rowIdx, setIdx) {
               <span class="text-[6px] text-gray-400 font-bold bg-gray-100 px-1.5 py-0.5 rounded">${dayName}</span> 
               <span class="text-[9px] font-semibold text-gray-700">${dayNum} ${month}</span>
               <span class="text-[9px] text-gray-300 mx-1">|</span>
-              <span class="text-[9px] text-gray-600">${data[rowIdx][setIdx+5]}</span>
+              <span class="text-[9px] text-gray-600">${flightData.name}</span>
               <div class="flex flex-1 justify-end items-center text-right">
                 <div class="mr-1.5">
-                  <div class="text-[9px] font-bold text-gray-800">${data[rowIdx][setIdx+6]}</div>
-                  <div class="text-[6px] text-gray-400 font-medium leading-none">${data[rowIdx][setIdx+7]}</div>
+                  <div class="text-[9px] font-bold text-gray-800">${flightRaw}</div>
+                  <div class="text-[6px] text-gray-400 font-medium leading-none">${flightData.airline}</div>
                 </div>
                 <img src="${logoUrl}" class="w-4 h-4 object-contain" onerror="this.style.display='none'">
               </div>
@@ -240,19 +238,19 @@ function createNarrowFlightCardHTML(data, rowIdx, setIdx) {
 
             <div class="grid grid-cols-[1fr,auto,1fr] items-end text-lg font-black text-[#333333] my-1 gap-2">
               <div class="flex items-baseline items-end justify-start gap-1 overflow-hidden">
-                    <span class="text-sm font-bold text-gray-800">${data[rowIdx+2][setIdx+3]}</span>
-                    <span class="text-[6px] text-gray-500 text-center">${data[rowIdx+3][setIdx+3] || ''}</span>
+                    <span class="text-sm font-bold text-gray-800">${flightData.dep_ap}</span>
+                    <span class="text-[6px] text-gray-500 text-center">${flightData.dep_pl || ''}</span>
               </div>
               
               <div class="grid grid-cols-[1fr,auto,1fr] items-center gap-1 px-2">
-                    <div class="flex text-xs font-bold text-gray-800 items-center justify-center">${formatTime(data[rowIdx+1][setIdx+3])}</div>
+                    <div class="flex text-xs font-bold text-gray-800 items-center justify-center">${formatTime(flightData.dep_t)}</div>
                     <div class="text-gray-300 text-sm justify-center mx-2">→</div>
-                    <div class="flex text-xs font-bold text-gray-800 items-center justify-center">${formatTime(data[rowIdx+1][setIdx+4])}</div>
+                    <div class="flex text-xs font-bold text-gray-800 items-center justify-center">${formatTime(flightData.arr_t)}</div>
                 </div>
               
               <div class="flex items-baseline items-end justify-end text-right gap-1 overflow-hidden">
-                    <span class="text-[6px] text-gray-500 text-center">${data[rowIdx+3][setIdx+4] || ''}</span>
-                    <span class="text-sm font-bold text-gray-800 text-left justify-start">${data[rowIdx+2][setIdx+4]}</span>
+                    <span class="text-[6px] text-gray-500 text-center">${flightData.arr_pl || ''}</span>
+                    <span class="text-sm font-bold text-gray-800 text-left justify-start">${flightData.arr_ap}</span>
               </div>
               
             </div>
@@ -326,15 +324,14 @@ function renderSingleFlight(latestFlight) {
 
 
 
-function renderFlights(data, setIdx) {
+function renderFlights(data, year) {
     let html = '';
-    for (let rowIdx = 3; rowIdx < 500; rowIdx += 4) {
-        if (!data[rowIdx] || !data[rowIdx][setIdx]) break;
-        
-        // เปลี่ยนจาก createFlightCardHTML เป็น createNarrowFlightCardHTML
-        // และเอา parameter showFloatingBar ออก เพราะ narrow card ของคุณไม่มีส่วนนี้
-        html += createNarrowFlightCardHTML(data, rowIdx, setIdx);
-    }
+    const flightsOfYear = Object.values(result[year]);
+    flightsOfYear.forEach(flightData => {
+        // คุณไม่ต้องส่ง rowIdx หรือ setIdx เข้าไปใน renderSingleFlight แล้ว
+        // เพราะเรามี Object 'flightData' ที่มีข้อมูลครบถ้วนอยู่ในมือ
+        html += createNarrowFlightCardHTML(flightData);
+    });
     const container = document.getElementById('card-container');
     if (container) {
         container.innerHTML = html;
