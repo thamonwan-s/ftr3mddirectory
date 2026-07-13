@@ -12,6 +12,12 @@ async function fetchFlights(pageKey) {
     });
     const textData = await response.text();
     console.log("ข้อมูลที่ได้จาก Server (Raw):", textData); // <--- เช็คใน Console ว่ามันขึ้นเป็น { ... } หรือขึ้นเป็น <html>
+    try {
+        return JSON.parse(textData);
+    } catch (e) {
+        console.error("Server ไม่ได้ส่ง JSON กลับมา! สิ่งที่ได้คือ:", textData);
+        throw new Error("Server response is not valid JSON");
+    }
     
     // เปลี่ยนบรรทัดที่ 16 เป็น:
     if (!response.ok) {
