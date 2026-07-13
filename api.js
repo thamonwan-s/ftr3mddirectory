@@ -46,7 +46,7 @@ function prepareGridData(rawData, pageKey) {
                 const row3 = rawData[r+2];
                 const row4 = rawData[r+3];
     
-                const i = counters++;
+                counters = counters+1;
                 const flightObj = {};
     
                 flightObj['date']=row1[setIdx +0];
