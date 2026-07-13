@@ -9,8 +9,6 @@ async function fetchFlights(pageKey) {
     const url = SCRIPT_URL + "?fileId=" + encodeURIComponent(fileId) + "&function=" + encodeURIComponent(action);
     const response = await fetch(url, {
         method: 'GET',
-        mode: 'no-cors', // ลองใช้ no-cors ถ้าติดเรื่องสิทธิ์เข้าถึง
-        cache: 'no-cache'
     });
     
     // เปลี่ยนบรรทัดที่ 16 เป็น:
