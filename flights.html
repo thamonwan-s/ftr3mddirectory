@@ -59,8 +59,6 @@
     document.addEventListener('DOMContentLoaded', async () => {
         injectHeader();    // ใส่ Header
         updateBreadcrumb(); // เติมข้อมูล Breadcrumb ใน id="breadcrumb" ที่ถูกสร้างขึ้น
-        const data = await loadPageData('EUROPE_FLIGHTS');
-        renderFlights(data);
     });
   </script>
 </body>
