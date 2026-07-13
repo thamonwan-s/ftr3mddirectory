@@ -25,7 +25,8 @@ async function fetchFlights(pageKey) {
         console.error("Server Error Details:", errorText);
         throw new Error(`Network response was not ok: ${response.status} - ${errorText}`);
     }
-    return await response.json();
+    const rawData = await response.json();
+    return prepareGridData(rawData,pageKey);
 }
 
 /**
