@@ -194,7 +194,6 @@ async function loadPageData(pageKey) {
         // ถ้าหน้า HTML นั้นมีฟังก์ชันแสดงผล ให้เรียกใช้ได้เลย
         renderSortFlight(data, pageKey);
         }
-    }
 }
 
 function formatTime(val) {
