@@ -136,7 +136,7 @@ async function fetchAndDisplayFlights(type = 'all') {
                     <div class="content hidden w-full">${renderFlights(data, setIdx)}</div>
                 </div>`;
         }
-    } catch (e) {
+     catch (e) {
         container.innerHTML = '<div class="text-center mt-10 text-red-500">เกิดข้อผิดพลาดในการโหลดข้อมูล</div>';
         console.error("Error:", e);
     }
