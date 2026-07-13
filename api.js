@@ -11,7 +11,6 @@ async function fetchFlights(pageKey) {
         method: 'GET',
     });
     const textData = await response.text();
-    console.log("ข้อมูลที่ได้จาก Server (Raw):", textData); // <--- เช็คใน Console ว่ามันขึ้นเป็น { ... } หรือขึ้นเป็น <html>
     try {
         return JSON.parse(textData);
     } catch (e) {
