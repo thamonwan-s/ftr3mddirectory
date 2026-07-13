@@ -123,7 +123,8 @@ async function fetchAndDisplayFlights(type = 'all') {
             `;
 
         // 3. วนลูปสร้างปี/เดือน
-        for (const year of years) {
+        const sortedYears = Object.keys(result).sort((a, b) => b - a); // 1. นำปีมาเรียงจากมากไปน้อยก่อนเริ่มลูป
+        for (const year of sortedYears) {
             
             container.innerHTML += `
                 <div id="year-${year}" class="year-section w-full max-w-sm">
