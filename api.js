@@ -33,7 +33,7 @@ function prepareGridData(rawData, pageKey) {
         const headerRow = rawData[0];
         for (let setIdx=4; setIdx<headerRow.length; setIdx+=9){
             const year = headerRow[setIdx];
-            const counters = 1;
+            let i = 1;
             if (!year) continue;
             if (!result[year]) {
                 result[year] = {};; // เริ่มนับจาก 1 สำหรับแต่ละปี
@@ -46,7 +46,7 @@ function prepareGridData(rawData, pageKey) {
                 const row3 = rawData[r+2];
                 const row4 = rawData[r+3];
     
-                counters = counters+1;
+                i = i+1;
                 const flightObj = {};
     
                 flightObj['date']=row1[setIdx +0];
