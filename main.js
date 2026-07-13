@@ -103,7 +103,7 @@ async function fetchAndDisplayFlights(type = 'all') {
     container.innerHTML = '<div class="text-center mt-10 text-gray-500">กำลังโหลดข้อมูล...</div>';
 
     try {
-        const data = fetchFlight('ALL_FLIGHTS');
+        const data = fetchFlights('ALL_FLIGHTS');
         container.innerHTML = "";
 
         // 1. กรองข้อมูล (ถ้ามี)
