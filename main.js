@@ -326,7 +326,7 @@ function renderSingleFlight(latestFlight) {
 
 function renderFlights(data, year) {
     let html = '';
-    const flightsOfYear = Object.values(result[year]);
+    const flightsOfYear = Object.values(data[year]);
     flightsOfYear.forEach(flightData => {
         // คุณไม่ต้องส่ง rowIdx หรือ setIdx เข้าไปใน renderSingleFlight แล้ว
         // เพราะเรามี Object 'flightData' ที่มีข้อมูลครบถ้วนอยู่ในมือ
