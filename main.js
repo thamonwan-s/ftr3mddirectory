@@ -103,10 +103,10 @@ async function fetchAndDisplayFlights(type = 'all') {
     container.innerHTML = '<div class="text-center mt-10 text-gray-500">กำลังโหลดข้อมูล...</div>';
 
     try {
-        const { fileId, action } = CONFIG[ALL_FLIGHTS];
+        const { fileId, action } = CONFIG['ALL_FLIGHTS'];
     
         // แปลง params (เช่น {type: 'intl'}) ให้เป็น query string
-        const queryString = new URLSearchParams({ fileId, action, ...params }).toString();
+        const queryString = new URLSearchParams({ fileId: fileId, function: action }).toString();
         const response = await fetch(`${SCRIPT_URL}?${queryString}`);
         const data = await response.json();
         container.innerHTML = "";
