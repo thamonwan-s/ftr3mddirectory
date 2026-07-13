@@ -105,29 +105,20 @@ async function fetchAndDisplayFlights(type = 'all') {
     try {
         const data = fetchFlights('ALL_FLIGHTS');
         container.innerHTML = "";
-
-        // 1. กรองข้อมูล (ถ้ามี)
-        let filteredData = data; 
-        if (type === 'intl') {
-            filteredData = data.filter(row => row[10] === 'International');
-        } else if (type === 'dom') {
-            filteredData = data.filter(row => row[10] === 'Domestic');
-        }
-
+        
         // 2. หา Recent Flight (ใช้ข้อมูลดิบจาก data ชุดแรก)
-        let latestRowIdx = -1;
-        for (let rowIdx = 499; rowIdx >= 3; rowIdx--) {
-            if (data[rowIdx] && data[rowIdx][4]) {
-                latestRowIdx = rowIdx;
-                break;
-            }
-        }
+        const years = Object.keys(result); // จะได้ ["2022", "2023", ..., "2026"]
+        const latestYear = years[years.length - 1]; // ดึงปีท้ายสุดออกมา
+        
+        const entries = Object.keys(result[latestYear]); // ได้ ["0", "1", ..., "12"]
+        const latestEntryKey = entries[entries.length - 1]; // ดึง Index ท้ายสุดออกมา
+        
+        const latestFlight = result[latestYear][latestEntryKey];
 
-        if (latestRowIdx !== -1) {
-            container.innerHTML += `
+        container.innerHTML += `
                 <div class="w-full max-w-sm mb-6">
                     <h2 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-2">Recent Flight</h2>
-                    ${renderSingleFlight(data, latestRowIdx, 4)}
+                    ${renderSingleFlight(latestFlight)}
                 </div>
             `;
         }
@@ -276,25 +267,25 @@ function createNarrowFlightCardHTML(data, rowIdx, setIdx) {
 
 function renderSingleFlight(data, rowIdx, setIdx) {
         // --- ดึงตรรกะคำนวณมาใส่ให้ครบ ---
-        const d = new Date(data[rowIdx][setIdx]);
+        const d = latestFlight.date;
         const dayName = d.toLocaleDateString('en-US', {weekday: 'short'}).toUpperCase();
         const dayNum = d.getDate();
         const month = d.toLocaleDateString('en-US', {month: 'short'}).toUpperCase();
         
-        const h4 = data[rowIdx][setIdx+3] === true;
-        const i4 = data[rowIdx][setIdx+4] === true;
+        const h4 = latestFlight.dep_ch === true;
+        const i4 = latestFlight.arr_ch === true;
         const statusIcon = h4 && i4 ? '🛄' : h4 ? '🛫' : i4 ? '🛬' : '⛔';
         const showMeeting = (h4 || i4);
         
-        const flightRaw = String(data[rowIdx][setIdx+6] || '');
+        const flightRaw = String(latestFlight.flight || '');
         const flightCode = flightRaw.trim().split(' ')[0].toLowerCase(); 
         const airlineMapping = { "tvj": "vj", "pal": "2p" };
         const finalFlightCode = airlineMapping[flightCode] || flightCode;
         const logoUrl = finalFlightCode ? `https://edge.wego.com/image/upload/flights/airlines_square/${finalFlightCode}` : '';
         
-        const j5 = data[rowIdx+1][setIdx+5] || '';
-        const j6 = data[rowIdx+2][setIdx+5] || '';
-        const j7 = data[rowIdx+3][setIdx+5] || '';
+        const j5 = latestFlight.desc || '';
+        const j6 = latestFlight.place || '';
+        const j7 = latestFlight.airport || '';
         const bottomText = showMeeting ? `${j5} ${j6} : ${j7}` : `${j5} ${j6}`;
 
         // --- โครงสร้าง HTML เดียวกับที่ใช้ในลูป (ตัดส่วน Floating Bar ออก) ---
@@ -304,11 +295,11 @@ function renderSingleFlight(data, rowIdx, setIdx) {
               <span class="text-[10px] text-gray-400 font-bold bg-gray-100 px-2 py-0.5 rounded">${dayName}</span> 
               <span class="text-sm font-semibold text-gray-700">${dayNum} ${month}</span>
               <span class="text-gray-300 mx-2"> | </span>
-              <span class="text-sm text-gray-700">${data[rowIdx][setIdx+5]}</span>
+              <span class="text-sm text-gray-700">${latestFlight.name}</span>
               <div class="flex flex-1 justify-end items-center text-right">
                 <div class="mr-2">
-                  <div class="text-sm font-bold text-gray-800">${data[rowIdx][setIdx+6]}</div>
-                  <div class="text-[9px] text-gray-400 font-medium">${data[rowIdx][setIdx+7]}</div>
+                  <div class="text-sm font-bold text-gray-800">${flightRaw}</div>
+                  <div class="text-[9px] text-gray-400 font-medium">${latestFlight.airline}</div>
                 </div>
                 <img src="${logoUrl}" class="w-6 h-6 object-contain" onerror="this.style.display='none'">
               </div>
@@ -316,15 +307,15 @@ function renderSingleFlight(data, rowIdx, setIdx) {
 
             <div class="flex justify-between items-center text-2xl sm:text-3xl font-black text-[#333333] my-4">
               <div class="text-center">
-                <div>${data[rowIdx+2][setIdx+3]}</div>
-                <div class="text-lg font-bold text-gray-800">${formatTime(data[rowIdx+1][setIdx+3])}</div>
-                <div class="text-xs text-gray-500">${data[rowIdx+3][setIdx+3] || ''}</div>
+                <div>${latestFlight.dep_ap}</div>
+                <div class="text-lg font-bold text-gray-800">${formatTime(latestFlight.dep_t)}</div>
+                <div class="text-xs text-gray-500">${latestFlight.dep_pl || ''}</div>
               </div>
               <div class="text-gray-400 text-lg">→</div>
               <div class="text-center">
-                <div>${data[rowIdx+2][setIdx+4]}</div>
-                <div class="text-lg font-bold text-gray-800">${formatTime(data[rowIdx+1][setIdx+4])}</div>
-                <div class="text-xs text-gray-500">${data[rowIdx+3][setIdx+4] || ''}</div>
+                <div>${latestFlight.arr_ap}</div>
+                <div class="text-lg font-bold text-gray-800">${formatTime(latestFlight.arr_t)}</div>
+                <div class="text-xs text-gray-500">${latestFlight.arr_pl || ''}</div>
               </div>
             </div>
 
