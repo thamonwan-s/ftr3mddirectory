@@ -107,13 +107,13 @@ async function fetchAndDisplayFlights(type = 'all') {
         container.innerHTML = "";
         
         // 2. หา Recent Flight (ใช้ข้อมูลดิบจาก data ชุดแรก)
-        const years = Object.keys(result); // จะได้ ["2022", "2023", ..., "2026"]
+        const years = Object.keys(data); // จะได้ ["2022", "2023", ..., "2026"]
         const latestYear = years[years.length - 1]; // ดึงปีท้ายสุดออกมา
         
-        const entries = Object.keys(result[latestYear]); // ได้ ["0", "1", ..., "12"]
+        const entries = Object.keys(data[latestYear]); // ได้ ["0", "1", ..., "12"]
         const latestEntryKey = entries[entries.length - 1]; // ดึง Index ท้ายสุดออกมา
         
-        const latestFlight = result[latestYear][latestEntryKey];
+        const latestFlight = data[latestYear][latestEntryKey];
 
         container.innerHTML += `
                 <div class="w-full max-w-sm mb-6">
