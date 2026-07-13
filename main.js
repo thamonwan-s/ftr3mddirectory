@@ -161,6 +161,7 @@ async function loadPageData(pageKey) {
         fetchAndDisplayFlights('all');
     } else {
         const data = await fetchFlights(pageKey);
+        displayFlightsByType?.(data);
     }
 }
 
