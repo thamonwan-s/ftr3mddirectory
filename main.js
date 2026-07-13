@@ -156,7 +156,10 @@ async function loadPageData(pageKey) {
         fetchAndDisplayFlights('all');
     } else {
         const data = await fetchFlights(pageKey);
-        displayFlightsByType?.(data);
+        // ถ้าหน้า HTML นั้นมีฟังก์ชันแสดงผล ให้เรียกใช้ได้เลย
+        if (typeof window.renderContent === 'function') {
+            window.renderContent(data, pageKey);
+        }
     }
 }
 
