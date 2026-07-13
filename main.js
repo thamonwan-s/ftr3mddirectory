@@ -17,6 +17,7 @@ function updateBreadcrumb() {
     const pageMap = {
         'flights.html': { name: 'Flights', parent: null },
         'all-flights.html': { name: 'All Flights', parent: 'flights.html' },
+        'international.html': { name: 'Interational', parent: 'flights.html' },
         'schedule.html': { name: 'Schedule', parent: null }
     };
 
