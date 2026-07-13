@@ -1,20 +1,11 @@
-// api.js
-async function fetchFlights(pageKey) {
-    // ดึงค่าจาก CONFIG ที่อยู่ใน config.js
+// api.js (แบบรวมฟังก์ชันเดียว)
+async function fetchFlights(pageKey, params = {}) {
     const { fileId, action } = CONFIG[pageKey];
     
-    // เรียกใช้ SCRIPT_URL จาก config.js ได้เลย
-    const response = await fetch(`${SCRIPT_URL}?fileId=${fileId}&action=${action}`);
+    // แปลง params (เช่น {type: 'intl'}) ให้เป็น query string
+    const queryString = new URLSearchParams({ fileId, action, ...params }).toString();
     
-    if (!response.ok) throw new Error('Network response was not ok');
-    return await response.json();
-}
-
-// เพิ่มฟังก์ชันนี้ลงใน api.js
-async function getFlightsByCategory(fileId, category) {
-    // ใช้ Template Literal ในการส่ง category ต่อท้าย URL ไปที่ Apps Script
-    const url = `${SCRIPT_URL}?fileId=${fileId}&action=getInterData&type=${category}`;
-    const response = await fetch(url);
+    const response = await fetch(`${SCRIPT_URL}?${queryString}`);
     
     if (!response.ok) throw new Error('Network response was not ok');
     return await response.json();
