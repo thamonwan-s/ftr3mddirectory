@@ -156,6 +156,14 @@ async function fetchAndDisplayFlights(type = 'all') {
     }
 }
 
+async function loadPageData(pageKey) {
+    if (pageKey === 'ALL_FLIGHTS') {
+        fetchAndDisplayFlights('all');
+    } else {
+        const data = await fetchFlights(pageKey);
+    }
+}
+
 function formatTime(val) {
     if (!val) return '--:--';
     const date = new Date(val);
@@ -294,14 +302,7 @@ function renderSingleFlight(data, rowIdx, setIdx) {
           </div>`;
     }
 
-async function loadPageData(pageKey) {
-    if (pageKey === 'ALL_FLIGHTS') {
-        fetchAndDisplayFlights('all');
-    } else {
-        const data = await fetchFlights(pageKey);
-        renderTable(data);
-    }
-}
+
 
 function renderFlights(data, setIdx) {
     let html = '';
