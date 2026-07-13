@@ -151,6 +151,41 @@ async function fetchAndDisplayFlights(type = 'all') {
     }
 }
 
+function renderSortFlight(data, pageKey_Name) {
+    // 1. จัดการ Mapping ข้อมูลจาก Row ให้เป็น Object
+    const mappedFlights = data.map(row => {
+        // ดึงข้อมูลพื้นฐานที่ทุกหน้ามีเหมือนกัน
+        const flight = {
+            date: row[0],
+            timeFly: row[1],
+            timeLand: row[2],
+            // กำหนดค่าเริ่มต้นเป็น null
+            origin: null,
+            destination: null,
+            type: null,
+            code: null,
+            airline: null,
+            note: null
+        };
+
+        // 2. ใช้ Logic ตามเงื่อนไข pageKey_Name เพื่อใส่ค่า
+        if (pageKey_Name === 'INTER_FLIGHTS') {
+            [flight.origin, flight.destination, flight.type, flight.code, flight.airline, flight.note] = [row[3], row[4], row[5], row[6], row[7], row[8]];
+        } else if (pageKey_Name === 'DEP_FLIGHTS') {
+            [flight.origin, flight.type, flight.code, flight.airline, flight.note] = [row[3], row[4], row[5], row[6], row[7]];
+        } else if (pageKey_Name === 'RET_FLIGHTS') {
+            [flight.destination, flight.type, flight.code, flight.airline, flight.note] = [row[3], row[4], row[5], row[6], row[7]];
+        }
+        
+        return flight;
+    });
+
+    // 3. ส่งข้อมูลที่ Map แล้ว ไปให้หน้า HTML นั้นๆ จัดการต่อ
+    if (typeof window.displayFlights === 'function') {
+        window.displayFlights(mappedFlights, pageKey_Name);
+    }
+}
+
 async function loadPageData(pageKey) {
     if (pageKey === 'ALL_FLIGHTS') {
         fetchAndDisplayFlights('all');
