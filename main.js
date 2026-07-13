@@ -104,7 +104,7 @@ async function fetchAndDisplayFlights(type = 'all') {
 
     try {
         const data = await fetchFlights('ALL_FLIGHTS');
-        container.innerHTML = "";
+        let htmlContent = '';
         
         // 2. หา Recent Flight (ใช้ข้อมูลดิบจาก data ชุดแรก)
         const years = Object.keys(data); // จะได้ ["2022", "2023", ..., "2026"]
@@ -115,17 +115,19 @@ async function fetchAndDisplayFlights(type = 'all') {
         
         const latestFlight = data[latestYear][latestEntryKey];
 
-        container.innerHTML += `
+        htmlContent += `
                 <div class="w-full max-w-sm mb-6">
                     <h2 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-2">Recent Flight</h2>
                     ${renderSingleFlight(latestFlight)}
                 </div>
             `;
+        container.innerHTML = htmlContent;
 
         // 3. วนลูปสร้างปี/เดือน
+        let htmlContent = '';
         for (const year of years.reverse()) {
             
-            container.innerHTML += `
+            htmlContent += `
                 <div id="year-${year}" class="year-section w-full max-w-sm">
                     <button onclick="toggleYear(this)" class="w-full flex justify-between items-center text-lg font-bold text-[#333333] border-b-2 border-[#333333] pb-1 mt-6 mb-2">
                         ${year} <span class="arrow">◂</span>
@@ -133,6 +135,7 @@ async function fetchAndDisplayFlights(type = 'all') {
                     <div class="content hidden w-full">${renderFlights(data, year)}</div>
                 </div>`;
         }
+        container.innerHTML = htmlContent;
     } catch (e) {
         container.innerHTML = '<div class="text-center mt-10 text-red-500">เกิดข้อผิดพลาดในการโหลดข้อมูล</div>';
         console.error("Error:", e);
