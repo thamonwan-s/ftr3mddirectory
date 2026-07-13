@@ -8,7 +8,7 @@ const CONFIG = {
     },
     INTER_FLIGHTS: {
         fileId: '1LTuNtQ7ChcHYkdbI63_zPpr2pTH95BnLCs_JB8dNE50',
-        action: 'Inter'
+        action: 'getInterData'
     },
     DEP_FLIGHTS: {
         fileId: '1LTuNtQ7ChcHYkdbI63_zPpr2pTH95BnLCs_JB8dNE50',
