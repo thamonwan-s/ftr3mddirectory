@@ -39,9 +39,7 @@
     document.addEventListener('DOMContentLoaded', () => {
         injectHeader();            // ใส่ Header
         updateBreadcrumb();        // เติมข้อมูล Breadcrumb
-        const data = await fetchFlights('INTER_FLIGHTS');
-        // ส่งข้อมูลไป render เป็นตาราง
-        renderTable(data);
+        loadPageData('INTER_FLIGHTS');
     });
 
   function renderTable(data) {
