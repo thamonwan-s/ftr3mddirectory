@@ -13,6 +13,11 @@ async function fetchFlights(pageKey) {
         cache: 'no-cache'
     });
     
-    if (!response.ok) throw new Error('Network response was not ok');
+    // เปลี่ยนบรรทัดที่ 16 เป็น:
+    if (!response.ok) {
+        const errorText = await response.text(); // ดูว่า Google พ่นข้อความ Error อะไรออกมา
+        console.error("Server Error Details:", errorText);
+        throw new Error(`Network response was not ok: ${response.status} - ${errorText}`);
+    }
     return await response.json();
 }
