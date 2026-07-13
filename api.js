@@ -10,6 +10,8 @@ async function fetchFlights(pageKey) {
     const response = await fetch(url, {
         method: 'GET',
     });
+    const textData = await response.text();
+    console.log("ข้อมูลที่ได้จาก Server (Raw):", textData); // <--- เช็คใน Console ว่ามันขึ้นเป็น { ... } หรือขึ้นเป็น <html>
     
     // เปลี่ยนบรรทัดที่ 16 เป็น:
     if (!response.ok) {
