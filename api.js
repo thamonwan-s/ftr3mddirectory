@@ -33,7 +33,7 @@ function prepareGridData(rawData, pageKey) {
         const headerRow = rawData[0];
         for (let setIdx=4; setIdx<headerRow.length; setIdx+=9){
             const year = headerRow[setIdx];
-            let i = 1;
+            let i = 0;
             if (!year) continue;
             if (!result[year]) {
                 result[year] = {};; // เริ่มนับจาก 1 สำหรับแต่ละปี
