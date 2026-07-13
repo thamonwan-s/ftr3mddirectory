@@ -44,14 +44,23 @@
         renderTable(data);
     });
 
-    function renderTable(data) {
-        const tableBody = document.querySelector('#flight-table tbody');
-        // ลบ Header ออกจาก data ก่อน (ถ้ามี)
-        const rows = data.slice(1); 
+  function renderTable(data) {
+        const container = document.getElementById('flight-container');
+        // เคลียร์ Loading
+        document.getElementById('loading').remove();
+
+        // 2. สร้างโครงสร้างตาราง (ตัวอย่าง)
+        let html = `<table id="flight-table" class="w-full">
+                        <thead><tr><th>เที่ยวบิน</th><th>เส้นทาง</th></tr></thead>
+                        <tbody>`;
         
+        const rows = data.slice(1); 
         rows.forEach(row => {
-            // สร้าง HTML แถวตารางตามปกติ
+            html += `<tr><td>${row[0]}</td><td>${row[1]}</td></tr>`;
         });
+        
+        html += `</tbody></table>`;
+        container.innerHTML += html;
     }
   </script>
 
