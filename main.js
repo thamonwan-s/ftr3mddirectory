@@ -121,7 +121,6 @@ async function fetchAndDisplayFlights(type = 'all') {
                     ${renderSingleFlight(latestFlight)}
                 </div>
             `;
-        }
 
         // 3. วนลูปสร้างปี/เดือน
         for (let setIdx = 4; setIdx < 200; setIdx += 9) {
