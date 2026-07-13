@@ -5,7 +5,7 @@ async function fetchFlights(pageKey) {
     // แปลง params (เช่น {type: 'intl'}) ให้เป็น query string
     const queryString = new URLSearchParams({ fileId: fileId, function: action }).toString();
     
-    const response = await fetch(`${SCRIPT_URL}?${queryString}`);
+    const response = await fetch(`${SCRIPT_URL}/?${queryString}`);
     
     if (!response.ok) throw new Error('Network response was not ok');
     return await response.json();
