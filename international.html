@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FTR3MD's - International</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+  <link rel="preload" href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500&display=swap" as="style">
+  <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500&display=swap" rel="stylesheet">
+    
+  <script src="https://cdn.tailwindcss.com"></script>    
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script src="config.js" defer></script>
+  <script src="api.js" defer></script>
+  <script src="header.js" defer></script>
+  <script src="main.js" defer></script>
+  <style>body { font-family: 'Kanit', sans-serif; }</style>
+</head>
+<body class="bg-white min-h-screen flex flex-col">
+
+  <main id="flight-container" class="flex flex-col items-center p-4 space-y-4 w-full">
+    <div id="loading" class="text-center mt-10 text-gray-500">กำลังโหลดข้อมูล...</div>
+  </main>
+
+  <script>
+    const loginTime = localStorage.getItem('loginTime');
+    const isExpired = !loginTime || (Date.now() - parseInt(loginTime) > 12 * 60 * 60 * 1000);
+
+    if (isExpired) {
+        localStorage.removeItem('loginTime'); // ล้างทิ้ง
+        window.location.href = 'index.html';
+    }
+  </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        injectHeader();            // ใส่ Header
+        updateBreadcrumb();        // เติมข้อมูล Breadcrumb
+        const data = await getFlightsByCategory(CONFIG.FILE_ID, 'International');
+        // ส่งข้อมูลไป render เป็นตาราง
+        renderTable(data);
+    });
+
+    function renderTable(data) {
+        const tableBody = document.querySelector('#flight-table tbody');
+        // ลบ Header ออกจาก data ก่อน (ถ้ามี)
+        const rows = data.slice(1); 
+        
+        rows.forEach(row => {
+            // สร้าง HTML แถวตารางตามปกติ
+        });
+    }
+  </script>
+
+</body>
+</html>
