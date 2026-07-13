@@ -11,22 +11,17 @@ async function fetchFlights(pageKey) {
         method: 'GET',
     });
     const textData = await response.text();
+    let rawData;
     console.log("ข้อมูลที่ได้จาก Server (Raw):", textData);
     try {
-        return JSON.parse(textData);
+        rawData = JSON.parse(textData);
     } catch (e) {
         console.error("Server ไม่ได้ส่ง JSON กลับมา! สิ่งที่ได้คือ:", textData);
         throw new Error("Server response is not valid JSON");
     }
-    
-    // เปลี่ยนบรรทัดที่ 16 เป็น:
-    if (!response.ok) {
-        const errorText = await response.text(); // ดูว่า Google พ่นข้อความ Error อะไรออกมา
-        console.error("Server Error Details:", errorText);
-        throw new Error(`Network response was not ok: ${response.status} - ${errorText}`);
-    }
-    const rawData = await response.json();
-    return prepareGridData(rawData,pageKey);
+
+    // 3. เมื่อข้อมูลเป็น JSON ที่ถูกต้องแล้ว ค่อยส่งไป Mapping
+    return prepareGridData(rawData, pageKey);
 }
 
 /**
