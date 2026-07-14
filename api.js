@@ -92,7 +92,6 @@ function prepareGridData(rawData, pageKey) {
             result[year][Object.keys(result[year]).length + 1] = flightObj;
             }
         }
-    }
         console.log("ข้อมูลที่ได้จาก All Flights Server (Raw):", result);
         return result;
 }
