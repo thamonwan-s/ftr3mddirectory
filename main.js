@@ -183,7 +183,7 @@ function renderUI(dataToDisplay) {
                         class="w-full flex justify-between items-center text-lg font-bold text-[#333333] border-b-2 border-[#333333] pb-1 mt-6 mb-2">
                     ${years[y]} <span class="arrow">◂</span>
                 </button>
-                <div class="content hidden w-full"></div>
+                <div class="content ${isCurrentlyOpen ? '' : 'hidden'} w-full"></div>
             </div>`;
     }
     container.innerHTML = htmlContent;
