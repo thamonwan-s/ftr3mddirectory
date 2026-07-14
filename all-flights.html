@@ -12,11 +12,6 @@
     
   <script src="https://cdn.tailwindcss.com"></script>    
   <script src="https://unpkg.com/lucide@latest"></script>
-
-  <script src="config.js"></script>
-  <script src="api.js"></script>
-  <script src="header.js"></script>
-  <script src="main.js"></script>
   <style>body { font-family: 'Kanit', sans-serif; }</style>
 </head>
 <body class="bg-white min-h-screen flex flex-col">
@@ -24,6 +19,11 @@
   <main id="flight-container" class="flex flex-col items-center p-4 space-y-4 w-full">
     <div id="loading" class="text-center mt-10 text-gray-500">กำลังโหลดข้อมูล...</div>
   </main>
+
+  <script src="config.js"></script>
+  <script src="api.js"></script>
+  <script src="header.js"></script>
+  <script src="main.js"></script>
 
   <script>
     const loginTime = localStorage.getItem('loginTime');
