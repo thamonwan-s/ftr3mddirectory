@@ -101,15 +101,15 @@ async function loadAndToggleYear(button, year) {
 
     // 2. ถ้ากางออกมาแล้ว เช็คว่าต้องโหลดข้อมูลไหม
     const isLoaded = button.getAttribute('data-loaded') === 'true';
-    if (!isLoaded || contentDiv.innerHTML.includes("กำลังโหลด")) {
+    if (isLoaded) return;
+    contentDiv.innerHTML = `<div class="p-4 text-center text-gray-500">กำลังโหลดข้อมูล...</div>`;
         if (!window.flightData) {
-            contentDiv.innerHTML = `<div class="p-4 text-center text-gray-500">กำลังโหลดข้อมูล...</div>`;
             await new Promise(resolve => window.addEventListener('recdataReady', resolve, { once: true }));
         }
         const data = window.flightData?.result || window.flightData;
         contentDiv.innerHTML = renderFlights(data, year);
         button.setAttribute('data-loaded', 'true');
-    }
+    
 }
     
     const observer = new IntersectionObserver((entries) => {
