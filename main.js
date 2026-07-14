@@ -56,19 +56,14 @@ async function checkPassword() {
     const input = document.getElementById('pass').value;
     if (!input) return;
 
-    // 1. เรียก URL เดิมเป๊ะๆ แต่ใช้ fetch แทนการสร้าง script tag
-    const url = `${SCRIPT_URL}?function=checkPassword&pass=${encodeURIComponent(input)}&callback=handleResponse`;
+    // เปลี่ยนมาใช้ fetch ดึงข้อมูล JSON ตรงๆ
+    // ไม่ต้องมี &callback=... อีกต่อไป
+    const url = `${SCRIPT_URL}?function=checkPassword&pass=${encodeURIComponent(input)}`;
 
     try {
         const response = await fetch(url);
-        const text = await response.text(); // ดึงมาเป็นข้อความดิบ
+        const isCorrect = await response.json(); // รับค่า true/false จาก JSON ที่คุณ return ออกมา
 
-        // 2. ตัดส่วน "handleResponse(...)" ออกจาก string เพื่อเอาเฉพาะค่าข้างใน
-        // ปกติ Google จะตอบกลับมาเป็น: handleResponse(true)
-        const jsonString = text.substring(text.indexOf('(') + 1, text.lastIndexOf(')'));
-        const isCorrect = JSON.parse(jsonString);
-
-        // 3. ทำงานต่อเหมือนเดิม
         if (isCorrect === true) {
             localStorage.setItem('loginTime', Date.now().toString());
             window.location.href = 'all-flights.html';
@@ -77,7 +72,7 @@ async function checkPassword() {
         }
     } catch (error) {
         console.error("Login Error:", error);
-        alert("การเชื่อมต่อถูกบล็อก - กรุณาตรวจสอบว่า Google Script ยัง Deploy อยู่");
+        alert("ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้");
     }
 }
 
