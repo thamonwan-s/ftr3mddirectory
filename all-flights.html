@@ -74,21 +74,26 @@
     };
 
 async function loadAndToggleYear(button, year) {
-    // 1. Toggle การแสดงผล (เปิด/ปิด)
-    toggleYear(button);
     const contentDiv = button.nextElementSibling;
     const yearId = button.closest('.year-section').id;
 
-    // ดึงค่าเก่ามาเช็ค (ถ้าไม่มีให้เริ่มเป็น Array ว่าง)
-    let openYears = JSON.parse(sessionStorage.getItem('openYears') || '[]');
-    
-    // ถ้าปิดอยู่ ก็จบการทำงาน ไม่ต้องทำอะไร
+    // ถ้า contentDiv ยังมี class 'hidden' อยู่ (แปลว่าตอนนี้มันปิดอยู่)
+    // ถึงจะยอมให้สั่ง toggleYear เพื่อเปิดมัน
     if (contentDiv.classList.contains('hidden')) {
+        toggleYear(button);
+    }
+
+    // หลังจากสั่งเปิดแล้ว (หรือถ้ามันเปิดอยู่แล้ว) ให้เช็คสถานะอีกรอบ
+    // ถ้าตอนนี้มันยังปิดอยู่ ให้ return ออกไปเลย (ป้องกันการทำงานซ้ำซ้อน)
+    if (contentDiv.classList.contains('hidden')) {
+        let openYears = JSON.parse(sessionStorage.getItem('openYears') || '[]');
         openYears = openYears.filter(id => id !== yearId);
         sessionStorage.setItem('openYears', JSON.stringify(openYears));
         return;
     }
-    // ถ้าเปิดอยู่ (ไม่ hidden) -> บันทึก ID ลงไป
+
+    // ถ้ามาถึงตรงนี้ แสดงว่าปีนี้เปิดอยู่ (กางออกอยู่) ให้บันทึกสถานะ
+    let openYears = JSON.parse(sessionStorage.getItem('openYears') || '[]');
     if (!openYears.includes(yearId)) {
         openYears.push(yearId);
         sessionStorage.setItem('openYears', JSON.stringify(openYears));
@@ -96,19 +101,12 @@ async function loadAndToggleYear(button, year) {
 
     // 2. ถ้ากางออกมาแล้ว เช็คว่าต้องโหลดข้อมูลไหม
     const isLoaded = button.getAttribute('data-loaded') === 'true';
-    
     if (!isLoaded || contentDiv.innerHTML.includes("กำลังโหลด")) {
-        
-        // ถ้าข้อมูลยังไม่มีจริงๆ ค่อยเริ่มแสดงสถานะ "กำลังโหลด" และรอ
         if (!window.flightData) {
             contentDiv.innerHTML = `<div class="p-4 text-center text-gray-500">กำลังโหลดข้อมูล...</div>`;
             await new Promise(resolve => window.addEventListener('recdataReady', resolve, { once: true }));
         }
-
-        // มั่นใจได้ว่ามาถึงตรงนี้ window.recFlight มีค่าแล้ว
         const data = window.flightData?.result || window.flightData;
-        
-        // Render ข้อมูล
         contentDiv.innerHTML = renderFlights(data, year);
         button.setAttribute('data-loaded', 'true');
     }
