@@ -73,27 +73,29 @@
       threshold: 0.6 
     };
 
-    async function loadAndToggleYear(button, year) {
-      // Toggle แสดง/ซ่อน (ฟังก์ชัน toggleYear เดิมของคุณ)
-      toggleYear(button);
-      const contentDiv = button.nextElementSibling;
-      const isVisible = !contentDiv.classList.contains('hidden');
+async function loadAndToggleYear(button, year) {
+    // 1. Toggle การแสดงผล (เปิด/ปิด)
+    toggleYear(button);
+    const contentDiv = button.nextElementSibling;
+    
+    // ถ้าปิดอยู่ ก็จบการทำงาน ไม่ต้องทำอะไร
+    if (contentDiv.classList.contains('hidden')) return;
 
-      // ถ้าสั่งให้ย่อ (ปิด) ไม่ต้องทำอะไรต่อ
-      if (!isVisible) return;
-
-      // 2. ถ้ากางออกมาแล้ว (isVisible เป็น true) -> เช็คว่ามีข้อมูลหรือยัง
-      const isLoaded = button.getAttribute('data-loaded') === 'true';
-      // ถ้ายังไม่โหลด หรือเนื้อหาว่างเปล่า (กรณีโดน Render ใหม่) ให้โหลด
-      if (!isLoaded || contentDiv.innerHTML === ""|| contentDiv.innerHTML.includes("กำลังโหลด")) {
+    // 2. ถ้ากางออกมาแล้ว เช็คว่าต้องโหลดข้อมูลไหม
+    const isLoaded = button.getAttribute('data-loaded') === 'true';
+    
+    if (!isLoaded || contentDiv.innerHTML.includes("กำลังโหลด")) {
+        
+        // ถ้าข้อมูลยังไม่มีจริงๆ ค่อยเริ่มแสดงสถานะ "กำลังโหลด" และรอ
         if (!window.recFlight) {
-            contentDiv.innerHTML = `<div class="p-4 text-center">กำลังโหลดข้อมูล...</div>`;
+            contentDiv.innerHTML = `<div class="p-4 text-center text-gray-500">กำลังโหลดข้อมูล...</div>`;
             await new Promise(resolve => window.addEventListener('recdataReady', resolve, { once: true }));
         }
 
+        // มั่นใจได้ว่ามาถึงตรงนี้ window.recFlight มีค่าแล้ว
         const data = window.recFlight?.result || window.recFlight;
         
-        // ใช้บรรทัดนี้ที่แก้แล้ว (data || {}) เพื่อกัน Error
+        // Render ข้อมูล
         contentDiv.innerHTML = renderFlights(data || {}, year);
         button.setAttribute('data-loaded', 'true');
     }
