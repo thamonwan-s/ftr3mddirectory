@@ -111,6 +111,7 @@ async function fetchAndDisplayFlights(type = 'all') {
     try {
         const {data, years} = await fetchFlights('REC_FLIGHTS');
         console.log("ข้อมูลที่จะ render:", data);
+        console.log("ปีที่จะ render:", years);
         let htmlContent = '';
 
         htmlContent += `
