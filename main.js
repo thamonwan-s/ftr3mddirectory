@@ -106,7 +106,14 @@ function startCountdown(endTime) {
 async function fetchAndDisplayFlights(type = 'all') {
     const container = document.getElementById('flight-container');
     if (!container) return;
-    container.innerHTML = '<div class="text-center mt-10 text-gray-500">กำลังโหลดข้อมูล...</div>';
+
+    if (!window.recFlight){
+        container.innerHTML = '<div class="text-center mt-10 text-gray-500">กำลังโหลดข้อมูล...</div>';
+        // รอรับสัญญาณจาก Event
+        await new Promise((resolve) => {
+            window.addEventListener('recdataReady', resolve, { once: true });
+        });
+    }
 
     try {
         const {flightObj, years} = window.recFlight;
