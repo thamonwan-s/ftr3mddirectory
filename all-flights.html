@@ -60,11 +60,29 @@
 
   <script>
     function toggleYear(btn) {
-      const content = btn.nextElementSibling;
+      const section = button.closest('.year-section');
+      const content = section.querySelector('.content');
+      const yearId = section.id;
+      const arrow = button.querySelector('.arrow');
       content.classList.toggle('hidden');
-      content.classList.toggle('block');
-      btn.querySelector('.arrow').innerText = content.classList.contains('hidden') ? '◂' : '▾';
-    }
+      // 2. อัปเดตลูกศรให้ตรงกับสถานะปัจจุบัน
+      const isHidden = content.classList.contains('hidden');
+      arrow.innerText = isHidden ? '◂' : '▾';
+  
+      // 3. **นี่คือจุดที่ต้องบันทึก:** ดึงค่าปัจจุบันจาก sessionStorage มาแก้ไข
+      let openYears = JSON.parse(sessionStorage.getItem('openYears') || '[]');
+      
+      if (!isHidden) {
+          // ถ้าเพิ่งเปิด ให้ใส่ ID เข้าไป
+          if (!openYears.includes(yearId)) openYears.push(yearId);
+      } else {
+          // ถ้าเพิ่งปิด ให้เอา ID ออก
+          openYears = openYears.filter(id => id !== yearId);
+      }
+      
+      // บันทึกกลับ
+      sessionStorage.setItem('openYears', JSON.stringify(openYears));
+}
 
     // อัปเดตเลขปี/เดือน ตามส่วนที่อยู่กลางจอ
 // แทนที่ Observer เดิมด้วยชุดนี้ครับ
