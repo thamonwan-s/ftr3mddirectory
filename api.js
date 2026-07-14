@@ -93,5 +93,29 @@ function prepareGridData(rawData, pageKey) {
         }
         console.log("ข้อมูลที่ได้จาก All Flights Server (Raw):", result);
         return {result, headerRow};
+    } else if (pageKey  === 'INTER_FLIGHTS'){
+        for (let setIdx=1; setIdx<rawData.length-1; setIdx++){
+            const flightObj = {}
+            const row = rawData[setIdx];
+    
+            flightObj['date']=row[0];
+            flightObj['dep_t']=row[1];
+            flightObj['arr_t']=row[2];
+            flightObj['dep_ap']=row[3];
+            flightObj['arr_ap']=row[4];
+            flightObj['name']=row[5];
+            flightObj['flight']=row[6];
+            flightObj['airline']=row1[7];
+            flightObj['note']=row[8];
+
+            const year = new Date(row[0]).getFullYear();
+            if (!result[year]) {
+                result[year] = {};; // เริ่มนับจาก 1 สำหรับแต่ละปี
+            }
+            const nextIndex = Object.keys(result[year]).length + 1;
+            result[year][nextIndex] = flightObj;
+        }
+        console.log("ข้อมูลที่ได้จาก All Flights Server (Raw):", result);
+        return {result, headerRow};
     }
 }
