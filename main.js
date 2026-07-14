@@ -131,17 +131,27 @@ async function fetchAndDisplayFlights(type = 'all') {
     const container = document.getElementById('flight-container');
     if (!container) return;
 
-    // ตรวจสอบข้อมูลก่อนว่ามีไหม
-    let dataToDisplay = window.recFlight || JSON.parse(sessionStorage.getItem('REC_FLIGHTS_DATA'));
+    // 1. ดึงจาก Storage มาวางที่ window.recFlight ให้แน่นอน
+    if (!window.recFlight) {
+        const cached = sessionStorage.getItem('REC_FLIGHTS_DATA');
+        if (cached) window.recFlight = JSON.parse(cached);
+    }
 
-    if (!dataToDisplay){
+    // 2. ถ้ายังไม่มีข้อมูล ให้รอดูนิดนึง (เพิ่ม Timeout กันค้าง)
+    if (!window.recFlight) {
         container.innerHTML = '<div class="text-center mt-10 text-gray-500">กำลังโหลดข้อมูล...</div>';
-        // รอรับสัญญาณจาก Event
-        await new Promise((resolve) => {
-            window.addEventListener('recdataReady', resolve, { once: true });
-        });
+        
+        // สร้าง Promise รอรับสัญญาณ แต่มี Timeout 10 วินาที
+        const data = await Promise.race([
+            new Promise(resolve => window.addEventListener('recdataReady', (e) => resolve(e.detail), { once: true })),
+            new Promise(resolve => setTimeout(() => resolve(null), 10000)) // ถ้าเกิน 10 วิให้คืนค่า null
+        ]);
 
-        dataToDisplay = window.recFlight;
+        if (!data) {
+            container.innerHTML = '<div class="text-center mt-10 text-red-500">โหลดข้อมูลไม่สำเร็จ (Timeout)</div>';
+            return;
+        }
+        window.recFlight = data;
     }
 
     try {
