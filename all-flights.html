@@ -43,7 +43,8 @@
 
         (async () => {
             console.log("กำลังโหลดข้อมูลเบื้องหลัง...");
-            window.flightData = await fetchFlights('ALL_FLIGHTS');
+            const allData = await fetchFlights('ALL_FLIGHTS');
+            window.flightData = allData;
             console.log("โหลดข้อมูลเบื้องหลังเสร็จแล้ว");
             
             // ส่ง Event ออกไปบอกว่าข้อมูลพร้อมแล้ว
