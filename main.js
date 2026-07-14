@@ -123,8 +123,7 @@ async function fetchAndDisplayFlights(type = 'all') {
             `;
 
         // 3. วนลูปสร้างปี/เดือน
-        window.flightData = await fetchFlights('ALL_FLIGHTS');
-        for (const year of years.reverse()) {
+        for (let year=latestYear; year >= 2022; year--) {
             
             htmlContent += `
                 <div id="year-${year}" class="year-section w-full max-w-sm">
