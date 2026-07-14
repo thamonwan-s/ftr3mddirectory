@@ -40,7 +40,17 @@
         injectHeader();            // ใส่ Header
         updateBreadcrumb();        // เติมข้อมูล Breadcrumb
         loadPageData('ALL_FLIGHTS'); // ดึงข้อมูลมาแสดง (ฟังก์ชันใหม่ใน main.js)
+
+        (async () => {
+            console.log("กำลังโหลดข้อมูลเบื้องหลัง...");
+            window.flightData = await fetchFlights('ALL_FLIGHTS');
+            console.log("โหลดข้อมูลเบื้องหลังเสร็จแล้ว");
+            
+            // ส่ง Event ออกไปบอกว่าข้อมูลพร้อมแล้ว
+            window.dispatchEvent(new CustomEvent('dataReady'));
+        })();
     });
+
   </script>
 
   <script>
@@ -62,6 +72,20 @@
       // Toggle แสดง/ซ่อน (ฟังก์ชัน toggleYear เดิมของคุณ)
       toggleYear(button);
       const contentDiv = button.nextElementSibling;
+
+      // 2. เตรียมที่สำหรับแสดงสถานะ (ใช้ nextElementSibling คือตัว content)
+      const contentDiv = button.nextElementSibling;
+      
+      // 3. เช็คว่าถ้าข้อมูลยังไม่มา และเป็นสถานะ "ยังไม่ได้โหลด"
+      if (!window.flightData && button.getAttribute('data-loaded') !== 'true') {
+          contentDiv.innerHTML = `<div class="p-4 text-center text-gray-500">กำลังโหลดข้อมูล...</div>`;
+          
+          // รอข้อมูลจาก background
+          await new Promise(resolve => window.addEventListener('dataReady', resolve, { once: true }));
+          
+          // ล้างคำว่า "กำลังโหลด" ออกก่อนเริ่ม render ข้อมูลจริง
+          contentDiv.innerHTML = ""; 
+      }
       const isLoaded = button.getAttribute('data-loaded') === 'true';
   
       // ถ้ายังไม่เคยโหลดข้อมูล ให้โหลดตอนนี้
