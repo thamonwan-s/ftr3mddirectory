@@ -143,30 +143,8 @@ async function fetchAndDisplayFlights(type = 'all') {
 
 function renderSortFlight(data, pageKey_Name) {
     // 1. จัดการ Mapping ข้อมูลจาก Row ให้เป็น Object
-    const mappedFlights = data.map(row => {
-        // ดึงข้อมูลพื้นฐานที่ทุกหน้ามีเหมือนกัน
-        const flight = {
-            date: row[0],
-            timeFly: row[1],
-            timeLand: row[2],
-            // กำหนดค่าเริ่มต้นเป็น null
-            origin: null,
-            destination: null,
-            type: null,
-            code: null,
-            airline: null,
-            note: null
-        };
-
-        // 2. ใช้ Logic ตามเงื่อนไข pageKey_Name เพื่อใส่ค่า
-        if (pageKey_Name === 'INTER_FLIGHTS') {
-            [flight.origin, flight.destination, flight.type, flight.code, flight.airline, flight.note] = [row[3], row[4], row[5], row[6], row[7], row[8]];
-        } else if (pageKey_Name === 'DEP_FLIGHTS') {
-            [flight.origin, flight.type, flight.code, flight.airline, flight.note] = [row[3], row[4], row[5], row[6], row[7]];
-        } else if (pageKey_Name === 'RET_FLIGHTS') {
-            [flight.destination, flight.type, flight.code, flight.airline, flight.note] = [row[3], row[4], row[5], row[6], row[7]];
-        }
-        
+        const flight = 'tested';
+        console.log("Inter Flights Preloaded!");
         return flight;
     });
 
@@ -182,7 +160,7 @@ async function loadPageData(pageKey) {
     } else {
         const data = await fetchFlights(pageKey);
         // ถ้าหน้า HTML นั้นมีฟังก์ชันแสดงผล ให้เรียกใช้ได้เลย
-        renderSortFlight(data, pageKey);
+        renderSortFlight(data.result, pageKey);
         }
 }
 
