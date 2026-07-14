@@ -64,7 +64,7 @@ function prepareGridData(rawData, pageKey) {
     else if (pageKey  === 'ALL_FLIGHTS'){
         const headerRow = rawData[0];
         for (let setIdx=1; setIdx<rawData.length-1; setIdx++){
-            const row1 = rawData[setIdx];
+            const row1 = rawData[setIdx][0];
             const row2 = rawData[setIdx][1];
             const row3 = rawData[setIdx][2];
             const row4 = rawData[setIdx][3];
