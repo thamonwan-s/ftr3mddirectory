@@ -66,7 +66,7 @@ async function checkPassword() {
 
         if (isCorrect === true) {
             localStorage.setItem('loginTime', Date.now().toString());
-            window.location.href = 'all-flights.html';
+            window.location.href = 'index.html';
         } else {
             alert("Incorrect password");
         }
