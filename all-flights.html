@@ -92,8 +92,7 @@
     };
 
 async function loadAndToggleYear(button, year) {
-    const section = button.closest('.year-section');
-    const yearId = button.closest('.year-section').id;
+    const section = button.closest('.year-section').id;
     const arrow = button.querySelector('.arrow');
 
     if (button.getAttribute('data-loaded') === 'true') return;
@@ -106,7 +105,6 @@ async function loadAndToggleYear(button, year) {
             await new Promise(resolve => window.addEventListener('dataReady', resolve, { once: true }));
         }
         const freshContentDiv = section.querySelector('.content');
-    
         // 5. เช็คสถานะก่อนอัปเดต (ถ้าโดนปิดไปแล้ว ห้ามแสดงผล)
         if (freshContentDiv.classList.contains('hidden')) return; // ถ้าถูกปิดไปแล้วตอนรอโหลด ก็ไม่ต้องยัดข้อมูลเข้าไป
         const data = window.flightData?.result || window.flightData;
