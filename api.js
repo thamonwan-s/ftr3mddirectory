@@ -55,6 +55,7 @@ function prepareGridData(rawData, pageKey) {
         flightObj['flight']=row1[4];
         flightObj['airline']=row1[5];
     
+        console.log("ข้อมูลที่ได้จาก Recent Flights Server (Raw):", flightObj);
         return {flightObj, years};
     
     }
