@@ -28,6 +28,9 @@ async function fetchFlights(pageKey) {
  * เปลี่ยนข้อมูล JSON แนวนอนให้เป็น Grid ที่โค้ดเดิมรู้จัก
  */
 function prepareGridData(rawData, pageKey) {
+    if (pageKey === 'REC_FLIGHTS'){
+        pageKey = 'ALL_FLIGHTS';
+    }
     if (pageKey  === 'ALL_FLIGHTS'){
         const result = {};
         const headerRow = rawData[0];
