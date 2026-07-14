@@ -17,6 +17,10 @@ const CONFIG = {
     RET_FLIGHTS: {
         fileId: '1LTuNtQ7ChcHYkdbI63_zPpr2pTH95BnLCs_JB8dNE50',
         action: 'getRet'
+    },
+    REC_FLIGHTS: {
+        fileId: '1LTuNtQ7ChcHYkdbI63_zPpr2pTH95BnLCs_JB8dNE50',
+        action: 'getRecent'
     }
     // เพิ่มหน้าใหม่ๆ ได้ที่นี่เลย
 };
