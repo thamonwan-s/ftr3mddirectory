@@ -80,17 +80,8 @@ async function loadAndToggleYear(button, year) {
     // ถ้า contentDiv ยังมี class 'hidden' อยู่ (แปลว่าตอนนี้มันปิดอยู่)
     // ถึงจะยอมให้สั่ง toggleYear เพื่อเปิดมัน
     if (contentDiv.classList.contains('hidden')) return;
+    if (button.getAttribute('data-loaded') === 'true') return;
 
-    // ถ้ามาถึงตรงนี้ แสดงว่าปีนี้เปิดอยู่ (กางออกอยู่) ให้บันทึกสถานะ
-    let openYears = JSON.parse(sessionStorage.getItem('openYears') || '[]');
-    if (!openYears.includes(yearId)) {
-        openYears.push(yearId);
-        sessionStorage.setItem('openYears', JSON.stringify(openYears));
-    }
-
-    // 2. ถ้ากางออกมาแล้ว เช็คว่าต้องโหลดข้อมูลไหม
-    const isLoaded = button.getAttribute('data-loaded') === 'true';
-    if (isLoaded) return;
     contentDiv.innerHTML = `<div class="p-4 text-center text-gray-500">กำลังโหลดข้อมูล...</div>`;
         if (!window.flightData) {
             await new Promise(resolve => window.addEventListener('recdataReady', resolve, { once: true }));
