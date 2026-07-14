@@ -127,7 +127,10 @@ async function fetchAndDisplayFlights(type = 'all') {
             
             htmlContent += `
                 <div id="year-${year}" class="year-section w-full max-w-sm">
-                    <button onclick="toggleYear(this)" class="w-full flex justify-between items-center text-lg font-bold text-[#333333] border-b-2 border-[#333333] pb-1 mt-6 mb-2">
+                    <button onclick="loadAndToggleYear(this, '${year}')" 
+                            data-year="${year}" 
+                            data-loaded="false" 
+                            class="w-full flex justify-between items-center text-lg font-bold text-[#333333] border-b-2 border-[#333333] pb-1 mt-6 mb-2">
                         ${year} <span class="arrow">◂</span>
                     </button>
                     <div class="content hidden w-full"></div>
