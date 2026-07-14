@@ -101,7 +101,9 @@ async function loadAndToggleYear(button, year) {
     if (contentDiv.classList.contains('hidden')) return;
     if (button.getAttribute('data-loaded') === 'true') return;
 
-    contentDiv.innerHTML = `<div class="p-4 text-center text-gray-500">กำลังโหลดข้อมูล...</div>`;
+    if (contentDiv.innerHTML.trim() === "") {
+      contentDiv.innerHTML = `<div class="p-4 text-center text-gray-500">กำลังโหลดข้อมูล...</div>`;
+    }
         if (!window.flightData) {
             await new Promise(resolve => window.addEventListener('recdataReady', resolve, { once: true }));
             if (contentDiv.classList.contains('hidden')) {
