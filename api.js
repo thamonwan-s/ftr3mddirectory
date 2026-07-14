@@ -37,7 +37,7 @@ function prepareGridData(rawData, pageKey) {
         let i = 0;    
             for (let r = rawData.length-4; r >= 3; r-=4){
                 const row1 = rawData[r];
-                if (!row1 || !row1[setIdx]) continue;
+                if (!row1[setIdx]) continue;
                 const row2 = rawData[r+1];
                 const row3 = rawData[r+2];
                 const row4 = rawData[r+3];
