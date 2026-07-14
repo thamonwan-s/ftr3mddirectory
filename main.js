@@ -109,7 +109,7 @@ async function fetchAndDisplayFlights(type = 'all') {
     container.innerHTML = '<div class="text-center mt-10 text-gray-500">กำลังโหลดข้อมูล...</div>';
 
     try {
-        const data = await fetchFlights('REC_FLIGHTS');
+        const {data, years} = await fetchFlights('REC_FLIGHTS');
         let htmlContent = '';
 
         htmlContent += `
@@ -120,7 +120,7 @@ async function fetchAndDisplayFlights(type = 'all') {
             `;
 
         // 3. วนลูปสร้างปี/เดือน
-        for (let year=latestYear; year >= 2022; year--) {
+        for (let year in years) {
             
             htmlContent += `
                 <div id="year-${year}" class="year-section w-full max-w-sm">
