@@ -107,10 +107,8 @@ async function loadAndToggleYear(button, year) {
 
         if (!window.flightData) {
             await new Promise(resolve => window.addEventListener('recdataReady', resolve, { once: true }));
-            if (contentDiv.classList.contains('hidden')) {
-                return; // ถ้าถูกปิดไปแล้วตอนรอโหลด ก็ไม่ต้องยัดข้อมูลเข้าไป
-            }
         }
+        if (contentDiv.classList.contains('hidden')) return; // ถ้าถูกปิดไปแล้วตอนรอโหลด ก็ไม่ต้องยัดข้อมูลเข้าไป
         const data = window.flightData?.result || window.flightData;
         contentDiv.innerHTML = renderFlights(data, year);
         button.setAttribute('data-loaded', 'true');
