@@ -77,26 +77,31 @@
       // Toggle แสดง/ซ่อน (ฟังก์ชัน toggleYear เดิมของคุณ)
       toggleYear(button);
       const contentDiv = button.nextElementSibling;
+      const isVisible = !contentDiv.classList.contains('hidden');
+
+      // ถ้าสั่งให้ย่อ (ปิด) ไม่ต้องทำอะไรต่อ
+      if (!isVisible) return;
       
-      // 3. เช็คว่าถ้าข้อมูลยังไม่มา และเป็นสถานะ "ยังไม่ได้โหลด"
-      if (!window.flightData && button.getAttribute('data-loaded') !== 'true') {
-          contentDiv.innerHTML = `<div class="p-4 text-center text-gray-500">กำลังโหลดข้อมูล...</div>`;
-          
-          // รอข้อมูลจาก background
-          await new Promise(resolve => window.addEventListener('dataReady', resolve, { once: true }));
-          
-          // ล้างคำว่า "กำลังโหลด" ออกก่อนเริ่ม render ข้อมูลจริง
-          contentDiv.innerHTML = ""; 
-      }
-      const isLoaded = button.getAttribute('data-loaded') === 'true';
-  
-      // ถ้ายังไม่เคยโหลดข้อมูล ให้โหลดตอนนี้
-      if (!isLoaded) {
-          console.log("ข้อมูลที่ได้จาก Button Flights Server (Raw):", window.flightData.result);
-          contentDiv.innerHTML = renderFlights(window.flightData.result, year); // เรียกใช้ฟังก์ชันเดิมของคุณ
-          button.setAttribute('data-loaded', 'true');
-      }
-  }
+      // 2. ถ้ากางออกมาแล้ว (isVisible เป็น true) -> เช็คว่ามีข้อมูลหรือยัง
+    const isLoaded = button.getAttribute('data-loaded') === 'true';
+
+    // ถ้ายังไม่โหลด หรือเนื้อหาว่างเปล่า (กรณีโดน Render ใหม่) ให้โหลด
+    if (!isLoaded || contentDiv.innerHTML === "") {
+        contentDiv.innerHTML = `<div class="p-4 text-center text-gray-500">กำลังโหลด...</div>`;
+
+        // รอให้มีข้อมูล (เช็คทั้ง window.recFlight และรอ Event ถ้ายังไม่มี)
+        if (!window.recFlight) {
+            await new Promise(resolve => window.addEventListener('recdataReady', resolve, { once: true }));
+        }
+
+        // ดึงข้อมูลมาแสดงผล
+        // ตรงนี้ผมใช้ window.recFlight ตามที่เราเซ็ตไว้ในฟังก์ชันหลัก
+        const data = window.recFlight.result || window.recFlight; 
+        contentDiv.innerHTML = renderFlights(data, year); 
+        
+        button.setAttribute('data-loaded', 'true');
+    }
+}
     
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
