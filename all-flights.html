@@ -93,10 +93,10 @@ async function loadAndToggleYear(button, year) {
         }
 
         // มั่นใจได้ว่ามาถึงตรงนี้ window.recFlight มีค่าแล้ว
-        const data = window.recFlight?.result || window.recFlight;
+        const data = window.flightData?.result || window.recFlight;
         
         // Render ข้อมูล
-        contentDiv.innerHTML = renderFlights(data || {}, year);
+        contentDiv.innerHTML = renderFlights(data, year);
         button.setAttribute('data-loaded', 'true');
     }
 }
