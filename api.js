@@ -33,8 +33,8 @@ function prepareGridData(rawData, pageKey) {
     const result = {};
     if (pageKey === 'REC_FLIGHTS'){
         const setIdx=4;
-        const year = new Date(rawData[0][0]).getFullYear();    
         const row1 = rawData[0];
+        const year = new Date(row1[0]).getFullYear();    
         const row2 = rawData[1];
         const row3 = rawData[2];
         const row4 = rawData[3];
