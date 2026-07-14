@@ -191,27 +191,23 @@ function renderUI(dataToDisplay) {
     container.innerHTML = htmlContent;
 
    // 4. หลังจาก Render เสร็จ ให้สั่ง "เปิด" ปีที่เคยค้างไว้กลับมา
-    for (const id of openYearIds) {
+    openYearIds.forEach(id => {
         const section = document.getElementById(id);
         if (section) {
             const btn = section.querySelector('button');
             const contentDiv = section.querySelector('.content');
+            const arrow = section.querySelector('.arrow');
             
-            // แทนที่จะเรียก loadAndToggleYear ซึ่งจะไปสลับ (Toggle) สถานะ
-            // ให้เราจัดการเองแค่ "เปิด" และ "โหลด"
+            // แทนที่จะเรียก loadAndToggleYear ซึ่งจะไปสั่ง Toggle (สลับ) อีกรอบ
+            // เราจัดการแค่ "เปิด" สถานะด้วยตัวเอง:
+            contentDiv.classList.remove('hidden'); // กาง div ออก
+            arrow.innerText = '▾';                // เปลี่ยนลูกศรให้ชี้ลง
             
-            // A. เปิดสถานะ (จัดการ class และลูกศร)
-            contentDiv.classList.remove('hidden');
-            btn.querySelector('.arrow').innerText = '▾';
-            
-            // B. บังคับโหลดข้อมูลใหม่
-            btn.setAttribute('data-loaded', 'false'); 
-            
-            // C. โหลดข้อมูลโดยไม่เรียก toggleYear ซ้ำ (เราทำเองแล้ว)
-            // เราดึงเฉพาะ Logic การโหลดข้อมูลมาใช้
-            await loadDataForYear(btn, btn.getAttribute('data-year'));
+            // สั่งให้มันโหลดข้อมูลใหม่โดยการยิง loadAndToggleYear ด้วยค่าพิเศษ
+            // แต่เราต้องแก้ loadAndToggleYear นิดเดียวเพื่อให้มันไม่รวน
+            btn.setAttribute('data-loaded', 'false');
+            loadAndToggleYear(btn, btn.getAttribute('data-year'));
         }
-    }
     });
 }
 
