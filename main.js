@@ -146,12 +146,6 @@ function renderSortFlight(data, pageKey_Name) {
         const flight = 'tested';
         console.log("Inter Flights Preloaded!");
         return flight;
-    });
-
-    // 3. ส่งข้อมูลที่ Map แล้ว ไปให้หน้า HTML นั้นๆ จัดการต่อ
-    if (typeof window.displayFlights === 'function') {
-        window.displayFlights(mappedFlights, pageKey_Name);
-    }
 }
 
 async function loadPageData(pageKey) {
