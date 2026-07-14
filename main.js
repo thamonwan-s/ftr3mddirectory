@@ -52,42 +52,33 @@ function init() {
     }
 }
 
-function checkPassword() {
+async function checkPassword() {
     const input = document.getElementById('pass').value;
     if (!input) return;
 
-    // 1. สร้างชื่อฟังก์ชันรับค่าแบบสุ่มเพื่อป้องกันการชนกัน (ถ้ามี)
-    const callbackName = 'cb_' + Date.now();
-    
-    window[callbackName] = function(isCorrect) {
-        // ล้างฟังก์ชันทิ้งหลังจากใช้งาน
-        delete window[callbackName];
-        
+    // 1. เรียก URL เดิมเป๊ะๆ แต่ใช้ fetch แทนการสร้าง script tag
+    const url = `${SCRIPT_URL}?function=checkPassword&pass=${encodeURIComponent(input)}&callback=handleResponse`;
+
+    try {
+        const response = await fetch(url);
+        const text = await response.text(); // ดึงมาเป็นข้อความดิบ
+
+        // 2. ตัดส่วน "handleResponse(...)" ออกจาก string เพื่อเอาเฉพาะค่าข้างใน
+        // ปกติ Google จะตอบกลับมาเป็น: handleResponse(true)
+        const jsonString = text.substring(text.indexOf('(') + 1, text.lastIndexOf(')'));
+        const isCorrect = JSON.parse(jsonString);
+
+        // 3. ทำงานต่อเหมือนเดิม
         if (isCorrect === true) {
             localStorage.setItem('loginTime', Date.now().toString());
             window.location.href = 'all-flights.html';
         } else {
             alert("Incorrect password");
         }
-    };
-
-    // 2. สร้าง script tag
-    const scriptTag = document.createElement('script');
-    
-    // สำคัญ: ต้อง encodeURIComponent เพื่อแก้ปัญหา ORB/302 Redirect
-    scriptTag.src = `${SCRIPT_URL}?function=checkPassword&pass=${encodeURIComponent(input)}&callback=${callbackName}`;
-    
-    // 3. กำหนดประเภทให้เป็น javascript ชัดเจน
-    scriptTag.type = 'text/javascript';
-    
-    // 4. จัดการกรณี Error (ถ้าถูกบล็อกด้วย ORB)
-    scriptTag.onerror = function() {
-        console.error("Script blocked or network error");
-        alert("การเชื่อมต่อถูกบล็อก (ORB Security) กรุณาลองตรวจสอบสิทธิ์การเข้าถึง");
-        document.body.removeChild(scriptTag);
-    };
-
-    document.body.appendChild(scriptTag);
+    } catch (error) {
+        console.error("Login Error:", error);
+        alert("การเชื่อมต่อถูกบล็อก - กรุณาตรวจสอบว่า Google Script ยัง Deploy อยู่");
+    }
 }
 
 function showLogoutState() {
