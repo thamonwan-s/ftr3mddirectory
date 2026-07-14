@@ -33,35 +33,32 @@ function prepareGridData(rawData, pageKey) {
     const result = {};
     if (pageKey === 'REC_FLIGHTS'){
         const setIdx=4;
-        const year = rawData[0][setIdx];
-        let i = 0;    
-            for (let r = rawData.length-4; r >= 3; r-=4){
-                const row1 = rawData[r];
-                if (row1[setIdx]==='') continue;
-                const row2 = rawData[r+1];
-                const row3 = rawData[r+2];
-                const row4 = rawData[r+3];
-                const flightObj = {};
+        const year = new Date(rawData[0][0]).getFullYear();    
+        const row1 = rawData[0];
+        const row2 = rawData[1];
+        const row3 = rawData[2];
+        const row4 = rawData[3];
+        const flightObj = {};
     
-                flightObj['date']=row1[setIdx +0];
-                flightObj['dep_ch']=row1[setIdx +3];
-                flightObj['dep_t']=row2[setIdx +3];
-                flightObj['dep_ap']=row3[setIdx +3];
-                flightObj['dep_pl']=row4[setIdx +3];
-                flightObj['arr_ch']=row1[setIdx +4];
-                flightObj['arr_t']=row2[setIdx +4];
-                flightObj['arr_ap']=row3[setIdx +4];
-                flightObj['arr_pl']=row4[setIdx +4];
-                flightObj['name']=row1[setIdx +5];
-                flightObj['desc']=row2[setIdx +5];
-                flightObj['place']=row3[setIdx +5];
-                flightObj['airport']=row4[setIdx +5];
-                flightObj['flight']=row1[setIdx +6];
-                flightObj['airline']=row1[setIdx +7];
+        flightObj['date']=row1[0];
+        flightObj['dep_ch']=row1[1];
+        flightObj['dep_t']=row2[1];
+        flightObj['dep_ap']=row3[1];
+        flightObj['dep_pl']=row4[1];
+        flightObj['arr_ch']=row1[2];
+        flightObj['arr_t']=row2[2];
+        flightObj['arr_ap']=row3[2];
+        flightObj['arr_pl']=row4[2];
+        flightObj['name']=row1[3];
+        flightObj['desc']=row2[3];
+        flightObj['place']=row3[3];
+        flightObj['airport']=row4[3];
+        flightObj['flight']=row1[4];
+        flightObj['airline']=row1[5];
     
-                result[year][i] = flightObj;
-                break;
-            }
+        result[year][i] = flightObj;
+        break;
+    
     }
     else if (pageKey  === 'ALL_FLIGHTS'){
         const headerRow = rawData[0];
