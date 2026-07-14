@@ -111,7 +111,7 @@ async function fetchRecentFlights() {
 
     // 2. ถ้าไม่มี ค่อย Fetch จริง
     try {
-        const response = await fetch('URL_ของคุณ?func=REC_FLIGHTS');
+        const response = await fetchFlights('REC_FLIGHTS');
         const data = await response.json();
         
         // เก็บเข้า Memory และ SessionStorage
