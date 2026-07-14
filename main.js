@@ -137,6 +137,7 @@ async function fetchAndDisplayFlights(type = 'all') {
                 </div>`;
         }
         container.innerHTML = htmlContent;
+        return true;
     } catch (e) {
         container.innerHTML = '<div class="text-center mt-10 text-red-500">เกิดข้อผิดพลาดในการโหลดข้อมูล</div>';
         console.error("Error:", e);
