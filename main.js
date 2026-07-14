@@ -217,10 +217,39 @@ async function backgroundUpdate() {
     if(popup) popup.style.display = 'block'; // แสดง Popup
     
     try {
+        // 1. บันทึก ID ของปีที่เปิดอยู่ก่อนที่จะ Render ใหม่
+        const openYearIds = [];
+        document.querySelectorAll('.year-section .content:not(.hidden)').forEach(el => {
+            const parent = el.closest('.year-section');
+            if (parent) openYearIds.push(parent.id);
+        });
+        
         const response = await fetchFlights('REC_FLIGHTS');
         window.recFlight = response;
         sessionStorage.setItem('REC_FLIGHTS_DATA', JSON.stringify(response));
+        
         renderUI(window.recFlight); // อัปเดตข้อมูลใหม่ลงหน้าจอ
+
+        // 3. กางปีที่เคยเปิดค้างไว้ออกมาใหม่
+        openYearIds.forEach(id => {
+            const section = document.getElementById(id);
+            if (section) {
+                const btn = section.querySelector('button');
+                const contentDiv = section.querySelector('.content');
+                
+                // กาง div ออกโดยตรงโดยไม่ใช้ toggleYear (เพื่อไม่ให้มันสลับกลับ)
+                contentDiv.classList.remove('hidden');
+                
+                // อัปเดตลูกศรให้ชี้ลง (ถ้ามี)
+                const arrow = btn.querySelector('.arrow');
+                if (arrow) arrow.innerText = '▾';
+                
+                // สั่งโหลดข้อมูลใหม่ลงใน div นั้น
+                btn.setAttribute('data-loaded', 'false');
+                loadAndToggleYear(btn, btn.getAttribute('data-year'));
+            }
+        });
+        
     } catch (e) {
         console.error("Update failed", e);
     } finally {
