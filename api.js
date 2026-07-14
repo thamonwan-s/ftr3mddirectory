@@ -58,7 +58,7 @@ function prepareGridData(rawData, pageKey) {
     
         result[year] = {};
         result[year]['1'] = flightObj;
-        return result;
+        return {result, year};
     
     }
     else if (pageKey  === 'ALL_FLIGHTS'){
