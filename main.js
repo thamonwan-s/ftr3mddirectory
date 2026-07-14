@@ -112,10 +112,9 @@ async function fetchRecentFlights() {
     // 2. ถ้าไม่มี ค่อย Fetch จริง
     try {
         const response = await fetchFlights('REC_FLIGHTS');
-        const data = await response.json();
         
         // เก็บเข้า Memory และ SessionStorage
-        window.recFlight = data;
+        window.recFlight = response;
         sessionStorage.setItem('REC_FLIGHTS_DATA', JSON.stringify(data));
         
         // ส่งสัญญาณบอกว่าโหลดเสร็จแล้ว
