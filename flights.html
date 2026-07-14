@@ -65,6 +65,8 @@
             const recallData = await fetchFlights('REC_FLIGHTS');
             window.recFlight = recallData;
             console.log("โหลดข้อมูลเบื้องหลังเสร็จแล้ว");
+
+            window.dispatchEvent(new CustomEvent('recdataReady'));
         })();
     });
   </script>
