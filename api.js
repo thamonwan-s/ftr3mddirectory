@@ -34,11 +34,7 @@ function prepareGridData(rawData, pageKey) {
     if (pageKey === 'REC_FLIGHTS'){
         const setIdx=4;
         const year = rawData[0][setIdx];
-        let i = 0;
-            if (!result[year]) {
-                result[year] = {};; // เริ่มนับจาก 1 สำหรับแต่ละปี
-            }
-    
+        let i = 0;    
             for (let r = rawData.length-4; r >= 3; r-=4){
                 const row1 = rawData[r];
                 if (!row1 || !row1[setIdx]) continue;
