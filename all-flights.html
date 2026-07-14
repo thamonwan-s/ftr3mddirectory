@@ -94,12 +94,15 @@
 async function loadAndToggleYear(button, year) {
     const section = button.closest('.year-section');
     const arrow = button.querySelector('.arrow');
+    const yearId = section.id;
 
     if (button.getAttribute('data-loaded') === 'true') return;
 
     const contentDiv = section.querySelector('.content');
     if (contentDiv.classList.contains('hidden')) return;
-    contentDiv.innerHTML = `<div class="p-4 text-center text-gray-500">กำลังโหลดข้อมูล...</div>`;
+    if (contentDiv.innerHTML.trim() === "" || contentDiv.innerHTML.includes("กำลังโหลด")) {
+        contentDiv.innerHTML = `<div class="p-4 text-center">กำลังโหลด...</div>`;
+    }
 
         if (!window.flightData) {
             await new Promise(resolve => window.addEventListener('dataReady', resolve, { once: true }));
@@ -108,7 +111,10 @@ async function loadAndToggleYear(button, year) {
         // 5. เช็คสถานะก่อนอัปเดต (ถ้าโดนปิดไปแล้ว ห้ามแสดงผล)
         if (freshContentDiv.classList.contains('hidden')) return; // ถ้าถูกปิดไปแล้วตอนรอโหลด ก็ไม่ต้องยัดข้อมูลเข้าไป
         const data = window.flightData?.result || window.flightData;
-        contentDiv.innerHTML = renderFlights(data, year);
+        const newContent = contentDiv.innerHTML = renderFlights(data, year);
+        // อัปเดตและเซฟข้อมูลใหม่เก็บไว้เสมอ
+        freshContentDiv.innerHTML = newContent;
+        localStorage.setItem(`flight-data-${year}`, newContent);
         button.setAttribute('data-loaded', 'true');
     
 }
