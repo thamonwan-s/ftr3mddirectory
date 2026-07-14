@@ -100,6 +100,30 @@ function startCountdown(endTime) {
         if (countdownEl) countdownEl.innerText = `auto-logout in: ${hours}h ${minutes}m ${seconds}s`;
     }, 1000);
 }
+async function fetchRecentFlights() {
+    // 1. เช็คก่อนว่ามีข้อมูลใน SessionStorage ไหม (เพื่อความเร็ว)
+    const cached = sessionStorage.getItem('REC_FLIGHTS_DATA');
+    if (cached) {
+        window.recFlight = JSON.parse(cached);
+        window.dispatchEvent(new CustomEvent('recdataReady'));
+        return; // มีของแล้ว ไม่ต้อง Fetch ใหม่
+    }
+
+    // 2. ถ้าไม่มี ค่อย Fetch จริง
+    try {
+        const response = await fetch('URL_ของคุณ?func=REC_FLIGHTS');
+        const data = await response.json();
+        
+        // เก็บเข้า Memory และ SessionStorage
+        window.recFlight = data;
+        sessionStorage.setItem('REC_FLIGHTS_DATA', JSON.stringify(data));
+        
+        // ส่งสัญญาณบอกว่าโหลดเสร็จแล้ว
+        window.dispatchEvent(new CustomEvent('recdataReady'));
+    } catch (e) {
+        console.error("Error fetching REC_FLIGHTS:", e);
+    }
+}
 
 // ใน main.js
 // ปรับฟังก์ชันให้รับพารามิเตอร์ type
@@ -107,16 +131,21 @@ async function fetchAndDisplayFlights(type = 'all') {
     const container = document.getElementById('flight-container');
     if (!container) return;
 
-    if (!window.recFlight){
+    // ตรวจสอบข้อมูลก่อนว่ามีไหม
+    let dataToDisplay = window.recFlight || JSON.parse(sessionStorage.getItem('REC_FLIGHTS_DATA'));
+
+    if (!dataToDisplay){
         container.innerHTML = '<div class="text-center mt-10 text-gray-500">กำลังโหลดข้อมูล...</div>';
         // รอรับสัญญาณจาก Event
         await new Promise((resolve) => {
             window.addEventListener('recdataReady', resolve, { once: true });
         });
+
+        dataToDisplay = window.recFlight;
     }
 
     try {
-        const {flightObj, years} = window.recFlight;
+        const {flightObj, years} = dataToDisplay;
         let htmlContent = '';
 
         htmlContent += `
