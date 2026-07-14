@@ -52,30 +52,42 @@ function init() {
     }
 }
 
-async function checkPassword() {
+function checkPassword() {
     const input = document.getElementById('pass').value;
     if (!input) return;
 
-    // 1. ใช้ encodeURIComponent เพื่อแก้ปัญหาช่องว่าง/ตัวอักษรพิเศษ
-    // 2. ไม่ต้องใส่ callback แล้ว เพราะเราจะรับค่าจาก response โดยตรง
-    const url = `${SCRIPT_URL}?function=checkPassword&pass=${encodeURIComponent(input)}`;
-
-    try {
-        const response = await fetch(url);
+    // 1. สร้างชื่อฟังก์ชันรับค่าแบบสุ่มเพื่อป้องกันการชนกัน (ถ้ามี)
+    const callbackName = 'cb_' + Date.now();
+    
+    window[callbackName] = function(isCorrect) {
+        // ล้างฟังก์ชันทิ้งหลังจากใช้งาน
+        delete window[callbackName];
         
-        // ถ้า Google Apps Script ของคุณส่งกลับมาเป็น JSON
-        const data = await response.json(); 
-
-        if (data === true) { // หรือ data.isCorrect === true ตามโครงสร้างข้อมูลของคุณ
+        if (isCorrect === true) {
             localStorage.setItem('loginTime', Date.now().toString());
             window.location.href = 'all-flights.html';
         } else {
             alert("Incorrect password");
         }
-    } catch (error) {
-        console.error("Login Error:", error);
-        alert("เกิดข้อผิดพลาดในการเชื่อมต่อ");
-    }
+    };
+
+    // 2. สร้าง script tag
+    const scriptTag = document.createElement('script');
+    
+    // สำคัญ: ต้อง encodeURIComponent เพื่อแก้ปัญหา ORB/302 Redirect
+    scriptTag.src = `${SCRIPT_URL}?function=checkPassword&pass=${encodeURIComponent(input)}&callback=${callbackName}`;
+    
+    // 3. กำหนดประเภทให้เป็น javascript ชัดเจน
+    scriptTag.type = 'text/javascript';
+    
+    // 4. จัดการกรณี Error (ถ้าถูกบล็อกด้วย ORB)
+    scriptTag.onerror = function() {
+        console.error("Script blocked or network error");
+        alert("การเชื่อมต่อถูกบล็อก (ORB Security) กรุณาลองตรวจสอบสิทธิ์การเข้าถึง");
+        document.body.removeChild(scriptTag);
+    };
+
+    document.body.appendChild(scriptTag);
 }
 
 function showLogoutState() {
