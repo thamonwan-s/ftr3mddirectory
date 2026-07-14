@@ -191,6 +191,25 @@ function renderUI(dataToDisplay) {
             </div>`;
     }
     container.innerHTML = htmlContent;
+
+    // 4. หลังจาก Render เสร็จ ให้สั่ง "เปิด" ปีที่เคยค้างไว้กลับมา
+        if (isOpen){
+            openYears.forEach(id => {
+            const section = document.getElementById(id); // หาแค่ section ของปีนั้น
+            if (section) {
+                const btn = section.querySelector('button'); // หาปุ่ม "ของปีนั้น"
+                const content = section.querySelector('.content');
+                const arrow = btn.querySelector('.arrow'); // หา "ลูกศรของปีนั้น"
+                
+                // กางให้ถูกต้อง
+                content.classList.remove('hidden');
+                arrow.innerText = '▾'; // ลูกศรต้องชี้ลง
+                
+                // สั่งโหลด
+                loadAndToggleYear(btn, btn.getAttribute('data-year'));
+            }
+        });
+    }
 }
 
 // ฟังก์ชันอัปเดตเงียบๆ (Background Update)
