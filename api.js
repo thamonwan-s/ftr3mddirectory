@@ -1,19 +1,28 @@
+// api.js (แบบรวมฟังก์ชันเดียว)
 async function fetchFlights(pageKey) {
-    const { url } = CONFIG[pageKey]; // ดึง URL แยกตาม pageKey
-    
-    try {
-        const response = await fetch(url);
-        const text = await response.text();
+    const { fileId, action } = CONFIG[pageKey];
 
-        // แปลง CSV เป็น Array (โครงสร้าง CSV คือ text, split ตามบรรทัดและคอมม่า)
-        const rawData = text.split('\n').map(row => row.split(','));
-        
-        // ส่งเข้าเตรียมข้อมูลแบบเดิมที่คุณทำไว้
-        return prepareGridData(rawData, pageKey);
+    // แปลง params (เช่น {type: 'intl'}) ให้เป็น query string
+    const queryString = new URLSearchParams({ fileId: fileId, function: action }).toString();
+
+    // api.js บรรทัดที่ 8 เปลี่ยนเป็นแบบนี้
+    const url = SCRIPT_URL + "?fileId=" + encodeURIComponent(fileId) + "&function=" + encodeURIComponent(action);
+    const response = await fetch(url, {
+        method: 'GET',
+        redirect: 'follow'
+    });
+    const textData = await response.text();
+    let rawData;
+    console.log("ข้อมูลที่ได้จาก Server (Raw):", textData);
+    try {
+        rawData = JSON.parse(textData);
     } catch (e) {
-        console.error("Error fetching CSV for " + pageKey, e);
-        return {};
+        console.error("Server ไม่ได้ส่ง JSON กลับมา! สิ่งที่ได้คือ:", textData);
+        throw new Error("Server response is not valid JSON");
     }
+
+    // 3. เมื่อข้อมูลเป็น JSON ที่ถูกต้องแล้ว ค่อยส่งไป Mapping
+    return prepareGridData(rawData, pageKey);
 }
 
 /**
