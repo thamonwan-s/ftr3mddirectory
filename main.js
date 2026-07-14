@@ -176,6 +176,10 @@ function renderUI(dataToDisplay) {
     for (let y in years) {
         const yearId = `year-${years[y]}`;
         const isOpen = openYears.includes(yearId);
+
+        // --- จุดแก้: ดึงข้อมูลเก่าจาก localStorage มาแปะไว้ใน div เลย ---
+        const savedData = localStorage.getItem(`flight-data-${years[y]}`) || "";
+        
         htmlContent += `
             <div id="year-${years[y]}" class="year-section w-full max-w-sm">
                 <button onclick="toggleYear(this); loadAndToggleYear(this, '${years[y]}')" 
@@ -187,23 +191,6 @@ function renderUI(dataToDisplay) {
             </div>`;
     }
     container.innerHTML = htmlContent;
-
-   // 4. หลังจาก Render เสร็จ ให้สั่ง "เปิด" ปีที่เคยค้างไว้กลับมา
-    openYears.forEach(id => {
-    const section = document.getElementById(id); // หาแค่ section ของปีนั้น
-    if (section) {
-        const btn = section.querySelector('button'); // หาปุ่ม "ของปีนั้น"
-        const content = section.querySelector('.content');
-        const arrow = btn.querySelector('.arrow'); // หา "ลูกศรของปีนั้น"
-        
-        // กางให้ถูกต้อง
-        content.classList.remove('hidden');
-        arrow.innerText = '▾'; // ลูกศรต้องชี้ลง
-        
-        // สั่งโหลด
-        loadAndToggleYear(btn, btn.getAttribute('data-year'));
-    }
-});
 }
 
 // ฟังก์ชันอัปเดตเงียบๆ (Background Update)
