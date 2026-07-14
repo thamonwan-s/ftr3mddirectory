@@ -77,6 +77,9 @@
       // Toggle แสดง/ซ่อน (ฟังก์ชัน toggleYear เดิมของคุณ)
       toggleYear(button);
       const contentDiv = button.nextElementSibling;
+      if (contentDiv.classList.contains('hidden')) {
+        toggleYear(button); 
+      }
       const isVisible = !contentDiv.classList.contains('hidden');
 
       // ถ้าสั่งให้ย่อ (ปิด) ไม่ต้องทำอะไรต่อ
