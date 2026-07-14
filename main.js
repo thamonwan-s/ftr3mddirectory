@@ -103,8 +103,7 @@ async function fetchAndDisplayFlights(type = 'all') {
     container.innerHTML = '<div class="text-center mt-10 text-gray-500">กำลังโหลดข้อมูล...</div>';
 
     try {
-        const data = await fetchFlights('ALL_FLIGHTS');
-        window.flightData = data;
+        const data = await fetchFlights('REC_FLIGHTS');
         let htmlContent = '';
         
         // 2. หา Recent Flight (ใช้ข้อมูลดิบจาก data ชุดแรก)
@@ -124,6 +123,7 @@ async function fetchAndDisplayFlights(type = 'all') {
             `;
 
         // 3. วนลูปสร้างปี/เดือน
+        window.flightData = await fetchFlights('ALL_FLIGHTS');
         for (const year of years.reverse()) {
             
             htmlContent += `
