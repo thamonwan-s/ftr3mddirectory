@@ -189,7 +189,7 @@ function renderUI(dataToDisplay) {
     container.innerHTML = htmlContent;
 
    // 4. หลังจาก Render เสร็จ ให้สั่ง "เปิด" ปีที่เคยค้างไว้กลับมา
-    openYearIds.forEach(id => {
+    openYears.forEach(id => {
         const btn = document.querySelector(`#${id} button`);
         if (btn) loadAndToggleYear(btn, btn.getAttribute('data-year'));
     });
