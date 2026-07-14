@@ -164,7 +164,7 @@ function renderUI(dataToDisplay) {
     const {flightObj, years} = dataToDisplay;
 
     // 1. เก็บสถานะปีที่เปิดค้างไว้ก่อน (เช็คจาก div.content ที่ไม่มี class 'hidden')
-    const openYear = JSON.parse(sessionStorage.getItem('openYears') || '[]');
+    const openYears = JSON.parse(sessionStorage.getItem('openYears') || '[]');
     
     let htmlContent = `
         <div class="w-full max-w-sm mb-6">
