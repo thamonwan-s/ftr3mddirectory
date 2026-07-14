@@ -87,7 +87,7 @@ async function loadAndToggleYear(button, year) {
     if (!isLoaded || contentDiv.innerHTML.includes("กำลังโหลด")) {
         
         // ถ้าข้อมูลยังไม่มีจริงๆ ค่อยเริ่มแสดงสถานะ "กำลังโหลด" และรอ
-        if (!window.recFlight) {
+        if (!window.flightData) {
             contentDiv.innerHTML = `<div class="p-4 text-center text-gray-500">กำลังโหลดข้อมูล...</div>`;
             await new Promise(resolve => window.addEventListener('recdataReady', resolve, { once: true }));
         }
