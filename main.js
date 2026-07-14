@@ -52,22 +52,30 @@ function init() {
     }
 }
 
-function checkPassword() {
+async function checkPassword() {
     const input = document.getElementById('pass').value;
-    
-    window.handleResponse = function(isCorrect) {
-        if (isCorrect === true) {
+    if (!input) return;
+
+    // 1. ใช้ encodeURIComponent เพื่อแก้ปัญหาช่องว่าง/ตัวอักษรพิเศษ
+    // 2. ไม่ต้องใส่ callback แล้ว เพราะเราจะรับค่าจาก response โดยตรง
+    const url = `${SCRIPT_URL}?function=checkPassword&pass=${encodeURIComponent(input)}`;
+
+    try {
+        const response = await fetch(url);
+        
+        // ถ้า Google Apps Script ของคุณส่งกลับมาเป็น JSON
+        const data = await response.json(); 
+
+        if (data === true) { // หรือ data.isCorrect === true ตามโครงสร้างข้อมูลของคุณ
             localStorage.setItem('loginTime', Date.now().toString());
-            location.reload();
+            window.location.href = 'all-flights.html';
         } else {
             alert("Incorrect password");
         }
-        document.body.removeChild(scriptTag);
-    };
-
-    const scriptTag = document.createElement('script');
-    scriptTag.src = `${SCRIPT_URL}?function=checkPassword&pass=${input}&callback=handleResponse`;
-    document.body.appendChild(scriptTag);
+    } catch (error) {
+        console.error("Login Error:", error);
+        alert("เกิดข้อผิดพลาดในการเชื่อมต่อ");
+    }
 }
 
 function showLogoutState() {
