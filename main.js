@@ -266,6 +266,7 @@ function createNarrowFlightCardHTML(flightData) {
 
 function renderSingleFlight(latestFlight) {
         // --- ดึงตรรกะคำนวณมาใส่ให้ครบ ---
+        console.log("ข้อมูลที่จะ render:", latestflight);
         const d = new Date(latestFlight.date);
         const dayName = d.toLocaleDateString('en-US', {weekday: 'short'}).toUpperCase();
         const dayNum = d.getDate();
