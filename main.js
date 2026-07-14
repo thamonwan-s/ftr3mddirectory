@@ -113,7 +113,7 @@ async function fetchAndDisplayFlights(type = 'all') {
         let htmlContent = '';
         
         // 2. หา Recent Flight (ใช้ข้อมูลดิบจาก data ชุดแรก)
-        const latestYear = years[years.length - 1]; // ดึงปีท้ายสุดออกมา
+        const latestYear = years[0]; // ดึงปีท้ายสุดออกมา
         
         const entries = Object.keys(data[latestYear]); // ได้ ["0", "1", ..., "12"]
         const latestEntryKey = entries[entries.length - 1]; // ดึง Index ท้ายสุดออกมา
