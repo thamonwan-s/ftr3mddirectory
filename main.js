@@ -154,6 +154,9 @@ async function fetchAndDisplayFlights(type = 'all') {
         window.recFlight = data;
     }
 
+    // --- แก้ไขจุดนี้: ใช้ window.recFlight ที่เรามั่นใจว่ามีข้อมูลแล้ว ---
+    const dataToDisplay = window.recFlight;
+
     try {
         const {flightObj, years} = dataToDisplay;
         let htmlContent = '';
