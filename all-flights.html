@@ -57,6 +57,20 @@
       root: null,
       threshold: 0.6 
     };
+
+    async function loadAndToggleYear(button, year) {
+      const contentDiv = button.nextElementSibling;
+      const isLoaded = button.getAttribute('data-loaded') === 'true';
+  
+      // ถ้ายังไม่เคยโหลดข้อมูล ให้โหลดตอนนี้
+      if (!isLoaded) {
+          contentDiv.innerHTML = renderFlights(result, year); // เรียกใช้ฟังก์ชันเดิมของคุณ
+          button.setAttribute('data-loaded', 'true');
+      }
+  
+      // Toggle แสดง/ซ่อน (ฟังก์ชัน toggleYear เดิมของคุณ)
+      toggleYear(button);
+  }
     
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
