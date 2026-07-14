@@ -88,6 +88,7 @@
   
       // ถ้ายังไม่เคยโหลดข้อมูล ให้โหลดตอนนี้
       if (!isLoaded) {
+          console.log("ข้อมูลที่ได้จาก Button Flights Server (Raw):", window.flightData.result);
           contentDiv.innerHTML = renderFlights(window.flightData.result, year); // เรียกใช้ฟังก์ชันเดิมของคุณ
           button.setAttribute('data-loaded', 'true');
       }
