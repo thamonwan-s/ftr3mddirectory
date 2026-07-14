@@ -88,7 +88,7 @@
   
       // ถ้ายังไม่เคยโหลดข้อมูล ให้โหลดตอนนี้
       if (!isLoaded) {
-          contentDiv.innerHTML = renderFlights(window.flightData.result, year); // เรียกใช้ฟังก์ชันเดิมของคุณ
+          contentDiv.innerHTML = renderFlights(window.flightData, year); // เรียกใช้ฟังก์ชันเดิมของคุณ
           button.setAttribute('data-loaded', 'true');
       }
   }
