@@ -130,16 +130,21 @@ async function fetchAndDisplayFlights(type = 'all') {
     const container = document.getElementById('flight-container');
     if (!container) return;
 
-    // 1. ดึงจาก Storage มาวางที่ window.recFlight ให้แน่นอน
-    if (!window.recFlight) {
-        const cached = sessionStorage.getItem('REC_FLIGHTS_DATA');
-        if (cached) window.recFlight = JSON.parse(cached);
+    // 1. ตรวจสอบข้อมูลใน Storage (เพื่อการแสดงผลทันที)
+    const cached = sessionStorage.getItem('REC_FLIGHTS_DATA');
+    if (cached) {
+        window.recFlight = JSON.parse(cached);
     }
 
-    // 2. ถ้ายังไม่มีข้อมูล ให้รอดูนิดนึง (เพิ่ม Timeout กันค้าง)
-    if (!window.recFlight) {
-        container.innerHTML = '<div class="text-center mt-10 text-gray-500">กำลังโหลดข้อมูล...</div>';
-        
+    // 2. ถ้ามีข้อมูลเก่า ให้ Render ไปก่อน แล้วอัปเดตเงียบๆ
+    if (window.recFlight) {
+        renderUI(window.recFlight); // แสดงผลข้อมูลเก่าทันที
+        backgroundUpdate();         // แอบไปโหลดใหม่
+        return;
+    }
+
+    // 3. ถ้าไม่มีข้อมูลเลย (โหลดครั้งแรก) ต้องยอมรอ
+    container.innerHTML = '<div class="text-center mt-10 text-gray-500">กำลังโหลดข้อมูล...</div>';
         // สร้าง Promise รอรับสัญญาณ แต่มี Timeout 10 วินาที
         const data = await Promise.race([
             new Promise(resolve => window.addEventListener('recdataReady', (e) => resolve(e.detail), { once: true })),
@@ -151,41 +156,47 @@ async function fetchAndDisplayFlights(type = 'all') {
             return;
         }
         window.recFlight = data;
+        renderUI(window.recFlight);
     }
 
-    // --- แก้ไขจุดนี้: ใช้ window.recFlight ที่เรามั่นใจว่ามีข้อมูลแล้ว ---
-    const dataToDisplay = window.recFlight;
+function renderUI(dataToDisplay) {
+    const container = document.getElementById('flight-container');
+    const {flightObj, years} = dataToDisplay;
+    let htmlContent = `
+        <div class="w-full max-w-sm mb-6">
+            <h2 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-2">Recent Flight</h2>
+            ${renderSingleFlight(flightObj)}
+        </div>
+    `;
 
-    try {
-        const {flightObj, years} = dataToDisplay;
-        let htmlContent = '';
-
+    for (let y in years) {
         htmlContent += `
-                <div class="w-full max-w-sm mb-6">
-                    <h2 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-2">Recent Flight</h2>
-                    ${renderSingleFlight(flightObj)}
-                </div>
-            `;
+            <div id="year-${years[y]}" class="year-section w-full max-w-sm">
+                <button onclick="loadAndToggleYear(this, '${years[y]}')" 
+                        data-year="${years[y]}" data-loaded="false" 
+                        class="w-full flex justify-between items-center text-lg font-bold text-[#333333] border-b-2 border-[#333333] pb-1 mt-6 mb-2">
+                    ${years[y]} <span class="arrow">◂</span>
+                </button>
+                <div class="content hidden w-full"></div>
+            </div>`;
+    }
+    container.innerHTML = htmlContent;
+}
 
-        // 3. วนลูปสร้างปี/เดือน
-        for (let y in years) {
-            
-            htmlContent += `
-                <div id="year-${years[y]}" class="year-section w-full max-w-sm">
-                    <button onclick="loadAndToggleYear(this, '${years[y]}')" 
-                            data-year="${years[y]}" 
-                            data-loaded="false" 
-                            class="w-full flex justify-between items-center text-lg font-bold text-[#333333] border-b-2 border-[#333333] pb-1 mt-6 mb-2">
-                        ${years[y]} <span class="arrow">◂</span>
-                    </button>
-                    <div class="content hidden w-full"></div>
-                </div>`;
-        }
-        container.innerHTML = htmlContent;
-        return true;
+// ฟังก์ชันอัปเดตเงียบๆ (Background Update)
+async function backgroundUpdate() {
+    const popup = document.getElementById('update-popup');
+    if(popup) popup.style.display = 'block'; // แสดง Popup
+    
+    try {
+        const response = await fetchFlights('REC_FLIGHTS');
+        window.recFlight = response;
+        sessionStorage.setItem('REC_FLIGHTS_DATA', JSON.stringify(response));
+        renderUI(window.recFlight); // อัปเดตข้อมูลใหม่ลงหน้าจอ
     } catch (e) {
-        container.innerHTML = '<div class="text-center mt-10 text-red-500">เกิดข้อผิดพลาดในการโหลดข้อมูล</div>';
-        console.error("Error:", e);
+        console.error("Update failed", e);
+    } finally {
+        if(popup) popup.style.display = 'none'; // ซ่อน Popup
     }
 }
 
