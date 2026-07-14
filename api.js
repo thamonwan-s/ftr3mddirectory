@@ -2,7 +2,7 @@
 async function fetchFlights(pageKey) {
     const { fileId } = CONFIG[pageKey];
     const API_KEY = "AIzaSyCoOS0Q_URsMYN0aSH1FBfA4b9dUSjPq4E";
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${fileId}/values/${sheetName}?key=${API_KEY}`;
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${fileId}/values/${sheetname}?key=${API_KEY}`;
 
     try {
         const response = await fetch(url);
