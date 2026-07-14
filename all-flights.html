@@ -92,7 +92,7 @@
     };
 
 async function loadAndToggleYear(button, year) {
-    const section = button.closest('.year-section').id;
+    const section = button.closest('.year-section');
     const arrow = button.querySelector('.arrow');
 
     if (button.getAttribute('data-loaded') === 'true') return;
