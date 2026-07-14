@@ -28,8 +28,8 @@ async function fetchFlights(pageKey) {
  * เปลี่ยนข้อมูล JSON แนวนอนให้เป็น Grid ที่โค้ดเดิมรู้จัก
  */
 function prepareGridData(rawData, pageKey) {
+    const result = {};
     if (pageKey === 'REC_FLIGHTS'){
-        const result = {};
         const setIdx=4;
         const year = rawData[0][setIdx];
         let i = 0;
@@ -66,8 +66,7 @@ function prepareGridData(rawData, pageKey) {
                 result[year][i] = flightObj;
             }
     }
-    if (pageKey  === 'ALL_FLIGHTS'){
-        const result = {};
+    else if (pageKey  === 'ALL_FLIGHTS'){
         const headerRow = rawData[0];
         for (let setIdx=4; setIdx<headerRow.length; setIdx+=9){
             const year = headerRow[setIdx];
