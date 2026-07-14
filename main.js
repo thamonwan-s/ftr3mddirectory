@@ -115,10 +115,10 @@ async function fetchRecentFlights() {
         
         // เก็บเข้า Memory และ SessionStorage
         window.recFlight = response;
-        sessionStorage.setItem('REC_FLIGHTS_DATA', JSON.stringify(data));
+        sessionStorage.setItem('REC_FLIGHTS_DATA', JSON.stringify(response));
         
         // ส่งสัญญาณบอกว่าโหลดเสร็จแล้ว
-        window.dispatchEvent(new CustomEvent('recdataReady'));
+        window.dispatchEvent(new CustomEvent('recdataReady', { detail: response }));
     } catch (e) {
         console.error("Error fetching REC_FLIGHTS:", e);
     }
