@@ -90,7 +90,8 @@ function prepareGridData(rawData, pageKey) {
             if (!result[year]) {
                 result[year] = {};; // เริ่มนับจาก 1 สำหรับแต่ละปี
             }
-            result[year][Object.keys(result[year]).length + 1] = flightObj;
+            const nextIndex = Object.keys(result[year]).length + 1;
+            result[year][nextIndex] = flightObj;
         }
         console.log("ข้อมูลที่ได้จาก All Flights Server (Raw):", result);
         return result;
