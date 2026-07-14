@@ -109,20 +109,13 @@ async function fetchAndDisplayFlights(type = 'all') {
     container.innerHTML = '<div class="text-center mt-10 text-gray-500">กำลังโหลดข้อมูล...</div>';
 
     try {
-        const { data, latestYear } = await fetchFlights('REC_FLIGHTS');
+        const data = await fetchFlights('REC_FLIGHTS');
         let htmlContent = '';
-        
-        // 2. หา Recent Flight (ใช้ข้อมูลดิบจาก data ชุดแรก)
-        
-        const entries = Object.keys(data[latestYear]); // ได้ ["0", "1", ..., "12"]
-        const latestEntryKey = entries[entries.length - 1]; // ดึง Index ท้ายสุดออกมา
-        
-        const latestFlight = data[latestYear][latestEntryKey];
 
         htmlContent += `
                 <div class="w-full max-w-sm mb-6">
                     <h2 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-2">Recent Flight</h2>
-                    ${renderSingleFlight(latestFlight)}
+                    ${renderSingleFlight(data)}
                 </div>
             `;
 
