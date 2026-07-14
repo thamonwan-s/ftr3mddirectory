@@ -9,6 +9,7 @@ async function fetchFlights(pageKey) {
     const url = SCRIPT_URL + "?fileId=" + encodeURIComponent(fileId) + "&function=" + encodeURIComponent(action);
     const response = await fetch(url, {
         method: 'GET',
+        redirect: 'follow'
     });
     const textData = await response.text();
     let rawData;
