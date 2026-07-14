@@ -77,9 +77,22 @@ async function loadAndToggleYear(button, year) {
     // 1. Toggle การแสดงผล (เปิด/ปิด)
     toggleYear(button);
     const contentDiv = button.nextElementSibling;
+    const yearId = button.closest('.year-section').id;
+
+    // ดึงค่าเก่ามาเช็ค (ถ้าไม่มีให้เริ่มเป็น Array ว่าง)
+    let openYears = JSON.parse(sessionStorage.getItem('openYears') || '[]');
     
     // ถ้าปิดอยู่ ก็จบการทำงาน ไม่ต้องทำอะไร
-    if (contentDiv.classList.contains('hidden')) return;
+    if (contentDiv.classList.contains('hidden')) {
+        openYears = openYears.filter(id => id !== yearId);
+        sessionStorage.setItem('openYears', JSON.stringify(openYears));
+        return;
+    }
+    // ถ้าเปิดอยู่ (ไม่ hidden) -> บันทึก ID ลงไป
+    if (!openYears.includes(yearId)) {
+        openYears.push(yearId);
+        sessionStorage.setItem('openYears', JSON.stringify(openYears));
+    }
 
     // 2. ถ้ากางออกมาแล้ว เช็คว่าต้องโหลดข้อมูลไหม
     const isLoaded = button.getAttribute('data-loaded') === 'true';
