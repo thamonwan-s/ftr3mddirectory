@@ -72,9 +72,6 @@
       // Toggle แสดง/ซ่อน (ฟังก์ชัน toggleYear เดิมของคุณ)
       toggleYear(button);
       const contentDiv = button.nextElementSibling;
-
-      // 2. เตรียมที่สำหรับแสดงสถานะ (ใช้ nextElementSibling คือตัว content)
-      const contentDiv = button.nextElementSibling;
       
       // 3. เช็คว่าถ้าข้อมูลยังไม่มา และเป็นสถานะ "ยังไม่ได้โหลด"
       if (!window.flightData && button.getAttribute('data-loaded') !== 'true') {
