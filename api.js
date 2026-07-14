@@ -66,8 +66,6 @@ function prepareGridData(rawData, pageKey) {
                 result[year][i] = flightObj;
             }
         }
-        console.log("ข้อมูลที่ได้จาก Server (Raw):", result);
-        return result;
     }
     if (pageKey  === 'ALL_FLIGHTS'){
         const result = {};
@@ -109,7 +107,7 @@ function prepareGridData(rawData, pageKey) {
                 result[year][i] = flightObj;
             }
         }
+    }
         console.log("ข้อมูลที่ได้จาก Server (Raw):", result);
         return result;
-    }
 }
