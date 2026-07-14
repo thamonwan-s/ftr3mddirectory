@@ -103,13 +103,13 @@ function startCountdown(endTime) {
 
 // ใน main.js
 // ปรับฟังก์ชันให้รับพารามิเตอร์ type
-async function fetchAndDisplayFlights(type = 'all') {
+async function fetchAndDisplayFlights(type = 'all', recFlights) {
     const container = document.getElementById('flight-container');
     if (!container) return;
     container.innerHTML = '<div class="text-center mt-10 text-gray-500">กำลังโหลดข้อมูล...</div>';
 
     try {
-        const {flightObj, years} = await fetchFlights('REC_FLIGHTS');
+        const {flightObj, years} = recFlights;
         let htmlContent = '';
 
         htmlContent += `
