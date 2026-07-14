@@ -194,14 +194,13 @@ function renderUI(dataToDisplay) {
     openYearIds.forEach(id => {
         const section = document.getElementById(id);
         if (section) {
-            const contentDiv = section.querySelector('.content');
-            const arrow = section.querySelector('.arrow');
-            contentDiv.classList.remove('hidden');
-            arrow.innerText = '▾'; // เปลี่ยนลูกศรให้ชี้ลง
+            const btn = section.querySelector('button');
             
-            // สำคัญ: ถ้าปีนั้นเคยโหลดข้อมูลแล้ว ให้ดึงข้อมูลมาใส่คืนด้วย
-            // (สมมติว่าคุณเก็บข้อมูลที่โหลดแล้วไว้ในตัวแปรอื่นหรือ local storage)
-            // ถ้าคุณมีฟังก์ชันดึงข้อมูลเก่ามาใส่ ให้เรียกที่นี่ครับ
+            // 1. สั่งเปิดและโหลดข้อมูลใหม่โดยใช้ฟังก์ชันเดิมของคุณ 
+            // ฟังก์ชันนี้จะจัดการ class 'hidden' และลูกศรให้เองอัตโนมัติ
+            // เราแค่ต้องแน่ใจว่ามันจะดึงข้อมูลใหม่มาใส่ให้
+            btn.setAttribute('data-loaded', 'false'); // บังคับให้มันมองว่ายังไม่ได้โหลด เพื่อดึงข้อมูลอัปเดต
+            loadAndToggleYear(btn, btn.getAttribute('data-year'));
         }
     });
 }
