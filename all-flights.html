@@ -79,18 +79,7 @@ async function loadAndToggleYear(button, year) {
 
     // ถ้า contentDiv ยังมี class 'hidden' อยู่ (แปลว่าตอนนี้มันปิดอยู่)
     // ถึงจะยอมให้สั่ง toggleYear เพื่อเปิดมัน
-    if (contentDiv.classList.contains('hidden')) {
-        toggleYear(button);
-    }
-
-    // หลังจากสั่งเปิดแล้ว (หรือถ้ามันเปิดอยู่แล้ว) ให้เช็คสถานะอีกรอบ
-    // ถ้าตอนนี้มันยังปิดอยู่ ให้ return ออกไปเลย (ป้องกันการทำงานซ้ำซ้อน)
-    if (contentDiv.classList.contains('hidden')) {
-        let openYears = JSON.parse(sessionStorage.getItem('openYears') || '[]');
-        openYears = openYears.filter(id => id !== yearId);
-        sessionStorage.setItem('openYears', JSON.stringify(openYears));
-        return;
-    }
+    if (contentDiv.classList.contains('hidden')) return;
 
     // ถ้ามาถึงตรงนี้ แสดงว่าปีนี้เปิดอยู่ (กางออกอยู่) ให้บันทึกสถานะ
     let openYears = JSON.parse(sessionStorage.getItem('openYears') || '[]');
