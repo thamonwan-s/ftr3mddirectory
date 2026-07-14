@@ -120,15 +120,15 @@ async function fetchAndDisplayFlights(type = 'all') {
             `;
 
         // 3. วนลูปสร้างปี/เดือน
-        for (let year in years) {
+        for (let y in years) {
             
             htmlContent += `
-                <div id="year-${year}" class="year-section w-full max-w-sm">
-                    <button onclick="loadAndToggleYear(this, '${year}')" 
-                            data-year="${year}" 
+                <div id="year-${years[y]}" class="year-section w-full max-w-sm">
+                    <button onclick="loadAndToggleYear(this, '${years[y]}')" 
+                            data-year="${years[y]}" 
                             data-loaded="false" 
                             class="w-full flex justify-between items-center text-lg font-bold text-[#333333] border-b-2 border-[#333333] pb-1 mt-6 mb-2">
-                        ${year} <span class="arrow">◂</span>
+                        ${years[y]} <span class="arrow">◂</span>
                     </button>
                     <div class="content hidden w-full"></div>
                 </div>`;
