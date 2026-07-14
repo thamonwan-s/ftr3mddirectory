@@ -89,7 +89,7 @@ function prepareGridData(rawData, pageKey) {
             if (!result[year]) {
                 result[year] = {};; // เริ่มนับจาก 1 สำหรับแต่ละปี
             }
-            result[year][result[year].length+1] = flightObj;
+            result[year][Object.keys(result[year]).length + 1] = flightObj;
             }
         }
     }
