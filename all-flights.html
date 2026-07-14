@@ -82,6 +82,12 @@
       // ถ้าสั่งให้ย่อ (ปิด) ไม่ต้องทำอะไรต่อ
       if (!isVisible) return;
 
+      // 2. ถ้ากางออกมาแล้ว (isVisible เป็น true) -> เช็คว่ามีข้อมูลหรือยัง
+      const isLoaded = button.getAttribute('data-loaded') === 'true';
+      // ถ้ายังไม่โหลด หรือเนื้อหาว่างเปล่า (กรณีโดน Render ใหม่) ให้โหลด
+      if (!isLoaded || contentDiv.innerHTML === "") {
+        contentDiv.innerHTML = `<div class="p-4 text-center text-gray-500">กำลังโหลด...</div>`;
+
         // ถ้ายังไม่มีข้อมูล ให้รอก่อน (รอจาก Event)
       if (!window.recFlight) {
           contentDiv.innerHTML = `<div class="p-4 text-center">กำลังโหลดข้อมูล...</div>`;
@@ -89,25 +95,22 @@
           // รอจนกว่า recdataReady จะถูกยิง
           await new Promise(resolve => window.addEventListener('recdataReady', resolve, { once: true }));
       }
-        
-      // 2. ถ้ากางออกมาแล้ว (isVisible เป็น true) -> เช็คว่ามีข้อมูลหรือยัง
-    const isLoaded = button.getAttribute('data-loaded') === 'true';
-
-    // ถ้ายังไม่โหลด หรือเนื้อหาว่างเปล่า (กรณีโดน Render ใหม่) ให้โหลด
-    if (!isLoaded || contentDiv.innerHTML === "") {
-        contentDiv.innerHTML = `<div class="p-4 text-center text-gray-500">กำลังโหลด...</div>`;
 
         // รอให้มีข้อมูล (เช็คทั้ง window.recFlight และรอ Event ถ้ายังไม่มี)
         if (!window.recFlight) {
             await new Promise(resolve => window.addEventListener('recdataReady', resolve, { once: true }));
         }
 
-        // ดึงข้อมูลมาแสดงผล
-        // ตรงนี้ผมใช้ window.recFlight ตามที่เราเซ็ตไว้ในฟังก์ชันหลัก
-        const data = window.recFlight.result || window.recFlight; 
-        contentDiv.innerHTML = renderFlights(data, year); 
+        // 4. ดึงข้อมูลและป้องกัน Error ด้วยการเช็คค่าก่อนส่งให้ renderFlights
+        const rawData = window.recFlight.result || window.recFlight;
         
-        button.setAttribute('data-loaded', 'true');
+        if (rawData) {
+            // ส่ง data ให้ renderFlights แล้วจบงาน
+            contentDiv.innerHTML = renderFlights(rawData, year);
+            button.setAttribute('data-loaded', 'true');
+        } else {
+            contentDiv.innerHTML = `<div class="p-4 text-center text-red-500">โหลดข้อมูลไม่สำเร็จ</div>`;
+        }
     }
 }
     
