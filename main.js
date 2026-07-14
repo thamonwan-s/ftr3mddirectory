@@ -164,11 +164,7 @@ function renderUI(dataToDisplay) {
     const {flightObj, years} = dataToDisplay;
 
     // 1. เก็บสถานะปีที่เปิดค้างไว้ก่อน (เช็คจาก div.content ที่ไม่มี class 'hidden')
-    const openYearIds = [];
-    container.querySelectorAll('.year-section .content:not(.hidden)').forEach(el => {
-        const parent = el.closest('.year-section');
-        if (parent) openYearIds.push(parent.id);
-    });
+    const openYearIds = JSON.parse(sessionStorage.getItem('openYears') || '[]');
     
     let htmlContent = `
         <div class="w-full max-w-sm mb-6">
@@ -178,6 +174,8 @@ function renderUI(dataToDisplay) {
     `;
 
     for (let y in years) {
+        const yearId = `year-${years[y]}`;
+        const isOpen = openYears.includes(yearId);
         htmlContent += `
             <div id="year-${years[y]}" class="year-section w-full max-w-sm">
                 <button onclick="toggleYear(this); loadAndToggleYear(this, '${years[y]}')" 
@@ -192,22 +190,8 @@ function renderUI(dataToDisplay) {
 
    // 4. หลังจาก Render เสร็จ ให้สั่ง "เปิด" ปีที่เคยค้างไว้กลับมา
     openYearIds.forEach(id => {
-        const section = document.getElementById(id);
-        if (section) {
-            const btn = section.querySelector('button');
-            const contentDiv = section.querySelector('.content');
-            const arrow = section.querySelector('.arrow');
-            
-            // แทนที่จะเรียก loadAndToggleYear ซึ่งจะไปสั่ง Toggle (สลับ) อีกรอบ
-            // เราจัดการแค่ "เปิด" สถานะด้วยตัวเอง:
-            contentDiv.classList.remove('hidden'); // กาง div ออก
-            arrow.innerText = '▾';                // เปลี่ยนลูกศรให้ชี้ลง
-            
-            // สั่งให้มันโหลดข้อมูลใหม่โดยการยิง loadAndToggleYear ด้วยค่าพิเศษ
-            // แต่เราต้องแก้ loadAndToggleYear นิดเดียวเพื่อให้มันไม่รวน
-            btn.setAttribute('data-loaded', 'false');
-            loadAndToggleYear(btn, btn.getAttribute('data-year'));
-        }
+        const btn = document.querySelector(`#${id} button`);
+        if (btn) loadAndToggleYear(btn, btn.getAttribute('data-year'));
     });
 }
 
