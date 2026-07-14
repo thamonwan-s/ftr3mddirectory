@@ -81,7 +81,15 @@
 
       // ถ้าสั่งให้ย่อ (ปิด) ไม่ต้องทำอะไรต่อ
       if (!isVisible) return;
-      
+
+        // ถ้ายังไม่มีข้อมูล ให้รอก่อน (รอจาก Event)
+      if (!window.recFlight) {
+          contentDiv.innerHTML = `<div class="p-4 text-center">กำลังโหลดข้อมูล...</div>`;
+          
+          // รอจนกว่า recdataReady จะถูกยิง
+          await new Promise(resolve => window.addEventListener('recdataReady', resolve, { once: true }));
+      }
+        
       // 2. ถ้ากางออกมาแล้ว (isVisible เป็น true) -> เช็คว่ามีข้อมูลหรือยัง
     const isLoaded = button.getAttribute('data-loaded') === 'true';
 
