@@ -59,6 +59,13 @@
     document.addEventListener('DOMContentLoaded', async () => {
         injectHeader();    // ใส่ Header
         updateBreadcrumb(); // เติมข้อมูล Breadcrumb ใน id="breadcrumb" ที่ถูกสร้างขึ้น
+
+        (async () => {
+            console.log("กำลังโหลดข้อมูลเบื้องหลัง...");
+            const recallData = await fetchFlights('REC_FLIGHTS');
+            window.recFlight = recallData;
+            console.log("โหลดข้อมูลเบื้องหลังเสร็จแล้ว");
+        })();
     });
   </script>
 </body>
