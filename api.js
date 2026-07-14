@@ -85,7 +85,7 @@ function prepareGridData(rawData, pageKey) {
             flightObj['flight']=row1[4];
             flightObj['airline']=row1[5];
 
-            const year = new Date(raw1[0]).getFullYear();
+            const year = new Date(row1[0]).getFullYear();
             if (!result[year]) {
                 result[year] = {};; // เริ่มนับจาก 1 สำหรับแต่ละปี
             }
