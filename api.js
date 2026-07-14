@@ -33,12 +33,11 @@ function prepareGridData(rawData, pageKey) {
     const result = {};
     const flightObj = {};
     if (pageKey === 'REC_FLIGHTS'){
-        const setIdx=4;
-        const row1 = rawData[0];
-        const year = new Date(row1[0]).getFullYear();    
-        const row2 = rawData[1];
-        const row3 = rawData[2];
-        const row4 = rawData[3];
+        const row1 = rawData[1];
+        const years = rawData[0];
+        const row2 = rawData[2];
+        const row3 = rawData[3];
+        const row4 = rawData[4];
     
         flightObj['date']=row1[0];
         flightObj['dep_ch']=row1[1];
@@ -56,7 +55,7 @@ function prepareGridData(rawData, pageKey) {
         flightObj['flight']=row1[4];
         flightObj['airline']=row1[5];
     
-        return flightObj;
+        return {flightObj, years};
     
     }
     else if (pageKey  === 'ALL_FLIGHTS'){
