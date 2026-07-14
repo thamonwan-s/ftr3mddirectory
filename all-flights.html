@@ -13,10 +13,10 @@
   <script src="https://cdn.tailwindcss.com"></script>    
   <script src="https://unpkg.com/lucide@latest"></script>
 
-  <script src="config.js" defer></script>
-  <script src="api.js" defer></script>
-  <script src="header.js" defer></script>
-  <script src="main.js" defer></script>
+  <script src="config.js"></script>
+  <script src="api.js"></script>
+  <script src="header.js"></script>
+  <script src="main.js"></script>
   <style>body { font-family: 'Kanit', sans-serif; }</style>
 </head>
 <body class="bg-white min-h-screen flex flex-col">
@@ -36,7 +36,7 @@
   </script>
 
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
         injectHeader();            // ใส่ Header
         updateBreadcrumb();        // เติมข้อมูล Breadcrumb
         await loadPageData('ALL_FLIGHTS'); // ดึงข้อมูลมาแสดง (ฟังก์ชันใหม่ใน main.js)
