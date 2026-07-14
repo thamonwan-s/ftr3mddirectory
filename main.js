@@ -109,15 +109,13 @@ async function fetchAndDisplayFlights(type = 'all') {
     container.innerHTML = '<div class="text-center mt-10 text-gray-500">กำลังโหลดข้อมูล...</div>';
 
     try {
-        const {data, years} = await fetchFlights('REC_FLIGHTS');
-        console.log("ข้อมูลที่จะ render:", data);
-        console.log("ปีที่จะ render:", years);
+        const {flightObj, years} = await fetchFlights('REC_FLIGHTS');
         let htmlContent = '';
 
         htmlContent += `
                 <div class="w-full max-w-sm mb-6">
                     <h2 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-2">Recent Flight</h2>
-                    ${renderSingleFlight(data)}
+                    ${renderSingleFlight(flightObj)}
                 </div>
             `;
 
