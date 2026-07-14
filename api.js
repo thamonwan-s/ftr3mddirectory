@@ -56,7 +56,6 @@ function prepareGridData(rawData, pageKey) {
         flightObj['flight']=row1[4];
         flightObj['airline']=row1[5];
     
-        result[year]['1'] = {};
         result[year]['1'] = flightObj;
     
     }
