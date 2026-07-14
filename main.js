@@ -391,6 +391,8 @@ function renderFlights(data, year) {
         console.warn("renderFlights: ได้รับข้อมูลที่ไม่ถูกต้อง", data);
         return '<div class="p-4 text-center text-red-500">ไม่พบข้อมูลสำหรับปีนี้</div>';
     }
+    console.log("ข้อมูลที่ได้จาก Data (Raw):", data);
+    console.log("ข้อมูลที่ได้จาก Year (Raw):", year);
     const flightsOfYear = Object.values(data[year]);
     flightsOfYear.forEach(flightData => {
         // คุณไม่ต้องส่ง rowIdx หรือ setIdx เข้าไปใน renderSingleFlight แล้ว
