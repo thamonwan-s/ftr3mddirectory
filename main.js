@@ -181,6 +181,8 @@ function renderSortFlight(data, pageKey_Name) {
 async function loadPageData(pageKey) {
     if (pageKey === 'ALL_FLIGHTS') {
         fetchAndDisplayFlights('all');
+        const allData = await fetchFlights('ALL_FLIGHTS');
+        window.flightData = allData;
     } else {
         const data = await fetchFlights(pageKey);
         // ถ้าหน้า HTML นั้นมีฟังก์ชันแสดงผล ให้เรียกใช้ได้เลย
