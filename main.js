@@ -124,7 +124,7 @@ async function fetchAndDisplayFlights(type = 'all') {
         container.innerHTML = htmlContent;
 
         // 3. วนลูปสร้างปี/เดือน
-        let htmlContent = '';
+        htmlContent = '';
         for (const year of years.reverse()) {
             
             htmlContent += `
