@@ -104,6 +104,7 @@ async function fetchAndDisplayFlights(type = 'all') {
 
     try {
         const data = await fetchFlights('ALL_FLIGHTS');
+        window.flightData = data;
         let htmlContent = '';
         
         // 2. หา Recent Flight (ใช้ข้อมูลดิบจาก data ชุดแรก)
