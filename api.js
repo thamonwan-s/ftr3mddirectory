@@ -39,14 +39,12 @@ function prepareGridData(rawData, pageKey) {
                 result[year] = {};; // เริ่มนับจาก 1 สำหรับแต่ละปี
             }
     
-            for (let r = 3; r<rawData.length; r+=4){
+            for (let r = rawData.length-4; r >= 3; r-=4){
                 const row1 = rawData[r];
-                if(!row1[setIdx]) continue;
+                if (!row1 || !row1[setIdx]) continue;
                 const row2 = rawData[r+1];
                 const row3 = rawData[r+2];
                 const row4 = rawData[r+3];
-    
-                i = i+1;
                 const flightObj = {};
     
                 flightObj['date']=row1[setIdx +0];
@@ -66,6 +64,7 @@ function prepareGridData(rawData, pageKey) {
                 flightObj['airline']=row1[setIdx +7];
     
                 result[year][i] = flightObj;
+                break;
             }
     }
     else if (pageKey  === 'ALL_FLIGHTS'){
