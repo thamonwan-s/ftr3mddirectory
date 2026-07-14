@@ -162,6 +162,14 @@ async function fetchAndDisplayFlights(type = 'all') {
 function renderUI(dataToDisplay) {
     const container = document.getElementById('flight-container');
     const {flightObj, years} = dataToDisplay;
+
+    // 1. เก็บสถานะปีที่เปิดค้างไว้ก่อน (เช็คจาก div.content ที่ไม่มี class 'hidden')
+    const openYearIds = [];
+    container.querySelectorAll('.year-section .content:not(.hidden)').forEach(el => {
+        const parent = el.closest('.year-section');
+        if (parent) openYearIds.push(parent.id);
+    });
+    
     let htmlContent = `
         <div class="w-full max-w-sm mb-6">
             <h2 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-3 px-2">Recent Flight</h2>
@@ -181,6 +189,21 @@ function renderUI(dataToDisplay) {
             </div>`;
     }
     container.innerHTML = htmlContent;
+
+    // 4. หลังจาก Render เสร็จ ให้สั่ง "เปิด" ปีที่เคยค้างไว้กลับมา
+    openYearIds.forEach(id => {
+        const section = document.getElementById(id);
+        if (section) {
+            const contentDiv = section.querySelector('.content');
+            const arrow = section.querySelector('.arrow');
+            contentDiv.classList.remove('hidden');
+            arrow.innerText = '▾'; // เปลี่ยนลูกศรให้ชี้ลง
+            
+            // สำคัญ: ถ้าปีนั้นเคยโหลดข้อมูลแล้ว ให้ดึงข้อมูลมาใส่คืนด้วย
+            // (สมมติว่าคุณเก็บข้อมูลที่โหลดแล้วไว้ในตัวแปรอื่นหรือ local storage)
+            // ถ้าคุณมีฟังก์ชันดึงข้อมูลเก่ามาใส่ ให้เรียกที่นี่ครับ
+        }
+    });
 }
 
 // ฟังก์ชันอัปเดตเงียบๆ (Background Update)
