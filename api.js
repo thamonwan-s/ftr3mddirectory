@@ -1,10 +1,24 @@
 // api.js (แบบรวมฟังก์ชันเดียว)
 async function fetchFlights(pageKey) {
-    const { fileId, sheetname } = CONFIG[pageKey];
+    const { fileId, action } = CONFIG[pageKey];
+    const { fileId } = CONFIG[pageKey];
     const API_KEY = "AIzaSyCoOS0Q_URsMYN0aSH1FBfA4b9dUSjPq4E";
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${fileId}/values/${sheetname}?key=${API_KEY}`;
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${fileId}/values/${sheetName}?key=${API_KEY}`;
 
+    // แปลง params (เช่น {type: 'intl'}) ให้เป็น query string
+    const queryString = new URLSearchParams({ fileId: fileId, function: action }).toString();
+
+    // api.js บรรทัดที่ 8 เปลี่ยนเป็นแบบนี้
+    const url = SCRIPT_URL + "?fileId=" + encodeURIComponent(fileId) + "&function=" + encodeURIComponent(action);
+    const response = await fetch(url, {
+        method: 'GET',
+        redirect: 'follow'
+    });
+    const textData = await response.text();
+    let rawData;
+    console.log("ข้อมูลที่ได้จาก Server (Raw):", textData);
     try {
+        rawData = JSON.parse(textData);
         const response = await fetch(url);
         const data = await response.json();
         
@@ -19,9 +33,14 @@ async function fetchFlights(pageKey) {
         return prepareGridData(data.values, pageKey);
         
     } catch (e) {
+        console.error("Server ไม่ได้ส่ง JSON กลับมา! สิ่งที่ได้คือ:", textData);
+        throw new Error("Server response is not valid JSON");
         console.error("Error fetching from Google Sheets API:", e);
         throw e;
     }
+
+    // 3. เมื่อข้อมูลเป็น JSON ที่ถูกต้องแล้ว ค่อยส่งไป Mapping
+    return prepareGridData(rawData, pageKey);
 }
 
 /**
