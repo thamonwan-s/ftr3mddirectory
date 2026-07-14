@@ -66,7 +66,6 @@ function prepareGridData(rawData, pageKey) {
                 result[year][i] = flightObj;
             }
         }
-    }
     if (pageKey  === 'ALL_FLIGHTS'){
         const result = {};
         const headerRow = rawData[0];
