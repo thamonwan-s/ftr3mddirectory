@@ -76,6 +76,7 @@
 async function loadAndToggleYear(button, year) {
     const contentDiv = button.nextElementSibling;
     const yearId = button.closest('.year-section').id;
+    const arrow = button.querySelector('.arrow');
 
     // ถ้า contentDiv ยังมี class 'hidden' อยู่ (แปลว่าตอนนี้มันปิดอยู่)
     // ถึงจะยอมให้สั่ง toggleYear เพื่อเปิดมัน
