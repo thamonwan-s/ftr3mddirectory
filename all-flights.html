@@ -59,6 +59,8 @@
     };
 
     async function loadAndToggleYear(button, year) {
+      // Toggle แสดง/ซ่อน (ฟังก์ชัน toggleYear เดิมของคุณ)
+      toggleYear(button);
       const contentDiv = button.nextElementSibling;
       const isLoaded = button.getAttribute('data-loaded') === 'true';
   
@@ -67,9 +69,6 @@
           contentDiv.innerHTML = renderFlights(result, year); // เรียกใช้ฟังก์ชันเดิมของคุณ
           button.setAttribute('data-loaded', 'true');
       }
-  
-      // Toggle แสดง/ซ่อน (ฟังก์ชัน toggleYear เดิมของคุณ)
-      toggleYear(button);
   }
     
     const observer = new IntersectionObserver((entries) => {
