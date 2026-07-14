@@ -93,22 +93,22 @@
 
 async function loadAndToggleYear(button, year) {
     const section = button.closest('.year-section');
-    const contentDiv = section.querySelector('.content');
     const yearId = button.closest('.year-section').id;
     const arrow = button.querySelector('.arrow');
 
-    // ถ้า contentDiv ยังมี class 'hidden' อยู่ (แปลว่าตอนนี้มันปิดอยู่)
-    // ถึงจะยอมให้สั่ง toggleYear เพื่อเปิดมัน
-    if (contentDiv.classList.contains('hidden')) return;
     if (button.getAttribute('data-loaded') === 'true') return;
 
-
+    const contentDiv = section.querySelector('.content');
+    if (contentDiv.classList.contains('hidden')) return;
     contentDiv.innerHTML = `<div class="p-4 text-center text-gray-500">กำลังโหลดข้อมูล...</div>`;
 
         if (!window.flightData) {
-            await new Promise(resolve => window.addEventListener('recdataReady', resolve, { once: true }));
+            await new Promise(resolve => window.addEventListener('dataReady', resolve, { once: true }));
         }
-        if (contentDiv.classList.contains('hidden')) return; // ถ้าถูกปิดไปแล้วตอนรอโหลด ก็ไม่ต้องยัดข้อมูลเข้าไป
+        const freshContentDiv = section.querySelector('.content');
+    
+        // 5. เช็คสถานะก่อนอัปเดต (ถ้าโดนปิดไปแล้ว ห้ามแสดงผล)
+        if (freshContentDiv.classList.contains('hidden')) return; // ถ้าถูกปิดไปแล้วตอนรอโหลด ก็ไม่ต้องยัดข้อมูลเข้าไป
         const data = window.flightData?.result || window.flightData;
         contentDiv.innerHTML = renderFlights(data, year);
         button.setAttribute('data-loaded', 'true');
