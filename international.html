@@ -43,20 +43,8 @@
         loadPageData(pageKey_Name);
     });
 
-  // ฟังก์ชันนี้จะถูกเรียกโดย main.js หลังจากดึงและ Map ข้อมูลเรียบร้อย
-    window.displayFlights = function(mappedFlights, pageKey_Name) {
-    const container = document.getElementById('flight-container');
-    
-    // ลบข้อความ "กำลังโหลด" ออก
-    container.innerHTML = ''; 
-
-    // สมมติว่า mappedFlights คือข้อมูลที่จัดกลุ่มตามปีแล้ว หรือเป็น Array ข้อมูล
-    // คุณสามารถเรียกใช้ฟังก์ชัน renderFlights ตรงนี้ได้เลย
-    // ตัวอย่าง: ถ้าข้อมูลเป็น Array ของเที่ยวบินทั้งหมด
-    const html = renderSortFlight(mappedFlights, "รายการเที่ยวบินทั้งหมด");
     
     container.innerHTML = html;
-};
   </script>
 
 </body>
