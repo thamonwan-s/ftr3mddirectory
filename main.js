@@ -261,14 +261,18 @@ async function backgroundUpdate() {
 async function renderSortFlight(data, pageKey_Name) {
     // 1. จัดการ Mapping ข้อมูลจาก Row ให้เป็น Object
     console.log("Inter Flights Preloaded!");
-    // แปลง Object เป็น Array ถ้าข้อมูลมาเป็น Object (เพื่อให้วนลูปง่าย)
     const container = document.getElementById('inter-container');
     if (!container) return;
+    
     const flightList = Array.isArray(data) ? data : Object.values(data);
 
     if (flightList.length === 0) {
-        return `<div class="p-4 text-center text-gray-500">ไม่มีข้อมูลเที่ยวบินสำหรับปี ${year}</div>`;
+        container.innerHTML = `<div class="p-4 text-center text-gray-500">ไม่พบข้อมูลเที่ยวบิน</div>`;
+        return;
     }
+
+    // เรียงลำดับข้อมูลก่อน render (ตามวันที่)
+    flightList.sort((a, b) => new Date(b.date) - new Date(a.date));
 
     let html = `
     <div class="overflow-x-auto bg-white rounded-lg shadow-sm border border-gray-200 mt-2">
