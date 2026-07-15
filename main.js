@@ -308,8 +308,6 @@ async function renderSortFlight(data, pageKey_Name) {
                         <div class="font-bold">${item.dep_ap || '-'}</div>
                         <div class="text-xs text-gray-400">${formatTime(item.dep_t)}</div>
                     </td>
-                    <td class="px-4 py-3 font-bold text-blue-700">${item.flight || '-'}</td>
-                    <td class="px-4 py-3 text-gray-700">${item.airline || '-'}</td>
                     <td class="px-4 py-3">
                         <div class="font-bold">${item.arr_ap || '-'}</div>
                         <div class="text-xs text-gray-400">${formatTime(item.arr_t)}</div>
@@ -318,6 +316,8 @@ async function renderSortFlight(data, pageKey_Name) {
                         <div class="font-semibold text-gray-800 truncate max-w-[180px]" title="${item.name}">${item.name || '-'}</div>
                         ${item.note ? `<div class="text-xs italic text-gray-400 mt-1">${item.note}</div>` : ''}
                     </td>
+                    <td class="px-4 py-3 font-bold text-blue-700">${item.flight || '-'}</td>
+                    <td class="px-4 py-3 text-gray-700">${item.airline || '-'}</td>
                 </tr>`;
         });
 
