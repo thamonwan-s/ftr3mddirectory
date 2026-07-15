@@ -288,12 +288,12 @@ async function renderSortFlight(data, pageKey_Name) {
             <table class="w-full text-sm text-left">
                 <thead class="bg-gray-50 text-gray-600 uppercase font-bold text-xs border-b">
                     <tr>
-                        <th class="px-4 py-3">#</th>
-                        <th class="px-4 py-3">เที่ยวบิน</th>
-                        <th class="px-4 py-3">สายการบิน</th>
+                        <th class="px-4 py-3">วันที่</th>
                         <th class="px-4 py-3">ต้นทาง/เวลา</th>
                         <th class="px-4 py-3">ปลายทาง/เวลา</th>
                         <th class="px-4 py-3">ทัวร์/หมายเหตุ</th>
+                        <th class="px-4 py-3">เที่ยวบิน</th>
+                        <th class="px-4 py-3">สายการบิน</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100">`;
@@ -303,13 +303,13 @@ async function renderSortFlight(data, pageKey_Name) {
             
             html += `
                 <tr class="hover:bg-blue-50/50 transition-colors">
-                    <td class="px-4 py-3 text-gray-500">${index + 1}</td>
-                    <td class="px-4 py-3 font-bold text-blue-700">${item.flight || '-'}</td>
-                    <td class="px-4 py-3 text-gray-700">${item.airline || '-'}</td>
+                    <td class="px-4 py-3 text-gray-500">${item.date}</td>
                     <td class="px-4 py-3">
                         <div class="font-bold">${item.dep_ap || '-'}</div>
                         <div class="text-xs text-gray-400">${formatTime(item.dep_t)}</div>
                     </td>
+                    <td class="px-4 py-3 font-bold text-blue-700">${item.flight || '-'}</td>
+                    <td class="px-4 py-3 text-gray-700">${item.airline || '-'}</td>
                     <td class="px-4 py-3">
                         <div class="font-bold">${item.arr_ap || '-'}</div>
                         <div class="text-xs text-gray-400">${formatTime(item.arr_t)}</div>
