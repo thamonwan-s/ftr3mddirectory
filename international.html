@@ -45,33 +45,18 @@
 
   // ฟังก์ชันนี้จะถูกเรียกโดย main.js หลังจากดึงและ Map ข้อมูลเรียบร้อย
     window.displayFlights = function(mappedFlights, pageKey_Name) {
-        const container = document.getElementById('test-output');
-        
-        // เช็คว่ามีข้อมูลไหม
-        if (mappedFlights.length === 0) {
-            container.innerHTML = "ไม่พบข้อมูลเที่ยวบิน";
-            return;
-        }
+    const container = document.getElementById('flight-container');
+    
+    // ลบข้อความ "กำลังโหลด" ออก
+    container.innerHTML = ''; 
 
-        // เลือกเฉพาะตัวแรก (Index 0)
-        const firstFlight = mappedFlights[0];
-
-        // สร้าง HTML แสดงผล (ตัวอย่างสำหรับโหมด INTER_FLIGHTS)
-        container.innerHTML = `
-            <div class="border p-4 rounded shadow-md">
-                <h3 class="font-bold text-xl mb-2">ข้อมูลไฟลท์แรก (${pageKey_Name})</h3>
-                <p><strong>วันที่:</strong> ${firstFlight.date}</p>
-                <p><strong>เวลาบิน:</strong> ${firstFlight.timeFly}</p>
-                <p><strong>เวลาแลนด์:</strong> ${firstFlight.timeLand}</p>
-                <p><strong>สนามบินต้นทาง:</strong> ${firstFlight.origin || 'N/A'}</p>
-                <p><strong>สนามบินปลายทาง:</strong> ${firstFlight.destination || 'N/A'}</p>
-                <p><strong>สายการบิน:</strong> ${firstFlight.airline || 'N/A'}</p>
-                <p><strong>รหัสไฟลท์:</strong> ${firstFlight.code || 'N/A'}</p>
-                <hr class="my-2">
-                <p class="text-sm text-gray-500">หมายเหตุ: ${firstFlight.note || '-'}</p>
-            </div>
-        `;
-    };
+    // สมมติว่า mappedFlights คือข้อมูลที่จัดกลุ่มตามปีแล้ว หรือเป็น Array ข้อมูล
+    // คุณสามารถเรียกใช้ฟังก์ชัน renderFlights ตรงนี้ได้เลย
+    // ตัวอย่าง: ถ้าข้อมูลเป็น Array ของเที่ยวบินทั้งหมด
+    const html = renderSortFlight(mappedFlights, "รายการเที่ยวบินทั้งหมด");
+    
+    container.innerHTML = html;
+};
   </script>
 
 </body>
