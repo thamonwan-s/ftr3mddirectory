@@ -187,13 +187,12 @@ function renderUI(dataToDisplay) {
                         class="w-full flex justify-between items-center text-lg font-bold text-[#333333] border-b-2 border-[#333333] pb-1 mt-6 mb-2">
                     ${years[y]} <span class="arrow">◂</span>
                 </button>
-                <div class="content ${isOpen ? '' : 'hidden'} w-full"></div>
+                <div class="content ${isOpen ? '' : 'hidden'} w-full">${savedData}</div>
             </div>`;
     }
     container.innerHTML = htmlContent;
 
     // 4. หลังจาก Render เสร็จ ให้สั่ง "เปิด" ปีที่เคยค้างไว้กลับมา
-        if (isOpen){
             openYears.forEach(id => {
             const section = document.getElementById(id); // หาแค่ section ของปีนั้น
             if (section) {
@@ -205,11 +204,12 @@ function renderUI(dataToDisplay) {
                 content.classList.remove('hidden');
                 arrow.innerText = '▾'; // ลูกศรต้องชี้ลง
                 
-                // สั่งโหลด
-                loadAndToggleYear(btn, btn.getAttribute('data-year'));
+                // ถ้า data-loaded เป็น false ค่อยสั่งโหลด
+                if (btn.getAttribute('data-loaded') === 'false') {
+                    loadAndToggleYear(btn, btn.getAttribute('data-year'));
+                }
             }
         });
-    }
 }
 
 // ฟังก์ชันอัปเดตเงียบๆ (Background Update)
