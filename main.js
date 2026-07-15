@@ -313,6 +313,7 @@ async function renderSortFlight(data, pageKey_Name) {
 
     html += `</tbody></table></div>`;
     container.innerHTML = html;
+    console.log("Finished");
 }
 
 async function loadPageData(pageKey) {
