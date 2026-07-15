@@ -260,9 +260,57 @@ async function backgroundUpdate() {
 
 function renderSortFlight(data, pageKey_Name) {
     // 1. จัดการ Mapping ข้อมูลจาก Row ให้เป็น Object
-        const flight = 'tested';
-        console.log("Inter Flights Preloaded!");
-        return flight;
+    console.log("Inter Flights Preloaded!");
+    // แปลง Object เป็น Array ถ้าข้อมูลมาเป็น Object (เพื่อให้วนลูปง่าย)
+    const flightList = Array.isArray(data) ? data : Object.values(data);
+
+    if (flightList.length === 0) {
+        return `<div class="p-4 text-center text-gray-500">ไม่มีข้อมูลเที่ยวบินสำหรับปี ${year}</div>`;
+    }
+
+    let html = `
+    <div class="overflow-x-auto bg-white rounded-lg shadow-sm border border-gray-200 mt-2">
+        <table class="w-full text-sm text-left">
+            <thead class="bg-gray-50 text-gray-700 uppercase font-bold border-b">
+                <tr>
+                    <th class="px-4 py-3">#</th>
+                    <th class="px-4 py-3">เที่ยวบิน</th>
+                    <th class="px-4 py-3">สายการบิน</th>
+                    <th class="px-4 py-3">ต้นทาง</th>
+                    <th class="px-4 py-3">ปลายทาง</th>
+                    <th class="px-4 py-3">สถานะ/ชื่อทัวร์</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+    `;
+
+    flightList.forEach((item, index) => {
+        // จัดการเวลาให้อ่านง่ายขึ้น (ตัด 1899-12-30 ออก)
+        const formatTime = (iso) => iso ? iso.split('T')[1].substring(0, 5) : '-';
+        
+        html += `
+            <tr class="hover:bg-blue-50 transition-colors">
+                <td class="px-4 py-3 font-medium text-gray-900">${index + 1}</td>
+                <td class="px-4 py-3 text-blue-600 font-semibold">${item.flight || '-'}</td>
+                <td class="px-4 py-3">${item.airline || '-'}</td>
+                <td class="px-4 py-3">
+                    <div class="font-bold">${item.dep_ap || '-'}</div>
+                    <div class="text-xs text-gray-400">${formatTime(item.dep_t)}</div>
+                </td>
+                <td class="px-4 py-3">
+                    <div class="font-bold">${item.arr_ap || '-'}</div>
+                    <div class="text-xs text-gray-400">${formatTime(item.arr_t)}</div>
+                </td>
+                <td class="px-4 py-3">
+                    <div class="truncate max-w-[150px]" title="${item.name}">${item.name || '-'}</div>
+                    ${item.note ? `<div class="text-xs italic text-gray-400">${item.note}</div>` : ''}
+                </td>
+            </tr>
+        `;
+    });
+
+    html += `</tbody></table></div>`;
+    return html;
 }
 
 async function loadPageData(pageKey) {
