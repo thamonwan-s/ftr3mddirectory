@@ -262,6 +262,8 @@ async function renderSortFlight(data, pageKey_Name) {
     // 1. จัดการ Mapping ข้อมูลจาก Row ให้เป็น Object
     console.log("Inter Flights Preloaded!");
     // แปลง Object เป็น Array ถ้าข้อมูลมาเป็น Object (เพื่อให้วนลูปง่าย)
+    const container = document.getElementById('inter-container');
+    if (!container) return;
     const flightList = Array.isArray(data) ? data : Object.values(data);
 
     if (flightList.length === 0) {
