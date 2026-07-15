@@ -319,7 +319,7 @@ async function loadPageData(pageKey) {
     } else {
         const data = await fetchFlights(pageKey);
         // ถ้าหน้า HTML นั้นมีฟังก์ชันแสดงผล ให้เรียกใช้ได้เลย
-        renderSortFlight(data.result, pageKey);
+        await renderSortFlight(data.result, pageKey);
         }
 }
 
