@@ -259,63 +259,64 @@ async function backgroundUpdate() {
 }
 
 async function renderSortFlight(data, pageKey_Name) {
-    // 1. จัดการ Mapping ข้อมูลจาก Row ให้เป็น Object
-    console.log("Inter Flights Preloaded!");
     const container = document.getElementById('inter-container');
     if (!container) return;
-    
-    const flightList = Array.isArray(data) ? data : Object.values(data);
 
-    if (flightList.length === 0) {
-        container.innerHTML = `<div class="p-4 text-center text-gray-500">ไม่พบข้อมูลเที่ยวบิน</div>`;
-        return;
-    }
+    let html = '';
 
-    // เรียงลำดับข้อมูลก่อน render (ตามวันที่)
-    flightList.sort((a, b) => new Date(b.date) - new Date(a.date));
+    // 1. วนลูปตามปี (ปีคือ Key ชั้นนอก)
+    const years = Object.keys(data).sort((a, b) => b - a); // เรียงปีจากมากไปน้อย
 
-    let html = `
-    <div class="overflow-x-auto bg-white rounded-lg shadow-sm border border-gray-200 mt-2">
-        <table class="w-full text-sm text-left">
-            <thead class="bg-gray-50 text-gray-700 uppercase font-bold border-b">
-                <tr>
-                    <th class="px-4 py-3">#</th>
-                    <th class="px-4 py-3">เที่ยวบิน</th>
-                    <th class="px-4 py-3">สายการบิน</th>
-                    <th class="px-4 py-3">ต้นทาง</th>
-                    <th class="px-4 py-3">ปลายทาง</th>
-                    <th class="px-4 py-3">สถานะ/ชื่อทัวร์</th>
-                </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-100">
-    `;
+    years.forEach(year => {
+        const flightsInYear = data[year]; // ได้ Object ของเที่ยวบินในปีนั้น
+        const flightList = Object.values(flightsInYear); // แปลงเที่ยวบินให้เป็น Array
 
-    flightList.forEach((item, index) => {
-        // จัดการเวลาให้อ่านง่ายขึ้น (ตัด 1899-12-30 ออก)
-        const formatTime = (iso) => iso ? iso.split('T')[1].substring(0, 5) : '-';
-        
+        // เรียงลำดับเที่ยวบินในแต่ละปี (ถ้ามี date)
+        flightList.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+        // 2. สร้างหัวข้อปี
+        html += `<h2 class="text-2xl font-bold mt-8 mb-4 text-gray-700">ปี ${year}</h2>`;
+
+        // 3. สร้างตารางของปีนั้น
         html += `
-            <tr class="hover:bg-blue-50 transition-colors">
-                <td class="px-4 py-3 font-medium text-gray-900">${index + 1}</td>
-                <td class="px-4 py-3 text-blue-600 font-semibold">${item.flight || '-'}</td>
-                <td class="px-4 py-3">${item.airline || '-'}</td>
-                <td class="px-4 py-3">
-                    <div class="font-bold">${item.dep_ap || '-'}</div>
-                    <div class="text-xs text-gray-400">${formatTime(item.dep_t)}</div>
-                </td>
-                <td class="px-4 py-3">
-                    <div class="font-bold">${item.arr_ap || '-'}</div>
-                    <div class="text-xs text-gray-400">${formatTime(item.arr_t)}</div>
-                </td>
-                <td class="px-4 py-3">
-                    <div class="truncate max-w-[150px]" title="${item.name}">${item.name || '-'}</div>
-                    ${item.note ? `<div class="text-xs italic text-gray-400">${item.note}</div>` : ''}
-                </td>
-            </tr>
-        `;
+        <div class="overflow-x-auto bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+            <table class="w-full text-sm text-left">
+                <thead class="bg-gray-50 border-b">
+                    <tr>
+                        <th class="px-4 py-3">#</th>
+                        <th class="px-4 py-3">เที่ยวบิน</th>
+                        <th class="px-4 py-3">สายการบิน</th>
+                        <th class="px-4 py-3">ต้นทาง/เวลา</th>
+                        <th class="px-4 py-3">ปลายทาง/เวลา</th>
+                        <th class="px-4 py-3">สถานะ/ชื่อทัวร์</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">`;
+
+        flightList.forEach((item, index) => {
+            const formatTime = (iso) => iso ? iso.split('T')[1].substring(0, 5) : '-';
+            html += `
+                <tr class="hover:bg-blue-50">
+                    <td class="px-4 py-3 font-bold">${index + 1}</td>
+                    <td class="px-4 py-3 text-blue-600 font-bold">${item.flight || '-'}</td>
+                    <td class="px-4 py-3">${item.airline || '-'}</td>
+                    <td class="px-4 py-3">
+                        <div class="font-bold">${item.dep_ap || '-'}</div>
+                        <div class="text-xs text-gray-400">${formatTime(item.dep_t)}</div>
+                    </td>
+                    <td class="px-4 py-3">
+                        <div class="font-bold">${item.arr_ap || '-'}</div>
+                        <div class="text-xs text-gray-400">${formatTime(item.arr_t)}</div>
+                    </td>
+                    <td class="px-4 py-3">
+                        <div class="truncate max-w-[150px]">${item.name || '-'}</div>
+                    </td>
+                </tr>`;
+        });
+
+        html += `</tbody></table></div>`;
     });
 
-    html += `</tbody></table></div>`;
     container.innerHTML = html;
     console.log("Finished");
 }
