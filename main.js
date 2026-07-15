@@ -310,7 +310,7 @@ function renderSortFlight(data, pageKey_Name) {
     });
 
     html += `</tbody></table></div>`;
-    return html;
+    container.innerHTML = html;
 }
 
 async function loadPageData(pageKey) {
