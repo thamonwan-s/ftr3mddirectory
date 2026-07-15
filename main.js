@@ -300,10 +300,14 @@ async function renderSortFlight(data, pageKey_Name) {
 
         flightList.forEach((item, index) => {
             const formatTime = (iso) => (iso ? iso.split('T')[1]?.substring(0, 5) : '-');
+            const d = new Date(item.date);
+            const dayName = d.toLocaleDateString('en-US', {weekday: 'short'}).toUpperCase();
+            const dayNum = d.getDate();
+            const month = d.toLocaleDateString('en-US', {month: 'short'}).toUpperCase();
             
             html += `
                 <tr class="hover:bg-blue-50/50 transition-colors">
-                    <td class="px-4 py-3 text-gray-500">${new Date(item.date)}</td>
+                    <td class="px-4 py-3 text-gray-500">${dayName} ${dayNum} ${month}</td>
                     <td class="px-4 py-3">
                         <div class="font-bold">${item.dep_ap || '-'}</div>
                         <div class="text-xs text-gray-400">${formatTime(item.dep_t)}</div>
