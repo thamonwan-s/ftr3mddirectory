@@ -40,11 +40,10 @@
     document.addEventListener('DOMContentLoaded', () => {
         injectHeader();            // ใส่ Header
         updateBreadcrumb();        // เติมข้อมูล Breadcrumb
-        loadPageData(pageKey_Name);
+        await loadPageData(pageKey_Name);
     });
 
-    
-    container.innerHTML = html;
+
   </script>
 
 </body>
