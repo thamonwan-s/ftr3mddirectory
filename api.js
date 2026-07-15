@@ -105,7 +105,7 @@ function prepareGridData(rawData, pageKey) {
             flightObj['arr_ap']=row[4];
             flightObj['name']=row[5];
             flightObj['flight']=row[6];
-            flightObj['airline']=row1[7];
+            flightObj['airline']=row[7];
             flightObj['note']=row[8];
 
             const year = new Date(row[0]).getFullYear();
