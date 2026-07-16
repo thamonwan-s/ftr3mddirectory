@@ -21,6 +21,18 @@
 </head>
 <body class="bg-white min-h-screen flex flex-col">
 
+  <div class="flex border-b border-gray-200 w-full max-w-4xl mx-auto">
+    <button id="tab-year" class="px-6 py-3 font-medium text-blue-600 border-b-2 border-blue-600 focus:outline-none" onclick="switchTab('year')">
+        จัดกลุ่มตามปี
+    </button>
+    <button id="tab-country" class="px-6 py-3 font-medium text-gray-500 hover:text-gray-700 focus:outline-none" onclick="switchTab('country')">
+        จัดกลุ่มตามประเทศ
+    </button>
+</div>
+
+<div id="flight-container" class="flex flex-col items-center p-4 space-y-4 w-full">
+    </div>
+
   <main id="flight-container" class="flex flex-col items-center p-4 space-y-4 w-full">
     <div id="loading" class="text-center mt-10 text-gray-500">กำลังโหลดข้อมูล...</div>
   </main>
@@ -42,6 +54,26 @@
         updateBreadcrumb();        // เติมข้อมูล Breadcrumb
         loadPageData(pageKey_Name);
     });
+
+    function switchTab(type) {
+    // 1. จัดการ UI ของปุ่ม
+        const tabYear = document.getElementById('tab-year');
+        const tabCountry = document.getElementById('tab-country');
+        
+        if (type === 'year') {
+            tabYear.className = "px-6 py-3 font-medium text-blue-600 border-b-2 border-blue-600";
+            tabCountry.className = "px-6 py-3 font-medium text-gray-500 hover:text-gray-700";
+            renderSortFlight(globalData, 'year'); // ฟังก์ชันที่คุณมีอยู่แล้ว
+        } else {
+            tabCountry.className = "px-6 py-3 font-medium text-blue-600 border-b-2 border-blue-600";
+            tabYear.className = "px-6 py-3 font-medium text-gray-500 hover:text-gray-700";
+            renderCountryFlight(globalData); // ฟังก์ชันใหม่ที่คุณจะอธิบาย
+        }
+    }
+
+    function renderCountryFlight(data) {
+      console.log("ข้อมูลที่ได้จาก Render (Raw):", data);
+    }
 
 
   </script>
