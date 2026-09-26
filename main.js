@@ -330,14 +330,15 @@ async function renderSortFlight(data, pageKey_Name) {
 
     container.innerHTML = html;
 }
-
+let globalData = null;
 async function loadPageData(pageKey) {
     if (pageKey === 'ALL_FLIGHTS') {
         await fetchAndDisplayFlights('all');
     } else {
         const data = await fetchFlights(pageKey);
         // ถ้าหน้า HTML นั้นมีฟังก์ชันแสดงผล ให้เรียกใช้ได้เลย
-        await renderSortFlight(data.result, pageKey);
+        globalData = data.result;
+        await renderSortFlight(globalData, pageKey);
         }
 }
 
