@@ -307,7 +307,7 @@ async function renderSortFlight(data, pageKey_Name) {
             
             html += `
                 <tr class="hover:bg-blue-50/50 transition-colors">
-                    <td class="px-4 py-3 text-gray-500">${dayName} ${dayNum} ${month}</td>
+                    <td class="px-4 py-3 text-gray-500 white-space: nowrap;">${dayName} ${dayNum} ${month}</td>
                     <td class="px-4 py-3">
                         <div class="font-bold">${item.dep_ap || '-'}</div>
                         <div class="text-xs text-gray-400">${formatTime(item.dep_t)}</div>
