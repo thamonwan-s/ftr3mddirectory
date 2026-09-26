@@ -304,6 +304,8 @@ async function renderSortFlight(data, pageKey_Name) {
             const dayName = d.toLocaleDateString('en-US', {weekday: 'short'}).toUpperCase();
             const dayNum = d.getDate();
             const month = d.toLocaleDateString('en-US', {month: 'short'}).toUpperCase();
+
+            const iconUrl = logoUrl(item.flightNo);
             
             html += `
                 <tr class="hover:bg-blue-50/50 transition-colors">
@@ -321,7 +323,9 @@ async function renderSortFlight(data, pageKey_Name) {
                         ${item.note ? `<div class="text-xs italic text-gray-400 mt-1">${item.note}</div>` : ''}
                     </td>
                     <td class="px-4 py-3 font-bold text-blue-700">${item.flight || '-'}</td>
-                    <td class="px-4 py-3 text-gray-700">${item.airline || '-'}</td>
+                    <td class="px-4 py-3 text-gray-700">
+                        <img src="${iconUrl}" class="w-4 h-4 object-contain" onerror="this.style.display='none'">
+                        <span>${item.airline || '-'}</td>
                 </tr>`;
         });
 
@@ -351,7 +355,14 @@ function formatTime(val) {
     return `${h}:${m}`;
 }
 
-// ฟังก์ชันเดียวจบสำหรับสร้าง HTML การ์ด
+// ฟังก์ชันกลางสำหรับแปลง flightCode เป็น URL โลโก้
+function findlogoUrl(flightCode) {
+    if (!flightCode) return '';
+    const code = flightCode.trim().split(' ')[0].toLowerCase();
+    const airlineMapping = { "tvj": "vj", "pal": "2p" };
+    const finalCode = airlineMapping[code] || code;
+    return `https://edge.wego.com/image/upload/flights/airlines_square/${finalCode}`;
+}
 
 // ฟังก์ชันตัวใหม่ (สำหรับรายการปีใน All Flights)
 function createNarrowFlightCardHTML(flightData) {
@@ -368,9 +379,7 @@ function createNarrowFlightCardHTML(flightData) {
         
         const flightRaw = String(flightData.flight || '');
         const flightCode = flightRaw.trim().split(' ')[0].toLowerCase(); 
-        const airlineMapping = { "tvj": "vj", "pal": "2p" };
-        const finalFlightCode = airlineMapping[flightCode] || flightCode;
-        const logoUrl = finalFlightCode ? `https://edge.wego.com/image/upload/flights/airlines_square/${finalFlightCode}` : '';
+        const logoUrl = findlogoUrl(flightCode);
         
         const j5 = flightData.desc || '';
         const j6 = flightData.place || '';
